@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
 # Go to the frontend directory
-cd "../frontend"
+#cd "../frontend/src/pages/home/home.html"
+
+# Open in browser (Google Chrome9
+open -a "Google Chrome" "../frontend/src/pages/home/home.html"
