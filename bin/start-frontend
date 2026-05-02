@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Go to the frontend directory
+cd "../frontend"
