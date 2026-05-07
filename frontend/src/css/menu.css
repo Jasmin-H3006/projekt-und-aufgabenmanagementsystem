@@ -1,0 +1,13 @@
+.menu-btn {
+    font-weight: bolder !important;
+}
+.menu-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-user {
+    padding-left: 2rem;
+}
