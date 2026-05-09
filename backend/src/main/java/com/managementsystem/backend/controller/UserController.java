@@ -20,16 +20,12 @@ public class UserController {
 
     @PostMapping
     public String createUser(@RequestBody NewUserDTO dto) {
-
-
         service.createUser(User.builder()
             .username(dto.username())
             .password(dto.password())
-            .role(dto.role())
             .build()
 
         );
-
         return "User created successfully";
     }
 }

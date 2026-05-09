@@ -11,13 +11,20 @@ public interface Dtos {
         @NotEmpty String role
     ) {}
     @Builder
-    public record CustomerDto(
-        @NotEmpty String componyName,
-        @NotEmpty String contactPersonName,
-        @NotEmpty String contactPersonEmail
-    ) {}
-    @Builder
-    public record RoleDto(
+    public record NewRoleDTO(
         @NotEmpty String name
     ) {}
+    @Builder
+    public record NewCustomerDTO(
+        @NotEmpty String name,
+        @NotEmpty String website
+    ) {}
+    @Builder
+    public record NewCustomerContactPersonDTO(
+        @NotEmpty String name,
+        @NotEmpty String email,
+        @NotEmpty Long telefone,
+        @NotEmpty String jobDescription
+    ) {}
+
 }
