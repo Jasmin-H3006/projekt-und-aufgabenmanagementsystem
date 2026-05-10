@@ -2,12 +2,12 @@ package com.managementsystem.backend.controller;
 
 import com.managementsystem.backend.dto.Dtos.NewCustomerDTO;
 import com.managementsystem.backend.model.Customer;
+import com.managementsystem.backend.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.managementsystem.backend.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/customers")

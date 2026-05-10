@@ -2,6 +2,8 @@ package com.managementsystem.backend.dto;
 
 import lombok.Builder;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.LocalDate;
+import jakarta.validation.constraints.NotNull;
 
 public interface Dtos {
     @Builder
@@ -23,8 +25,21 @@ public interface Dtos {
     public record NewCustomerContactPersonDTO(
         @NotEmpty String name,
         @NotEmpty String email,
-        @NotEmpty Long telefone,
-        @NotEmpty String jobDescription
+        @NotEmpty Long telefone
     ) {}
-
+    @Builder
+    public record NewTaskDTO(
+        @NotEmpty String title,
+        @NotEmpty String description
+    ) {}
+    @Builder
+    public record NewTaskStateDTO(
+        @NotEmpty String name
+    ) {}
+    @Builder
+    public record NewProjectDTO(
+        @NotEmpty String title,
+        @NotNull LocalDate deadline,
+        @NotEmpty String description
+    ) {}
 }
