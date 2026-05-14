@@ -5,16 +5,33 @@ import {ThemeProvider} from "@mui/material/styles";
 import {MenuComponent} from '../../js/menuComponent.js';
 import theme from "../../css/theme-provider.js";
 import {ProjectsTableHeader} from "../../js/projects-table.js";
+import {requireLogin} from "../../js/session-handling.js";
 
-function Intro() {
-
+function Page() {
     const [username, setUsername] = useState("");
-
     useEffect(() => {
+        requireLogin(setUsername);
+    }, []);
+
+    return React.createElement(
+        ThemeProvider,
+        { theme },
+        React.createElement(MenuComponent),
+        React.createElement(Intro, { username }),
+        React.createElement(Home),
+        React.createElement(MyProjectsTable)
+    );
+}
+
+function Intro({username}) {
+
+    /*useEffect(() => {
         fetch("http://localhost:8080/api/auth/current-user", { credentials: "include" })
             .then(res => res.ok ? res.text() : Promise.reject("Failed to fetch current user"))
             .then(username => setUsername(username));
     }, []);
+
+     */
 
     return React.createElement(
         Typography,
@@ -76,14 +93,4 @@ function MyProjectsTable() {
 // Komponente in den DOM rendern
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
-
-root.render(
-    React.createElement(
-        ThemeProvider,
-        { theme: theme },
-        React.createElement(MenuComponent),
-        React.createElement(Intro),
-        React.createElement(Home),
-        React.createElement(MyProjectsTable)
-    )
-);
+root.render(React.createElement(Page));

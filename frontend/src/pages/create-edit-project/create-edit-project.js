@@ -9,6 +9,22 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import {requireLogin} from "../../js/session-handling.js";
+
+function Page() {
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        requireLogin(setUsername);
+    }, []);
+
+    return React.createElement(
+        ThemeProvider,
+        { theme: theme },
+        React.createElement(MenuComponent),
+        React.createElement(CreateEditProject),
+        React.createElement(ButtonsCreatePages)
+    );
+}
 
 function CreateEditProject() {
     const [customers, setCustomers] = useState([]);
@@ -92,13 +108,4 @@ function CreateEditProject() {
 // Komponente in den DOM rendern
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
-
-root.render(
-    React.createElement(
-        ThemeProvider,
-        { theme: theme },
-        React.createElement(MenuComponent),
-        React.createElement(CreateEditProject),
-        React.createElement(ButtonsCreatePages)
-    )
-);
+root.render(React.createElement(Page));
