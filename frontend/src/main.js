@@ -1,8 +1,9 @@
-import React, {useReducer, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
 import {Button, TextField} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "./css/theme-provider.js";
+import {MenuComponentLogin} from "./js/menu-component-login.js";
 
 function LogInForm() {
 
@@ -88,6 +89,7 @@ root.render(
     React.createElement(
         ThemeProvider,
         { theme: theme },
-        React.createElement(LogInForm, { key: "login" }),
+        React.createElement(MenuComponentLogin),
+        React.createElement(LogInForm),
     )
 );

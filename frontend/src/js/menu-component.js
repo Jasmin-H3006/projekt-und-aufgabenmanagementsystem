@@ -1,8 +1,9 @@
 import React from "react";
-import {AppBar, Button, Typography, Toolbar, IconButton, Box, Tooltip, MenuItem, ListItemIcon, Menu} from "@mui/material";
+import {AppBar, Typography, IconButton, Box, Tooltip, MenuItem, ListItemIcon, Menu} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 import Logout from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 
 export function MenuComponent() {
 
@@ -15,16 +16,20 @@ export function MenuComponent() {
         setAnchorEl(null);
     };
 
+    const goToStartingPage = () => {
+        window.location.href="../home/home.html"
+    };
+
     const goToAdminArea = () => {
         window.location.href="../admin-area/admin-area.html"
     };
 
-    const logoutAndGoToLoginPage = () => {
-
+    const logoutAndGoToLoginPage = async () => {
         // Session beenden
-
-
-
+        await fetch("http://localhost:8080/api/auth/logout", {
+            method: "POST",
+            credentials: "include",
+        });
         window.location.href="../../../index.html"
     };
 
@@ -64,6 +69,18 @@ export function MenuComponent() {
         [
             React.createElement(
                 MenuItem,
+                { key: "home", onClick: goToStartingPage },
+                [
+                    React.createElement(
+                        ListItemIcon,
+                        { key: "home-icon" },
+                        React.createElement(HomeIcon, { fontSize: "small" })
+                    ),
+                    "Startseite",
+                ]
+            ),
+            React.createElement(
+                MenuItem,
                 { key: "admin-area", onClick: goToAdminArea },
                 [
                     React.createElement(
@@ -71,7 +88,7 @@ export function MenuComponent() {
                         { key: "admin-area-icon" },
                         React.createElement(AdminPanelSettings, { fontSize: "small" })
                     ),
-                    "Zum Admin-Bereich",
+                    "Admin-Bereich",
                 ]
             ),
             React.createElement(
@@ -90,42 +107,4 @@ export function MenuComponent() {
     );
 
     return React.createElement(AppBar, {position: 'static'}, [topBar, menu]);
-
-    /*const appBarContent = React.createElement(
-        Toolbar,
-        null,
-        [
-            // Admin-Bereich Button
-            React.createElement(
-                Button,
-                {className: 'menu-btn', size: 'large', color: 'secondary', variant: 'contained'},
-                'Zum Admin-Bereich'
-            ),
-            // Brand
-            React.createElement(
-                Typography,
-                {variant: 'h1', className: 'menu-title'},
-                'Mane'
-            ),
-            // Log-out Button
-            React.createElement(
-                Button,
-                {className: 'menu-btn', size: 'medium', color: 'secondary', variant: 'contained'},
-                'Log-out'
-            ),
-            // Benutzername
-            React.createElement(
-                Typography,
-                {className: 'menu-user', variant: 'h6', color: 'text'},
-                '{Benutzername}'
-            ),
-        ]
-    );
-
-    return (React.createElement(
-        AppBar,
-        {position: 'static'},
-        appBarContent
-    ));
-     */
 }

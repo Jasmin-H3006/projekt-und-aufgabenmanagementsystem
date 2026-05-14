@@ -48,6 +48,16 @@ public class AuthController {
         return result;
     }
 
+    // Beispiel: /api/auth/logout
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/current-user")
     public ResponseEntity<String> currentUser(HttpSession session) {
         String username = (String) session.getAttribute("username");

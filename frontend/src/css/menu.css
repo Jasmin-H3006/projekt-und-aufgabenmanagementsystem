@@ -3,6 +3,11 @@
     align-items: center;
     justify-content: space-between;
     padding: .5rem 2rem .5rem 2rem;
+
+    &.menu-bar-login .menu-title {
+        flex: 1;
+        text-align: center;
+    }
 }
 
 .menu-title {

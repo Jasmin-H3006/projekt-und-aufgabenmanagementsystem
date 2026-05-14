@@ -5,20 +5,20 @@ export function ProjectsTableHeader() {
     return (
         React.createElement(
             TableHead,
-            {className: 'projects-table-head'},
+            {className: 'projects-table-head pl-2'},
             [
                 React.createElement(
                     TableRow,
                     null,
                     [
-                        React.createElement(TableCell, null, 'ID'),
-                        React.createElement(TableCell, null, 'Projektname'),
-                        React.createElement(TableCell, null, 'Kunde'),
-                        React.createElement(TableCell, null, 'Fortschritt'),
-                        React.createElement(TableCell, null, 'Projektleiter'),
-                        React.createElement(TableCell, null, 'Beteiligte Mitarbeiter'),
-                        React.createElement(TableCell, null, 'Frist zur Fertigstellung'),
-                        React.createElement(TableCell, null, 'Projekt ansehen')
+                        React.createElement(TableCell, {key: 'projects-id'}, 'ID'),
+                        React.createElement(TableCell, {key: 'projects-name'}, 'Projektname'),
+                        React.createElement(TableCell, {key: 'projects-customer'}, 'Kunde'),
+                        React.createElement(TableCell, {key: 'projects-progress'}, 'Fortschritt'),
+                        React.createElement(TableCell, {key: 'projects-manager'}, 'Projektleiter'),
+                        React.createElement(TableCell, {key: 'projects-user'}, 'Beteiligte Mitarbeiter'),
+                        React.createElement(TableCell, {key: 'projects-deadline'}, 'Frist zur Fertigstellung'),
+                        React.createElement(TableCell, {key: 'projects-show'}, 'Projekt ansehen')
                     ]
                 ),
             ]

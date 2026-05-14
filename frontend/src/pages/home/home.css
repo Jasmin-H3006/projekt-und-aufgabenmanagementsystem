@@ -1,3 +1,11 @@
+@import "../../css/general.css";
+
 .projects-table-head * {
     font-weight: bolder !important;
+}
+
+.projects-introduction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }

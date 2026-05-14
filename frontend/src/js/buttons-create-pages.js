@@ -9,17 +9,17 @@ export function ButtonsCreatePages() {
             [
                 React.createElement(
                     Button,
-                    {color: 'secondary', variant: 'outlined'},
+                    {key: 'cancel', color: 'secondary', variant: 'outlined'},
                     'Abbrechen & zurück'
                 ),
                 React.createElement(
                     Button,
-                    {color: 'success', variant: 'outlined'},
+                    {key: 'save', color: 'success', variant: 'outlined'},
                     'Speichern & zurück'
                 ),
                 React.createElement(
                     Button,
-                    {color: 'warning', variant: 'outlined'},
+                    {key: 'delete', color: 'warning', variant: 'outlined'},
                     'Löschen & zurück'
                 ),
             ]
