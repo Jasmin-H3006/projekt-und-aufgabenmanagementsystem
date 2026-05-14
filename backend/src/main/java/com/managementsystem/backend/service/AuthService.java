@@ -16,6 +16,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    public boolean adminExists() {
+        Role adminRole = roleRepository.findByName("Admin");
+        return adminRole != null && userRepository.existsByRoleId(adminRole.getId());
+    }
+
     public ResponseEntity<String> registerAdmin(NewUserDTO dto) {
         // Admin-Registration at Log-in Page is not possible if there is already an Admin in the database
 

@@ -56,4 +56,9 @@ public class AuthController {
         }
         return ResponseEntity.ok(username);
     }
+
+    @GetMapping("/admin-exists")
+    public ResponseEntity<Boolean> adminExists() {
+        return ResponseEntity.ok(authService.adminExists());
+    }
 }

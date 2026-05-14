@@ -27,7 +27,7 @@ function RegisterAdmin() {
 
             if (response.ok) {
                 setMessage('Registrierung erfolgreich!');
-                alert('Registrierung erfolgreich! Bitte jetzt anmelden.');
+                alert('Registrierung erfolgreich! Sie können sich nun am System anmelden.');
                 window.location.href="../../../index.html"
             } else if (response.status === 409) {
                 setMessage('Es existiert bereits ein Admin. Bitte an den bisherigen Admin wenden, damit dieser neue hinzufügen kann.');
@@ -59,6 +59,11 @@ function RegisterAdmin() {
                     Button,
                     {key: "btn-admin-register", color: 'primary', variant: 'contained', type: "submit"},
                     'Registrieren'
+                ),
+                React.createElement(
+                    Button,
+                    {key: "btn-back-to-login-page", color: 'primary', variant: 'outlined', href: '../../../index.html'},
+                    'Zur Anmelden-Seite'
                 ),
             ]
         )

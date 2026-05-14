@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer, useState, useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
 import {Button, TextField} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
@@ -39,6 +39,15 @@ function LogInForm() {
         }
     };
 
+    const [noAdminInSystem, setNoAdminInSystem] = useState(false);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/auth/admin-exists')
+            .then(r => r.json())
+            .then(exists => setNoAdminInSystem(!exists))
+            .catch(() => setNoAdminInSystem(false));
+    }, []);
+
     return (
         React.createElement(
             "form",
@@ -61,6 +70,11 @@ function LogInForm() {
                     {key: "btn-user-log-in", color: 'primary', variant: 'contained', type: "submit"},
                     'Anmelden'
                 ),
+                noAdminInSystem ? React.createElement(
+                    Button,
+                    {key: "btn-register-admin-page", color: 'primary', variant: 'outlined', href: './src/pages/registrate-admin/registrate-admin.html'},
+                    'Zur Admin-Registration'
+                ) : null,
             ]
         )
     );
