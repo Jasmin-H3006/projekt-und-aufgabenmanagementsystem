@@ -1,41 +1,103 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ReactDOM from 'react-dom/client';
-import {Toolbar} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../css/theme-provider.js";
+import {Menu} from '../../js/menu.js';
 import {ButtonsCreatePages} from "../../js/buttons-create-pages.js";
-
-function Intro() {
-    return React.createElement(
-        Toolbar,
-        null,
-        [
-            React.createElement('h3', null, "Projekt anlegen/bearbeiten")
-        ]
-    )
-}
+import {TextField, MenuItem} from "@mui/material";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 function CreateEditProject() {
-    return React.createElement(
-        Toolbar,
-        null,
-        [
-            React.createElement('h3', null, "Meine Projekte")
-        ]
-    )
-}
+    const [customers, setCustomers] = useState([]);
+    const [customerId, setCustomerId] = useState("");
 
+    const [customerContactPersons, setCustomerContactPersons] = useState([]);
+    const [customerContactPersonId, setCustomerContactPersonId] = useState("");
+
+    const [projectManagers, setProjectManagers] = useState([]);
+    const [projectManagerId, setProjectManagerId] = useState("");
+
+    const [users, setUsers] = useState([]);
+    const [userId, setUserId] = useState("");
+
+    const [deadline, setDeadline] = useState(dayjs());
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/customers")
+            .then(res => res.json())
+            .then(data => setCustomers(data));
+
+        fetch("http://localhost:8080/api/customerContactPersons")
+            .then(res => res.json())
+            .then(data => setCustomerContactPersons(data));
+
+        fetch("http://localhost:8080/api/users?role=Projektleiter")
+            .then(res => res.json())
+            .then(data => setProjectManagers(data));
+
+        fetch("http://localhost:8080/api/users")
+            .then(res => res.json())
+            .then(data => setUsers(data));
+    }, []);
+
+
+
+    return [
+        React.createElement("form", {className: "create-element-form"}, [
+            React.createElement('h2', null, "Projekt anlegen/bearbeiten"),
+            React.createElement(TextField, {variant: "outlined", label: "Bezeichnung"}, null),
+            React.createElement(TextField,
+                {select: true, value: customerId, variant: "outlined", label: "Kunde", onChange: (e) => setCustomerId(e.target.value),},
+                customers.map(customer =>
+                    React.createElement(MenuItem, { key: customer.id, value: customer.id }, customer.name)
+                )
+            ),
+            React.createElement(TextField,
+                {select: true, value: projectManagerId, variant: "outlined", label: "Projektleiter", onChange: (e) => setProjectManagerId(e.target.value),},
+                projectManagers.map(projectManager =>
+                    React.createElement(MenuItem, { key: projectManager.id, value: projectManager.id }, projectManager.name)
+                )
+            ),
+            React.createElement(
+                TextField,
+                {select: true, value: customerContactPersonId, variant: "outlined", label: "Ansprechpartner", onChange: (e) => setCustomerContactPersonId(e.target.value),},
+                customerContactPersons.map(contactPerson =>
+                    React.createElement(MenuItem, { key: contactPerson.id, value: contactPerson.id }, contactPerson.name)
+                )
+            ),
+            React.createElement(
+                TextField,
+                {select: true, value: userId, variant: "outlined", label: "Beteiligte Mitarbeiter", onChange: (e) => setUserId(e.target.value),},
+                users.map(user =>
+                    React.createElement(MenuItem, { key: user.id, value: user.id }, user.name)
+                )
+            ),
+            React.createElement(LocalizationProvider, {dateAdapter: AdapterDayjs},
+                React.createElement(DatePicker, {
+                    value: deadline,
+                    format: "DD.MM.YYYY",
+                    variant: "outlined",
+                    label: "Frist",
+                    onChange: (newValue) => setDeadline(newValue),
+                }, null)
+            ),
+            React.createElement(TextField, {multiline: "true", rows: "4", variant: "outlined", label: "Beschreibung", className: "full-width description-field"}, null),
+        ])
+    ]
+}
 
 // Komponente in den DOM rendern
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
-// Komponenten als Funktion aufrufen
 root.render(
     React.createElement(
         ThemeProvider,
         { theme: theme },
-        React.createElement(Intro),
+        React.createElement(Menu),
         React.createElement(CreateEditProject),
         React.createElement(ButtonsCreatePages)
     )

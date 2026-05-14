@@ -18,7 +18,6 @@ export function ProjectsTableHeader() {
                         React.createElement(TableCell, null, 'Projektleiter'),
                         React.createElement(TableCell, null, 'Beteiligte Mitarbeiter'),
                         React.createElement(TableCell, null, 'Frist zur Fertigstellung'),
-                        React.createElement(TableCell, null, 'Status'),
                         React.createElement(TableCell, null, 'Projekt ansehen')
                     ]
                 ),

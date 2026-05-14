@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
@@ -31,12 +31,20 @@ function Home() {
         null,
         [
             React.createElement('h3', null, "Meine Projekte"),
-            React.createElement(Button, {color: 'secondary', variant: 'contained'}, "Neues Projekt anlegen")
+            React.createElement(Button, {color: 'secondary', variant: 'contained', href: '../create-edit-project/create-edit-project.html'}, "Neues Projekt anlegen")
         ]
     )
 }
 
 function MyProjectsTable() {
+    const [projects, setProjects] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/projects")
+            .then(res => res.json())
+            .then(data => setProjects(data));
+    }, []);
+
     return React.createElement(
         Table,
         null,
@@ -45,11 +53,18 @@ function MyProjectsTable() {
             React.createElement(
                 TableBody,
                 null,
-                React.createElement(
-                    TableRow,
-                    null,
-                    React.createElement(TableCell, null, "Test"),
-                    React.createElement(TableCell, null, 'Aktion...')
+                projects.map(project =>
+                    React.createElement(
+                        TableRow,
+                        { key: project.id },
+                        React.createElement(TableCell, null, project.id),
+                        React.createElement(TableCell, null, project.title),
+                        React.createElement(TableCell, null, project.customer?.name  ?? "-"),
+                        React.createElement(TableCell, null, 'Fortschritt'),
+                        React.createElement(TableCell, null, project.projectManager?.username  ?? "-"),
+                        React.createElement(TableCell, null, project.users?.username ?? "-"),
+                        React.createElement(TableCell, null, project.deadline ?? "-")
+                    )
                 )
             ),
         ]
@@ -60,7 +75,6 @@ function MyProjectsTable() {
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
-// Komponenten als Funktion aufrufen
 root.render(
     React.createElement(
         ThemeProvider,

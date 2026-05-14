@@ -40,6 +40,11 @@ public class Project {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    // FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_manager_id", nullable = false)
+    private User projectManager;
+
     // Join with User-Table
     @ManyToMany
     @JoinTable(
