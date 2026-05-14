@@ -23,7 +23,7 @@ public class AuthService {
         Role adminRole = roleRepository.findByName("Admin");
 
         if (adminRole != null && userRepository.existsByRoleId(adminRole.getId())) {
-            return ResponseEntity.status(409).body("Es existiert bereits ein Admin. Bitte an den bisherigen Admin wenden, damit dieser neue hinzufügen kann.");
+            return ResponseEntity.status(409).body("An Admin user already exists. Please log in with the existing Admin account or contact your administrator.");
         }
 
         // Create Admin role if it doesn't exist

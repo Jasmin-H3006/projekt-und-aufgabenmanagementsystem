@@ -57,8 +57,7 @@ function RegisterAdmin() {
                 message ? React.createElement('p', {key: "admin-error", className: "full-width"}, message) : null,
                 React.createElement(
                     Button,
-                    {key: "btn-admin-register", color: 'primary', variant: 'contained', type: "submit"
-                    },
+                    {key: "btn-admin-register", color: 'primary', variant: 'contained', type: "submit"},
                     'Registrieren'
                 ),
             ]

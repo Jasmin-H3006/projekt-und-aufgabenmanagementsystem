@@ -16,6 +16,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
+import jakarta.persistence.Column;
 
 @Entity
 @Data // Generiert Getter & Setter
@@ -30,7 +31,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String username;
+
     private String password;
 
     // FK

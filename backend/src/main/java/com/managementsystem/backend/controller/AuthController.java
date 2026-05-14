@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.dto.Dtos.NewUserDTO;
 import com.managementsystem.backend.service.AuthService;
+import com.managementsystem.backend.service.LoginService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,9 +19,15 @@ import com.managementsystem.backend.service.AuthService;
 public class AuthController {
 
      private final AuthService authService;
+     private final LoginService loginService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody NewUserDTO dto) {
         return authService.registerAdmin(dto);
+    }
+
+    @PostMapping("/log-in")
+    public ResponseEntity<String> loginUser(@RequestBody NewUserDTO dto) {
+        return loginService.loginUser(dto);
     }
 }
