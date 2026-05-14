@@ -1,13 +1,15 @@
-.menu-btn {
-    font-weight: bolder !important;
-}
-.menu-title {
+.menu-bar {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 100%;
+    justify-content: space-between;
+    padding: .5rem 2rem .5rem 2rem;
 }
 
-.menu-user {
-    padding-left: 2rem;
+.menu-title {
+    font-size: 80px !important;
+}
+
+.menu-dropdown-icon {
+    min-width: 100px;
+    min-height: 50px;
 }

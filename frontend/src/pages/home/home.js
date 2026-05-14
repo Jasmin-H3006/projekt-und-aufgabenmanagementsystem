@@ -2,26 +2,28 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
-import {Menu} from '../../js/menu.js';
+import {MenuComponent} from '../../js/menuComponent.js';
 import theme from "../../css/theme-provider.js";
 import {ProjectsTableHeader} from "../../js/projects-table.js";
 
 function Intro() {
+
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/auth/current-user", { credentials: "include" })
+            .then(res => res.ok ? res.text() : Promise.reject("Failed to fetch current user"))
+            .then(username => setUsername(username));
+    }, []);
+
     return React.createElement(
         Typography,
         null,
-        [
-            React.createElement(
-                "h2",
-                null,
-                "Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, {Benutzername}!"
-            ),
-            React.createElement(
-                "h2",
-                null,
-                "Willkommen, {Benutzername}!"
-            )
-        ]
+        React.createElement(
+            "h2",
+            {key: 'welcome'},
+            `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
+        )
     )
 }
 
@@ -79,7 +81,7 @@ root.render(
     React.createElement(
         ThemeProvider,
         { theme: theme },
-        React.createElement(Menu),
+        React.createElement(MenuComponent),
         React.createElement(Intro),
         React.createElement(Home),
         React.createElement(MyProjectsTable)

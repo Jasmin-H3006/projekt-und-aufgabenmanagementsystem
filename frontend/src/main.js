@@ -18,10 +18,9 @@ function LogInForm() {
         try {
             const response = await fetch('http://localhost:8080/api/auth/log-in', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(user),
+                credentials: 'include', // Important for session-handling
             });
 
             if (response.ok) {

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import ReactDOM from 'react-dom/client';
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../css/theme-provider.js";
-import {Menu} from '../../js/menu.js';
+import {MenuComponent} from '../../js/menuComponent.js';
 import {ButtonsCreatePages} from "../../js/buttons-create-pages.js";
 import {TextField, MenuItem} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -97,7 +97,7 @@ root.render(
     React.createElement(
         ThemeProvider,
         { theme: theme },
-        React.createElement(Menu),
+        React.createElement(MenuComponent),
         React.createElement(CreateEditProject),
         React.createElement(ButtonsCreatePages)
     )
