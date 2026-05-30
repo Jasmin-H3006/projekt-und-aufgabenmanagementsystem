@@ -1,0 +1,20 @@
+.table-container {
+    margin-left: 3rem;
+    max-width: 1200px;
+
+    &.role-table-container {
+        max-width: 600px;
+    }
+
+    @media (max-width: 1200px) {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        max-width: 100%;
+    }
+}
+
+.table-introduction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

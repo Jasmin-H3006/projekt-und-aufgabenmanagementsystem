@@ -5,11 +5,11 @@ export function ProjectsTableHeader() {
     return (
         React.createElement(
             TableHead,
-            {className: 'projects-table-head pl-2'},
+            {key: 'projects-table-head', className: 'projects-table-head pl-2'},
             [
                 React.createElement(
                     TableRow,
-                    null,
+                    {key: 'projects-table-columns'},
                     [
                         React.createElement(TableCell, {key: 'projects-id'}, 'ID'),
                         React.createElement(TableCell, {key: 'projects-name'}, 'Projektname'),

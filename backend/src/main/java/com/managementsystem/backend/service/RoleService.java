@@ -14,4 +14,13 @@ public class RoleService {
     public Role createRole(Role role) {
         return roleRepository.save(role);
     }
+
+    public java.util.List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    public boolean roleExists(String name) {
+        return roleRepository.existsByName(name);
+    }
+
 }

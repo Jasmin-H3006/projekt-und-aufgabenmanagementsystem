@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../css/theme-provider.js";
 import {MenuComponent} from '../../js/menu-component.js';
-import {ButtonsCreatePages} from "../../js/buttons-create-pages.js";
+import {FormButtons} from "../../js/form-buttons.js";
 import {TextField, MenuItem} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
@@ -22,7 +22,7 @@ function Page() {
         { theme: theme },
         React.createElement(MenuComponent),
         React.createElement(CreateEditProject),
-        React.createElement(ButtonsCreatePages)
+        React.createElement(FormButtons)
     );
 }
 

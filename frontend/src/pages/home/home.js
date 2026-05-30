@@ -46,7 +46,7 @@ function MyProjectsTable() {
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'projects-introduction', className: 'projects-introduction pl-0'},
+            {key: 'projects-introduction', className: 'table-introduction pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Meine Projekte"),
                 React.createElement(Button, {key: 'btn-new-project', className: 'btn-new-project', color: 'primary', variant: 'contained', href: '../create-edit-project/create-edit-project.html'}, "Neues Projekt anlegen")
