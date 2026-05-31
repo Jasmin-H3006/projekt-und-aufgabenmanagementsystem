@@ -19,7 +19,7 @@ public interface Dtos {
     @Builder
     public record NewCustomerDTO(
         @NotEmpty String name,
-        @NotEmpty String website
+        String website
     ) {}
     @Builder
     public record NewCustomerContactPersonDTO(
@@ -39,7 +39,7 @@ public interface Dtos {
     @Builder
     public record NewProjectDTO(
         @NotEmpty String title,
-        @NotNull LocalDate deadline,
+        LocalDate deadline,
         @NotEmpty String description
     ) {}
 }

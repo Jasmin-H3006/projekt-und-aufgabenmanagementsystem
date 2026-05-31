@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:mysql://localhost:3306/mane
+    url: jdbc:mysql://localhost:3306/mane?createDatabaseIfNotExist=true
     username: springuser
     password: springpass
     driver-class-name: com.mysql.cj.jdbc.Driver
