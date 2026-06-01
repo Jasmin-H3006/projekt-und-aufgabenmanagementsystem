@@ -14,7 +14,13 @@ public interface Dtos {
     ) {}
     @Builder
     public record NewRoleDTO(
-        @NotEmpty String name
+        @NotEmpty String name,
+        @NotEmpty Boolean adminAccess,
+        Boolean allProjectsAccess,
+        Boolean createProjectsAccess,
+        Boolean editAvailableProjectsAccess,
+        Boolean createAndEditTasksAccess,
+        Boolean customerPageAccess
     ) {}
     @Builder
     public record NewCustomerDTO(

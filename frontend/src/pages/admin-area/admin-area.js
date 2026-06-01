@@ -68,7 +68,6 @@ function UserOverview() {
                             TableRow,
                             {key: 'user-table-columns'},
                             [
-                                React.createElement(TableCell, {key: 'users-id'}, 'ID'),
                                 React.createElement(TableCell, {key: 'users-username'}, 'Benutzername'),
                                 React.createElement(TableCell, {key: 'users-role'}, 'Rolle'),
                                 React.createElement(TableCell, {key: 'users-edit'}, "Benutzer bearbeiten")
@@ -83,7 +82,6 @@ function UserOverview() {
                         React.createElement(
                             TableRow,
                             { key: user.id },
-                            React.createElement(TableCell, {key: 'user-id'}, user.id),
                             React.createElement(TableCell, {key: 'user-username'}, user.username),
                             React.createElement(TableCell, {key: 'user-role'}, user.username  ?? "-"),
                             React.createElement(
@@ -117,8 +115,8 @@ function RoleOverview() {
             .then(roles => setRoles(roles));
     }, []);
 
-    const editRole = () => {
-        window.location.href="../home/home.html"
+    const editRole = (roleId) => {
+        window.location.href='../create-edit-role/create-edit-role.html?id=' + roleId
     };
 
     const tableIntroduction = (
@@ -145,8 +143,7 @@ function RoleOverview() {
                             TableRow,
                             {key: 'role-table-columns'},
                             [
-                                React.createElement(TableCell, {key: 'roles-id'}, 'ID'),
-                                React.createElement(TableCell, {key: 'roles-name'}, 'Bezeichnung'),
+                                React.createElement(TableCell, {key: 'roles-name'}, 'Rolle'),
                                 React.createElement(TableCell, {key: 'roles-edit'}, "Rolle bearbeiten")
                             ]
                         ),
@@ -159,15 +156,14 @@ function RoleOverview() {
                         React.createElement(
                             TableRow,
                             { key: role.id },
-                            React.createElement(TableCell, {key: 'role-id'}, role.id),
-                            React.createElement(TableCell, {key: 'role-username'}, role.name),
+                            React.createElement(TableCell, {key: 'role-name'}, role.name),
                             React.createElement(
                                 TableCell,
-                                { key: "roles-edit", onClick: editRole },
+                                { key: "role-edit" },
                                 [
                                     React.createElement(
                                         IconButton,
-                                        { key: "edit-role-icon-btn" },
+                                        { key: "edit-role-icon-btn", onClick: () => editRole(role.id) },
                                         React.createElement(EditIcon, { fontSize: "small" })
                                     ),
                                     null,

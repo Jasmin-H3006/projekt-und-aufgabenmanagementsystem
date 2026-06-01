@@ -1,11 +1,7 @@
 import React from "react";
 import {Button, Toolbar} from "@mui/material";
 
-export function FormButtons({onSave, onDelete}) {
-    const handleCancel = () => {
-        window.history.back()
-    };
-
+export function FormButtons({onCancel, onSave, onDelete, createNewElement}) {
     return (
         React.createElement(
             Toolbar,
@@ -13,19 +9,19 @@ export function FormButtons({onSave, onDelete}) {
             [
                 React.createElement(
                     Button,
-                    {key: 'cancel', color: 'primary', variant: 'outlined', onClick: handleCancel},
+                    {key: 'cancel', type: 'button', color: 'primary', variant: 'outlined', onClick: onCancel},
                     'Abbrechen & zurück'
                 ),
                 React.createElement(
                     Button,
-                    {key: 'save', type: 'submit', color: 'primary', variant: 'contained', onSubmit: onSave},
+                    {key: 'save', type: 'button', color: 'primary', variant: 'contained', onClick: onSave},
                     'Speichern & zurück'
                 ),
-                React.createElement(
+                !createNewElement ? React.createElement(
                     Button,
-                    {key: 'delete', type: 'submit', color: 'warning', variant: 'outlined', onSubmit: onDelete},
+                    {key: 'delete', type: 'button', color: 'warning', variant: 'outlined', onClick: onDelete},
                     'Löschen & zurück'
-                ),
+                ) : null,
             ]
         )
     )

@@ -26,4 +26,12 @@ public class Role {
 
     @Column(unique = true)
     private String name;
+
+    @Builder.Default
+    private Boolean adminAccess = false;
+    private Boolean allProjectsAccess = false;
+    private Boolean createProjectsAccess = false;
+    private Boolean editAvailableProjectsAccess = false;
+    private Boolean createAndEditTasksAccess = false;
+    private Boolean customerPageAccess = false;
 }

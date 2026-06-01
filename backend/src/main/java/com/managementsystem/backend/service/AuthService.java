@@ -17,24 +17,30 @@ public class AuthService {
     private final RoleRepository roleRepository;
 
     public boolean adminExists() {
-        Role adminRole = roleRepository.findByName("Admin");
-        return adminRole != null && userRepository.existsByRoleId(adminRole.getId());
+        // Check if there is already an user with a role that has admin access
+        return userRepository.existsByRole_AdminAccessTrue();
     }
 
     public ResponseEntity<String> registerAdmin(NewUserDTO dto) {
         // Admin-Registration at Log-in Page is not possible if there is already an Admin in the database
-
-        // If there is no Admin in the database, the first registered user will be assigned the Admin role
-        Role adminRole = roleRepository.findByName("Admin");
-
-        if (adminRole != null && userRepository.existsByRoleId(adminRole.getId())) {
+        if (adminExists()) {
             return ResponseEntity.status(409).body("An Admin user already exists. Please log in with the existing Admin account or contact your administrator.");
         }
+
+        // If there is no Role named "Admin" in the database, the first registered user will be assigned to an new role "Admin"
+        Role adminRole = roleRepository.findByName("Admin");
+        String adminRoleName = (adminRole == null) ? "Admin" : "Admin-Neu";
 
         // Create Admin role if it doesn't exist
         if (adminRole == null) {
             adminRole = new Role();
-            adminRole.setName("Admin");
+            adminRole.setName(adminRoleName);
+            adminRole.setAdminAccess(true);
+            adminRole.setAllProjectsAccess(true);
+            adminRole.setCreateProjectsAccess(true);
+            adminRole.setEditAvailableProjectsAccess(true);
+            adminRole.setCreateAndEditTasksAccess(true);
+            adminRole.setCustomerPageAccess(true);
             adminRole = roleRepository.save(adminRole);
         }
 

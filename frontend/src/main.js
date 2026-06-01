@@ -40,7 +40,7 @@ function LogInForm() {
         }
     };
 
-    const [noAdminInSystem, setNoAdminInSystem] = useState(false);
+    const [noAdminInSystem, setNoAdminInSystem] = useState(true);
 
     useEffect(() => {
         fetch('http://localhost:8080/api/auth/admin-exists')

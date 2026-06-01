@@ -23,4 +23,12 @@ public class RoleService {
         return roleRepository.existsByName(name);
     }
 
+    public Role getRoleById(Long id) {
+        return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found"));
+    }
+
+    public void deleteRole(Long id) {
+        roleRepository.deleteById(id);
+    }
+
 }
