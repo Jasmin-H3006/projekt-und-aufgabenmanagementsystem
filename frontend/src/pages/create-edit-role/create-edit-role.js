@@ -86,7 +86,7 @@ function CreateEditRole() {
             }
         }
 
-        const responseUrl = editRole ? `http://localhost:8080/api/roles/update/${roleIdInUrl}` : "http://localhost:8080/api/roles/create";
+        const responseUrl = editRole ? `http://localhost:8080/api/roles/${roleIdInUrl}` : "http://localhost:8080/api/roles/create";
         const method = editRole ? "PUT" : "POST";
 
         // Save process
@@ -181,7 +181,7 @@ function CreateEditRole() {
                         onChange: handleChange("allProjectsAccess"),
                         disabled: isAdmin
                     }),
-                    label: "Alle Projekte einsehen"}
+                    label: "Alle Projekte einsehen (wenn deaktiviert nur die zugeordneten)"}
                 ),
                 React.createElement(FormControlLabel, {
                     key: "create-projects-access",

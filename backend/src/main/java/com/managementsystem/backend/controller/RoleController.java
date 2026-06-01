@@ -39,7 +39,7 @@ public class RoleController {
         return "Role created successfully";
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody NewRoleDTO dto) {
         Role existing = service.getRoleById(id);
 
