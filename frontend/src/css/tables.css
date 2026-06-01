@@ -3,7 +3,7 @@
     max-width: 1200px;
 
     &.role-table-container {
-        max-width: 600px;
+        max-width: 90%;
     }
 
     @media (max-width: 1200px) {

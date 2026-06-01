@@ -115,7 +115,7 @@ function CreateEditRole() {
             `Soll die Rolle mit der ID "${roleIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
         );
 
-        if (!confirmed) return; // Stopp action
+        if (!confirmed) return; // Stop action
 
 
         // Delete process

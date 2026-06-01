@@ -112,7 +112,7 @@ function RoleOverview() {
     useEffect(() => {
         fetch("http://localhost:8080/api/roles/get-all")
             .then(res => res.json())
-            .then(roles => setRoles(roles));
+            .then(role => setRoles(role));
     }, []);
 
     const editRole = (roleId) => {
@@ -144,6 +144,12 @@ function RoleOverview() {
                             {key: 'role-table-columns'},
                             [
                                 React.createElement(TableCell, {key: 'roles-name'}, 'Rolle'),
+                                React.createElement(TableCell, {key: 'roles-admin-access'}, 'Admin-Zugang'),
+                                React.createElement(TableCell, {key: 'roles-all-projects-access'}, 'Einsicht in alle Projekte'),
+                                React.createElement(TableCell, {key: 'roles-create-projects-access'}, 'Neue Projekte anlegen'),
+                                React.createElement(TableCell, {key: 'roles-edit-available-projects-access'}, 'Einsehbare Projekte bearbeiten'),
+                                React.createElement(TableCell, {key: 'roles-create-and-edit-tasks-access'}, 'Neue Aufgaben anlegen und bestehende bearbeiten'),
+                                React.createElement(TableCell, {key: 'roles-customer-page-access'}, 'Zugang zur Kunden-Übersicht'),
                                 React.createElement(TableCell, {key: 'roles-edit'}, "Rolle bearbeiten")
                             ]
                         ),
@@ -157,6 +163,12 @@ function RoleOverview() {
                             TableRow,
                             { key: role.id },
                             React.createElement(TableCell, {key: 'role-name'}, role.name),
+                            React.createElement(TableCell, {key: 'role-admin-access'}, role.adminAccess ? "Ja" : "Nein"),
+                            React.createElement(TableCell, {key: 'role-all-projects-access'}, role.allProjectsAccess ? "Ja" : "Nein"),
+                            React.createElement(TableCell, {key: 'role-create-projects-access'}, role.createProjectsAccess ? "Ja" : "Nein"),
+                            React.createElement(TableCell, {key: 'role-edit-available-projects-access'}, role.editAvailableProjectsAccess ? "Ja" : "Nein"),
+                            React.createElement(TableCell, {key: 'role-create-and-edit-tasks-access'}, role.createAndEditTasksAccess ? "Ja" : "Nein"),
+                            React.createElement(TableCell, {key: 'role-customer-page-access'}, role.customerPageAccess ? "Ja" : "Nein"),
                             React.createElement(
                                 TableCell,
                                 { key: "role-edit" },
