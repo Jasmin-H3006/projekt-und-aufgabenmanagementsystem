@@ -14,7 +14,7 @@ import {requireLogin} from "../../js/session-handling.js";
 function Page() {
     const [username, setUsername] = useState("");
     useEffect(() => {
-        requireLogin(setUsername);
+        requireLogin(setUsername, false, false, false, true);
     }, []);
 
     return React.createElement(

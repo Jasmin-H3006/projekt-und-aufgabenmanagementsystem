@@ -4,13 +4,14 @@ import lombok.Builder;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
+import com.managementsystem.backend.model.Role;
 
 public interface Dtos {
     @Builder
     public record NewUserDTO(
         @NotEmpty String username,
-        @NotEmpty String password,
-        @NotEmpty String role
+        String password,
+        @NotEmpty Long roleId
     ) {}
     @Builder
     public record NewRoleDTO(
@@ -47,5 +48,15 @@ public interface Dtos {
         @NotEmpty String title,
         LocalDate deadline,
         @NotEmpty String description
+    ) {}
+    @Builder
+    public record CurrentUserDTO(
+        String username,
+        boolean adminAccess,
+        boolean allProjectsAccess,
+        boolean createProjectsAccess,
+        boolean editAvailableProjectsAccess,
+        boolean createAndEditTasksAccess,
+        boolean customerPageAccess
     ) {}
 }

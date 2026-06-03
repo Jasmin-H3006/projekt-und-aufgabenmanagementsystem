@@ -19,4 +19,16 @@ public class UserService {
     public java.util.List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public boolean userExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }

@@ -3,7 +3,7 @@ import {FormGroup, FormControlLabel, Checkbox}  from "@mui/material";
 function Page() {
     const [username, setUsername] = useState("");
     useEffect(() => {
-        requireLogin(setUsername);
+        requireLogin(setUsername, true);
     }, []);
 
     return React.createElement(
@@ -121,16 +121,14 @@ function CreateEditRole() {
         // Delete process
         const response = await fetch(
             `http://localhost:8080/api/roles/${roleIdInUrl}`,
-            {
-                method: "DELETE"
-            }
+            {method: "DELETE"}
         );
 
         if (response.ok) {
             setMessage('Die Rolle wurde erfolgreich gelöscht!');
             handleBack()
         } else {
-            setMessage('Löschen fehlgeschlagen.');
+            setMessage('Löschen fehlgeschlagen. Es kann sein, dass es noch Benutzer mit dieser Rolle gibt.');
         }
     };
 
@@ -156,7 +154,52 @@ function CreateEditRole() {
         }));
     };
 
+    const handleAllProjectsAccessChange = (e) => {
+        const checked = e.target.checked;
+
+        setRights(prev => ({
+            ...prev,
+            adminAccess: prev.adminAccess, // No change to Admin-Access
+            allProjectsAccess: checked,
+            createProjectsAccess: checked,
+            editAvailableProjectsAccess: checked,
+            createAndEditTasksAccess: checked,
+            customerPageAccess: prev.customerPageAccess
+        }));
+    };
+
+    const handleCreateProjectsAccessChange = (e) => {
+        const checked = e.target.checked;
+
+        setRights(prev => ({
+            ...prev,
+            adminAccess: prev.adminAccess,
+            allProjectsAccess: prev.allProjectsAccess,
+            createProjectsAccess: checked,
+            editAvailableProjectsAccess: checked,
+            createAndEditTasksAccess: checked,
+            customerPageAccess: prev.customerPageAccess
+        }));
+    };
+
+    const handleEditAvailableProjectsAccessChange = (e) => {
+        const checked = e.target.checked;
+
+        setRights(prev => ({
+            ...prev,
+            adminAccess: prev.adminAccess,
+            allProjectsAccess: prev.allProjectsAccess,
+            createProjectsAccess: prev.createProjectsAccess,
+            editAvailableProjectsAccess: checked,
+            createAndEditTasksAccess: checked,
+            customerPageAccess: prev.customerPageAccess
+        }));
+    };
+
     const isAdmin = rights.adminAccess; // To disable other rights when the Admin-Access is enabled
+    const isAllProjectsAccess = rights.allProjectsAccess;
+    const isCreateProjectsAccess = rights.createProjectsAccess;
+    const isEditAvailableProjectsAccess = rights.editAvailableProjectsAccess;
 
     return (
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
@@ -175,20 +218,29 @@ function CreateEditRole() {
                     label: "Admin-Zugriff"}
                 ),
                 React.createElement(FormControlLabel, {
+                    key: "customer-page-access",
+                    control: React.createElement(Checkbox, {
+                        checked: rights.customerPageAccess,
+                        onChange: handleChange("customerPageAccess"),
+                        disabled: isAdmin
+                    }),
+                    label: "Zugang zur Kunden-Übersicht"}
+                ),
+                React.createElement(FormControlLabel, {
                     key: "all-projects-access",
                     control: React.createElement(Checkbox, {
                         checked: rights.allProjectsAccess,
-                        onChange: handleChange("allProjectsAccess"),
+                        onChange: handleAllProjectsAccessChange,
                         disabled: isAdmin
                     }),
-                    label: "Alle Projekte einsehen (wenn deaktiviert nur die zugeordneten)"}
+                    label: "Alle Projekte einsehen und verwalten (wenn deaktiviert nur die zugeordneten)"}
                 ),
                 React.createElement(FormControlLabel, {
                     key: "create-projects-access",
                     control: React.createElement(Checkbox, {
                         checked: rights.createProjectsAccess,
-                        onChange: handleChange("createProjectsAccess"),
-                        disabled: isAdmin
+                        onChange: handleCreateProjectsAccessChange,
+                        disabled: isAdmin || isAllProjectsAccess
                     }),
                     label: "Neue Projekte anlegen"}
                 ),
@@ -196,8 +248,8 @@ function CreateEditRole() {
                     key: "edit-available-projects-access",
                     control: React.createElement(Checkbox, {
                         checked: rights.editAvailableProjectsAccess,
-                        onChange: handleChange("editAvailableProjectsAccess"),
-                        disabled: isAdmin
+                        onChange: handleEditAvailableProjectsAccessChange,
+                        disabled: isAdmin || isAllProjectsAccess || isCreateProjectsAccess
                     }),
                     label: "Einsehbare Projekte bearbeiten"}
                 ),
@@ -206,23 +258,14 @@ function CreateEditRole() {
                     control: React.createElement(Checkbox, {
                         checked: rights.createAndEditTasksAccess,
                         onChange: handleChange("createAndEditTasksAccess"),
-                        disabled: isAdmin
+                        disabled: isAdmin || isAllProjectsAccess || isCreateProjectsAccess || isEditAvailableProjectsAccess
                     }),
                     label: "Neue Aufgaben anlegen und bestehende bearbeiten"}
-                ),
-                React.createElement(FormControlLabel, {
-                    key: "customer-page-access",
-                    control: React.createElement(Checkbox, {
-                        checked: rights.customerPageAccess,
-                        onChange: handleChange("customerPageAccess"),
-                        disabled: isAdmin
-                    }),
-                    label: "Zugang zur Kunden-Übersicht"}
                 )
             ]),
             !noEqualRoleInSystem ? React.createElement('p', {key: "role-already-exists-error", className: "full-width"}, "Diese Rolle existiert bereits.") : null,
             message ? React.createElement('p', {key: "role-error", className: "full-width"}, message) : null,
-            React.createElement(FormButtons, {onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewRole})
+            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewRole})
         ])
     )
 }

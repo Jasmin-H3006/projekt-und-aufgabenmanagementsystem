@@ -33,7 +33,7 @@ function RegisterAdmin() {
             } else if (response.status === 409) {
                 setMessage('Es existiert bereits ein Admin. Bitte an den bisherigen Admin wenden, damit dieser neue hinzufügen kann.');
             } else {
-                setMessage('Registrierung fehlgeschlagen.');
+                setMessage('Registrierung fehlgeschlagen. Ggf. existiert dieser Benutzername bereits.');
             }
         } catch (error) {
             console.error('Error:', error);

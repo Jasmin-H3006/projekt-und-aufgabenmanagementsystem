@@ -17,6 +17,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
+import com.managementsystem.backend.dto.Dtos.CurrentUserDTO;
+import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.model.Role;
+import com.managementsystem.backend.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +30,7 @@ public class AuthController {
 
      private final AuthService authService;
      private final LoginService loginService;
+     private final UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody NewUserDTO dto) {
@@ -59,12 +64,26 @@ public class AuthController {
     }
 
     @GetMapping("/current-user")
-    public ResponseEntity<String> currentUser(HttpSession session) {
+    public ResponseEntity<CurrentUserDTO> currentUser(HttpSession session) {
         String username = (String) session.getAttribute("username");
         if (username == null) {
-            return ResponseEntity.status(401).body("Not logged in");
+            return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(username);
+
+        User user = userRepository.findByUsername(username);
+        Role role = user.getRole();
+
+        CurrentUserDTO dto = new CurrentUserDTO(
+            user.getUsername(),
+            role.getAdminAccess(),
+            role.getAllProjectsAccess(),
+            role.getCreateProjectsAccess(),
+            role.getEditAvailableProjectsAccess(),
+            role.getCreateAndEditTasksAccess(),
+            role.getCustomerPageAccess()
+        );
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/admin-exists")

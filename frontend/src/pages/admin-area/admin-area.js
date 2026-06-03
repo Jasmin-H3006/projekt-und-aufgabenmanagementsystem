@@ -19,7 +19,7 @@ import {requireLogin} from "../../js/session-handling.js";
 function Page() {
     const [username, setUsername] = useState("");
     useEffect(() => {
-        requireLogin(setUsername);
+        requireLogin(setUsername, true);
     }, []);
 
     return React.createElement(
@@ -40,8 +40,8 @@ function UserOverview() {
             .then(users => setUsers(users));
     }, []);
 
-    const editUser = () => {
-        window.location.href="../home/home.html"
+    const editUser = (userId) => {
+        window.location.href='../create-edit-user/create-edit-user.html?id=' + userId
     };
 
     const tableIntroduction = (
@@ -58,7 +58,7 @@ function UserOverview() {
     const table = (
         users.length > 0 ? React.createElement(
             Table,
-            {key: 'user-table-container', className: 'table-container', size: 'small'},
+            {key: 'user-table-container', className: 'table-container user-table-container', size: 'small'},
             [
                 React.createElement(
                     TableHead,
@@ -83,14 +83,14 @@ function UserOverview() {
                             TableRow,
                             { key: user.id },
                             React.createElement(TableCell, {key: 'user-username'}, user.username),
-                            React.createElement(TableCell, {key: 'user-role'}, user.username  ?? "-"),
+                            React.createElement(TableCell, {key: 'user-role'}, user.role.name  ?? "-"),
                             React.createElement(
                                 TableCell,
-                                { key: "users-edit", onClick: editUser },
+                                { key: "user-edit" },
                                 [
                                     React.createElement(
                                         IconButton,
-                                        { key: "edit-user-icon-btn" },
+                                        { key: "edit-user-icon-btn", onClick: () => editUser(user.id) },
                                         React.createElement(EditIcon, { fontSize: "small" })
                                     ),
                                     null,
