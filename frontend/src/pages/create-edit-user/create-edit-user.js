@@ -2,14 +2,16 @@ import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponen
 
 function Page() {
     const [username, setUsername] = useState("");
+    const [user, setUser] = useState("");
     useEffect(() => {
-        requireLogin(setUsername, true);
+        requireLogin(setUsername, true)
+            .then(setUser);
     }, []);
 
     return React.createElement(
         ThemeProvider,
         { theme: theme },
-        React.createElement(MenuComponent),
+        React.createElement(MenuComponent, { user }),
         React.createElement(CreateEditUser)
     );
 }

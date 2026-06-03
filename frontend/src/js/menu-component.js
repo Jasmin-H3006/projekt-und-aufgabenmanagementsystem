@@ -5,7 +5,7 @@ import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 import Logout from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 
-export function MenuComponent() {
+export function MenuComponent({user}) {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -79,7 +79,7 @@ export function MenuComponent() {
                     "Startseite",
                 ]
             ),
-            React.createElement(
+            user.adminAccess ? React.createElement(
                 MenuItem,
                 { key: "admin-area", onClick: goToAdminArea },
                 [
@@ -90,7 +90,7 @@ export function MenuComponent() {
                     ),
                     "Admin-Bereich",
                 ]
-            ),
+            ) : null,
             React.createElement(
                 MenuItem,
                 { key: "logout", onClick: logoutAndGoToLoginPage },

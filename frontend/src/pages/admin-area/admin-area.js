@@ -18,14 +18,16 @@ import {requireLogin} from "../../js/session-handling.js";
 
 function Page() {
     const [username, setUsername] = useState("");
+    const [user, setUser] = useState("");
     useEffect(() => {
-        requireLogin(setUsername, true);
+        requireLogin(setUsername, true)
+            .then(setUser);
     }, []);
 
     return React.createElement(
         ThemeProvider,
         { theme },
-        React.createElement(MenuComponent),
+        React.createElement(MenuComponent, { user }),
         React.createElement(UserOverview),
         React.createElement(RoleOverview)
     );
