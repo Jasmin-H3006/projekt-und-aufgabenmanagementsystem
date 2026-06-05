@@ -73,6 +73,10 @@ function CreateEditRole() {
             customerPageAccess: rights.customerPageAccess
         }
 
+        // Reset Messages after a new click
+        setMessage('');
+        setNoEqualRoleInSystem(true);
+
         const editRole = roleIdInUrl;
 
         if(!editRole) {
@@ -86,6 +90,11 @@ function CreateEditRole() {
                 setNoEqualRoleInSystem(false);
                 return;
             }
+        }
+
+        if(name === "") {
+            setMessage('Die Rollen-Bezeichnung darf nicht leer sein.');
+            return;
         }
 
         const responseUrl = editRole ? `http://localhost:8080/api/roles/${roleIdInUrl}` : "http://localhost:8080/api/roles/create";
@@ -205,7 +214,7 @@ function CreateEditRole() {
 
     return (
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
-            React.createElement('h2', {key: 'headline'}, "Rolle anlegen/bearbeiten"),
+            React.createElement('h2', {key: 'headline'}, roleIdInUrl ? "Bestehende Rolle bearbeiten" : "Neue Rolle anlegen"),
             React.createElement(TextField, {key: 'name', required: true, variant: "outlined", label: "Bezeichnung",  value: name,
                 onChange: (e) => setName(e.target.value)
             }, null),

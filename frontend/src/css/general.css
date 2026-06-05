@@ -9,3 +9,15 @@
 .pt-3 {
     padding-top: 3rem;
 }
+
+.ml-2 {
+    margin-left: 2rem !important;
+}
+
+.mt-3 {
+    margin-top: 3rem !important;
+}
+
+.back-btn {
+    border: 1px solid #843B6B !important; /* Primary color */
+}

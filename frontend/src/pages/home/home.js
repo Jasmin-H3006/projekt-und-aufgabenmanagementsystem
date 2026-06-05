@@ -20,6 +20,7 @@ function Page() {
         { theme },
         React.createElement(MenuComponent, { user }),
         React.createElement(Intro, { username }),
+        React.createElement(ToCustomerPage, { user }),
         React.createElement(MyProjectsTable)
     );
 }
@@ -34,6 +35,16 @@ function Intro({username}) {
             `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
         )
     )
+}
+
+function ToCustomerPage({user}) {
+    return (
+        user.customerPageAccess ? React.createElement(
+            Button,
+            {key: 'btn-to-customer-page', className: 'btn-to-customer-page ml-2 mt-3', color: 'primary', variant: 'outlined', href: '../customer-page/customer-page.html'},
+            "Zur Kunden-Übersicht"
+        ) : null
+    );
 }
 
 function MyProjectsTable() {

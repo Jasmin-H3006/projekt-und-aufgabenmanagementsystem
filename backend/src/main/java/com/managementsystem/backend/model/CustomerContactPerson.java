@@ -27,11 +27,13 @@ public class CustomerContactPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = false)
     private String name;
 
+    @Column(unique = true)
     private String email;
-    private Long telefone;
+
+    private String telefone;
 
     // FK
     @ManyToOne(fetch = FetchType.LAZY)

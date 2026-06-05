@@ -3,13 +3,10 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#3F40A6',
-        },
-        secondary: {
-            main: '#A4C9FF',
+            main: '#843B6B',
         },
         background: {
-            default: '#EBEBEB',
+            default: '#DFC3CE',
         },
         success: {
             main: '#6EC356'
@@ -24,6 +21,7 @@ const theme = createTheme({
             main: '#CD0439'
         }
         /*
+        secondary
         mode
         tonalOffset
         contrastThreshold

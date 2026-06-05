@@ -32,7 +32,8 @@ public interface Dtos {
     public record NewCustomerContactPersonDTO(
         @NotEmpty String name,
         @NotEmpty String email,
-        @NotEmpty Long telefone
+        String telefone,
+        @NotEmpty Long customerId
     ) {}
     @Builder
     public record NewTaskDTO(

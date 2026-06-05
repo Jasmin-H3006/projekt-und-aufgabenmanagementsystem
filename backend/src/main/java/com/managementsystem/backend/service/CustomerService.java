@@ -14,4 +14,20 @@ public class CustomerService {
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    public java.util.List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public boolean customerExists(String name) {
+        return customerRepository.existsByName(name);
+    }
+
+    public Customer getCustomerById(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+    }
+
+    public void deleteCustomer(Long id) {
+        customerRepository.deleteById(id);
+    }
 }

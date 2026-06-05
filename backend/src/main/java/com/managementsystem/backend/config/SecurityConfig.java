@@ -20,6 +20,8 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/users/**").permitAll()
                     .requestMatchers("/api/roles/**").permitAll()
+                    .requestMatchers("/api/customers/**").permitAll()
+                    .requestMatchers("/api/customer/contact-persons/**").permitAll()
                     .anyRequest().authenticated()
             );
 

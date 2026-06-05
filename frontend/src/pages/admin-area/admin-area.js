@@ -85,7 +85,7 @@ function UserOverview() {
                             TableRow,
                             { key: user.id },
                             React.createElement(TableCell, {key: 'user-username'}, user.username),
-                            React.createElement(TableCell, {key: 'user-role'}, user.role.name  ?? "-"),
+                            React.createElement(TableCell, {key: 'user-role'}, user.role.name),
                             React.createElement(
                                 TableCell,
                                 { key: "user-edit" },

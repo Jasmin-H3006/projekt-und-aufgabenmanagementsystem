@@ -63,6 +63,10 @@ function CreateEditUser() {
             roleId
         }
 
+        // Reset Messages after a new click
+        setMessage('');
+        setNoEqualUserInSystem(true)
+
         const editUser = userIdInUrl;
 
         if(!editUser) {
@@ -77,6 +81,15 @@ function CreateEditUser() {
                 setNoEqualUserInSystem(false);
                 return;
             }
+        }
+
+        if(username === "") {
+            setMessage('Der Benutzername darf nicht leer sein.');
+            return;
+        }
+        if(roleId === "") {
+            setMessage('Jedem Nutzer muss eine Rolle zugeordnet werden.');
+            return;
         }
 
         const responseUrl = editUser ? `http://localhost:8080/api/users/${userIdInUrl}` : "http://localhost:8080/api/users/create";
@@ -127,13 +140,13 @@ function CreateEditUser() {
 
     return [
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
-            React.createElement('h2', {key: 'headline'}, "Nutzer anlegen/bearbeiten"),
+            React.createElement('h2', {key: 'headline'}, userIdInUrl ? "Bestehenden Nutzer bearbeiten" : "Neuen Nutzer anlegen"),
             React.createElement(TextField, {
-                key: 'username', variant: "outlined", label: "Benutzername", value: username,
+                key: 'username', required: true, variant: "outlined", label: "Benutzername", value: username,
                 onChange: (e) => setUsername(e.target.value)
             }, null),
             React.createElement(TextField,
-                {key: 'role', select: true, value: roleId, variant: "outlined", label: "Rolle", onChange: (e) => setRoleId(e.target.value),},
+                {key: 'role', select: true, required: true, value: roleId, variant: "outlined", label: "Rolle", onChange: (e) => setRoleId(e.target.value),},
                 roles.map(role =>
                     React.createElement(MenuItem, { key: role.id, value: role.id }, role.name)
                 )
