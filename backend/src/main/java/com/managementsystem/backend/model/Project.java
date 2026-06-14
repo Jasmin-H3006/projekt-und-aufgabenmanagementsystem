@@ -18,6 +18,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
+import com.managementsystem.backend.model.CustomerContactPerson;
 
 @Entity
 @Data // Generiert Getter & Setter
@@ -32,9 +33,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String title;
-
     private LocalDate deadline;
     private String description;
 
@@ -56,4 +55,13 @@ public class Project {
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> users = new HashSet<>();
+
+    // Join with Contact-Person-Table
+    @ManyToMany
+    @JoinTable(
+        name = "project_x_contact_person",
+        joinColumns = @JoinColumn(name = "project_id"),
+        inverseJoinColumns = @JoinColumn(name = "contact_person_id")
+    )
+    private Set<CustomerContactPerson> contactPersons = new HashSet<>();
 }

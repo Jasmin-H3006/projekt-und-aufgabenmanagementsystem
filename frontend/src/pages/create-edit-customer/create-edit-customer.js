@@ -123,7 +123,7 @@ function CreateEditCustomer() {
             setMessage('Der Kunde wurde erfolgreich gelöscht!');
             handleBack()
         } else {
-            setMessage('Löschen fehlgeschlagen.');
+            setMessage('Löschen fehlgeschlagen. Bitte prüfen, ob es noch nicht gelöschte Ansprechpartner von diesem Kunden gibt.');
         }
     };
 

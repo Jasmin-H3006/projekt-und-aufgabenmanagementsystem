@@ -48,7 +48,11 @@ public interface Dtos {
     public record NewProjectDTO(
         @NotEmpty String title,
         LocalDate deadline,
-        @NotEmpty String description
+        @NotEmpty String description,
+        @NotEmpty Long customerId,
+        @NotEmpty Long projectManagerId,
+        java.util.List<Long> userIds,
+        @NotEmpty java.util.List<Long> contactPersonIds
     ) {}
     @Builder
     public record CurrentUserDTO(

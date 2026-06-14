@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography} from "@mui/material";
+import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography, IconButton} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
 import {MenuComponent} from '../../js/menu-component.js';
 import theme from "../../css/theme-provider.js";
 import {ProjectsTableHeader} from "../../js/projects-table.js";
 import {requireLogin} from "../../js/session-handling.js";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -51,10 +52,14 @@ function MyProjectsTable() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/projects")
+        fetch("http://localhost:8080/api/projects/get-all")
             .then(res => res.json())
             .then(projects => setProjects(projects));
     }, []);
+
+    const viewProject = (projectId) => {
+        window.location.href='../project-overview/project-overview.html?projectId=' + projectId
+    }
 
     const tableIntroduction = (
         React.createElement(
@@ -70,7 +75,7 @@ function MyProjectsTable() {
     const table = (
         projects.length > 0 ? React.createElement(
             Table,
-            {key: 'projects-table'},
+            {key: 'projects-table', className: 'table-container projects-table-container', size: 'small'},
             [
                 React.createElement(ProjectsTableHeader),
                 React.createElement(
@@ -87,7 +92,18 @@ function MyProjectsTable() {
                             React.createElement(TableCell, {key: 'project-manager'}, project.projectManager?.username  ?? "-"),
                             React.createElement(TableCell, {key: 'project-user'}, project.users?.username ?? "-"),
                             React.createElement(TableCell, {key: 'project-deadline'}, project.deadline ?? "-"),
-                            React.createElement(Button, {key: 'project-show'}, "-")
+                            React.createElement(
+                                TableCell,
+                                { key: "project-view" },
+                                [
+                                    React.createElement(
+                                        IconButton,
+                                        { key: "view-project", onClick: () => viewProject(project.id) },
+                                        React.createElement(VisibilityIcon, { fontSize: "small" })
+                                    ),
+                                    null,
+                                ]
+                            )
                         )
                     )
                 ),

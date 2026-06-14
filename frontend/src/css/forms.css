@@ -21,6 +21,12 @@ form {
         justify-content: center;
         gap: 2rem;
     }
+
+    .select-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
 }
 
 /* Two Columns */

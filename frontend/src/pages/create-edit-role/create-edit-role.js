@@ -244,7 +244,7 @@ function CreateEditRole() {
                         onChange: handleAllProjectsAccessChange,
                         disabled: isAdmin
                     }),
-                    label: "Alle Projekte einsehen und verwalten (wenn deaktiviert nur die zugeordneten)"}
+                    label: "Alle Projekte einsehen und verwalten (wenn deaktiviert nur die zugewiesenen)"}
                 ),
                 React.createElement(FormControlLabel, {
                     key: "create-projects-access",
@@ -253,7 +253,7 @@ function CreateEditRole() {
                         onChange: handleCreateProjectsAccessChange,
                         disabled: isAdmin || isAllProjectsAccess
                     }),
-                    label: "Neue Projekte anlegen"}
+                    label: "Neue Projekte anlegen (Benötigt, um als Projektleiter zu fungieren)"}
                 ),
                 React.createElement(FormControlLabel, {
                     key: "edit-available-projects-access",
