@@ -58,7 +58,7 @@ function MyProjectsTable() {
     }, []);
 
     const viewProject = (projectId) => {
-        window.location.href='../project-overview/project-overview.html?projectId=' + projectId
+        window.location.href='../project-page/project-page.html?projectId=' + projectId
     }
 
     const tableIntroduction = (

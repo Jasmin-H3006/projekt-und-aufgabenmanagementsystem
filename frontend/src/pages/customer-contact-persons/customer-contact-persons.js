@@ -15,7 +15,7 @@ import {ThemeProvider} from "@mui/material/styles";
 import {MenuComponent} from '../../js/menu-component.js';
 import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import {BackButton} from "../../js/back-button.js";
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -25,26 +25,15 @@ function Page() {
             .then(setUser);
     }, []);
 
+    const backLink = '../customer-page/customer-page.html'
+
     return React.createElement(
         ThemeProvider,
         { theme },
         React.createElement(MenuComponent, { user }),
-        React.createElement(BackButton),
+        React.createElement(BackButton, { pageLink: backLink }),
         React.createElement(CustomerContactPersonsOverview)
     );
-}
-
-function BackButton() {
-
-    const backToCustomerPage = () => {
-        window.location.href='../customer-page/customer-page.html'
-    }
-
-    return React.createElement(
-        IconButton,
-        { key: "back-btn", className: 'back-btn ml-2 mt-3', color: 'primary', onClick: () => backToCustomerPage() },
-        React.createElement(ChevronLeftIcon, { color: "primary", fontSize: "medium" })
-    )
 }
 
 function CustomerContactPersonsOverview() {
