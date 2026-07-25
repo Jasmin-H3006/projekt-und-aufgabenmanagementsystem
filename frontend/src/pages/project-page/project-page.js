@@ -71,21 +71,35 @@ function ProjectOverview() {
             React.createElement('p', {key: 'customer-intro', className: 'project-info intro'}, "Kunde:"),
             React.createElement('p', {key: 'customer', className: 'project-info info'}, customer.name + " ( " + customer.website + " ) "),
         ]),
-        React.createElement('div', {key: 'customer-contact-persons-container'}, [
+        React.createElement('div', {key: 'customer-contact-persons-container', className: 'customer-contact-persons-container'}, [
             React.createElement('p', {key: 'customer-contact-persons-intro', className: 'project-info intro'}, "Ansprechpartner: "),
-            contactPersons.length > 0 ? React.createElement('p', {key: 'customer-contact-persons', className: 'project-info info'},
-                contactPersons.map(contactPerson => contactPerson.name + " ( " + contactPerson.email + (contactPerson.telefone ? ", " + contactPerson.telefone : " test ") + " ) <br>") //.join(", ")
-            ) : React.createElement('p', {key: 'no-customer-contact-persons', className: 'project-info info'}, "Dem Projekt wurden keine Ansprechpartner zugewiesen.")
+            contactPersons.length > 0 ?
+                React.createElement('div', {key: 'customer-contact-persons', className: 'project-info info'},
+                    contactPersons.map(contactPerson =>
+                        React.createElement(
+                            'p',
+                            { key: contactPerson.id },
+                            `${contactPerson.name} (${contactPerson.email}${contactPerson.telefone ? ", " + contactPerson.telefone : ""})`
+                        )
+                    )
+                ) : React.createElement('p', {key: 'no-customer-contact-persons', className: 'project-info info'}, "Dem Projekt wurden keine Ansprechpartner zugewiesen.")
         ]),
         React.createElement('div', {key: 'project-manager-container'}, [
             React.createElement('p', {key: 'project-manager-intro', className: 'project-info intro'}, "Projektleiter:"),
             React.createElement('p', {key: 'project-manager', className: 'project-info info'}, projectManager.username),
         ]),
-        React.createElement('div', {key: 'users-container'}, [
+        React.createElement('div', {key: 'users-container', className: 'users-container'}, [
             React.createElement('p', {key: 'users-intro', className: 'project-info intro'}, "Beteiligte Mitarbeiter: "),
-            users.length > 0 ? React.createElement('p', {key: 'users', className: 'project-info info'},
-                users.map(user => user.name + "<br>") //.join(", ")
-            ) : React.createElement('p', {key: 'no-users', className: 'project-info info'}, "Dem Projekt wurden keine Mitarbeiter zugewiesen.")
+            users.length > 0 ?
+                React.createElement('div', {key: 'users', className: 'project-info info'},
+                    users.map(user =>
+                        React.createElement(
+                            'p',
+                            { key: user.id },
+                            `${user.username}`
+                        )
+                    )
+                ) : React.createElement('p', {key: 'no-users', className: 'project-info info'}, "Dem Projekt wurden keine Mitarbeiter zugewiesen.")
         ]),
         React.createElement('div', {key: 'deadline-container'}, [
             React.createElement('p', {key: 'deadline-intro', className: 'project-info intro'}, "Frist zur Fertigstellung:"),

@@ -9,3 +9,8 @@
         padding-left: .5rem;
     }
 }
+
+.customer-contact-persons-container, .users-container {
+    display: flex;
+    justify-content: flex-start;
+}
