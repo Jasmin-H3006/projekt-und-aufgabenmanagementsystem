@@ -17,95 +17,92 @@ function Page() {
 }
 
 function CreateEditTask() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [telefone, setTelefone] = useState("");
-    const [contactPersons, setContactPersons] = useState([]);
-    const [customerName, setCustomerName] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [projectTitle, setProjectTitle] = useState("");
 
-    const [createNewContactPerson, setCreateNewContactPerson] = useState(false); // First, it's assumed that the user only wants to edit
-    const [noEqualContactPersonInSystem, setNoEqualContactPersonInSystem] = useState(true);
+    const [tasks, setTasks] = useState([]);
+    const [createNewTask, setCreateNewTask] = useState(false); // First, it's assumed that the user only wants to edit
+    const [noEqualTaskInSystem, setNoEqualTaskInSystem] = useState(true);
     const [message, setMessage] = useState('');
 
     const urlParams = new URLSearchParams(window.location.search);
-    const contactPersonIdInUrl = urlParams.get("id");
-    const customerIdInUrl = urlParams.get("projectId");
+    const taskIdInUrl = urlParams.get("id");
+    const projectIdInUrl = urlParams.get("projectId");
 
     useEffect(() => {
         fetch("http://localhost:8080/api/tasks/get-all")
             .then(res => res.json())
-            .then(data => setContactPersons(data));
+            .then(data => setTasks(data));
 
-        if (!customerIdInUrl) return;
+        if (!projectIdInUrl) return;
 
-        fetch(`http://localhost:8080/api/customers/${customerIdInUrl}`)
+        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`)
             .then(r => r.json())
-            .then(customer => setCustomerName(customer.name));
+            .then(project => setProjectTitle(project.title));
 
-        if (!contactPersonIdInUrl) {
-            setCreateNewContactPerson(true);
+        if (!taskIdInUrl) {
+            setCreateNewTask(true);
             return;
         }
 
-        fetch(`http://localhost:8080/api/customer/contact-persons/${contactPersonIdInUrl}`)
+        fetch(`http://localhost:8080/api/project/tasks/${taskIdInUrl}`)
             .then(r => r.json())
-            .then(contactPerson => {
-                setName(contactPerson.name)
-                setEmail(contactPerson.email)
-                setTelefone(contactPerson.telefone)
+            .then(task => {
+                setTitle(task.title)
+                setDescription(task.description)
             });
-    }, [customerIdInUrl, contactPersonIdInUrl]);
+    }, [projectIdInUrl, taskIdInUrl]);
 
-    const handleBack = (customerIdInUrl) => {
-        window.location.href = '../customer-contact-persons/customer-contact-persons.html?customerId=' + customerIdInUrl;
+    const handleBack = (projectIdInUrl) => {
+        window.location.href = '../project-page/project-page.html?projectId=' + projectIdInUrl;
     };
 
     const handleCancel = async (e) => {
         e.preventDefault();
-        handleBack(customerIdInUrl)
+        handleBack(projectIdInUrl)
     }
 
     const handleSave = async (e) => {
         e.preventDefault();
         const payload = {
-            name,
-            email,
-            telefone,
-            customerId: customerIdInUrl
+            title,
+            description,
+            projectId: projectIdInUrl
         }
 
         // Reset Messages after a new click
         setMessage('');
-        setNoEqualContactPersonInSystem(true);
+        setNoEqualTaskInSystem(true);
 
-        const editContactPerson = contactPersonIdInUrl;
+        const editTask = taskIdInUrl;
 
-        if(!editContactPerson) {
-            // Creating a new contact person (not edit an already existing one)
+        if(!editTask) {
+            // Creating a new task (not edit an already existing one)
             const responseCheck = await fetch(
-                'http://localhost:8080/api/customer/contact-persons/contact-person-exists?email=' + encodeURIComponent(email)
+                'http://localhost:8080/api/project/tasks/task-exists?title=' + encodeURIComponent(title)
             );
             if (!responseCheck.ok) return;
             const exists = await responseCheck.json();
 
             if (exists) {
-                setNoEqualContactPersonInSystem(false);
+                setNoEqualTaskInSystem(false);
                 return;
             }
         }
 
-        if(name === "") {
-            setMessage('Der Name vom Ansprechpartner darf nicht leer sein.');
+        if(title === "") {
+            setMessage('Der Titel der Aufgabe darf nicht leer sein.');
             return;
         }
 
-        if(email === "") {
-            setMessage('Die E-Mail vom Ansprechpartner darf nicht leer sein.');
+        if(description === "") {
+            setMessage('Die Beschreibung darf nicht leer sein.');
             return;
         }
 
-        const responseUrl = editContactPerson ? `http://localhost:8080/api/customer/contact-persons/${contactPersonIdInUrl}` : "http://localhost:8080/api/customer/contact-persons/create";
-        const method = editContactPerson ? "PUT" : "POST";
+        const responseUrl = editTask ? `http://localhost:8080/api/project/tasks/${taskIdInUrl}` : "http://localhost:8080/api/project/tasks/create";
+        const method = editTask ? "PUT" : "POST";
 
         // Save process
         const response = await fetch(responseUrl, {
@@ -115,10 +112,10 @@ function CreateEditTask() {
         });
 
         if (response.ok) {
-            setMessage('Der Ansprechpartner wurde erfolgreich angelegt/bearbeitet!');
-            handleBack(customerIdInUrl)
+            setMessage('Die Aufgabe wurde erfolgreich angelegt/bearbeitet!');
+            handleBack(projectIdInUrl)
         } else if (response.status === 409) {
-            setMessage('Es gibt bereits einen Ansprechpartner mit dieser E-Mail.');
+            setMessage('Es gibt bereits eine Aufgabe mit diesem Titel.');
         } else {
             setMessage('Aktion fehlgeschlagen.');
         }
@@ -127,23 +124,23 @@ function CreateEditTask() {
     const handleDelete = async (e) => {
         e.preventDefault();
 
-        if (!contactPersonIdInUrl) return;
+        if (!taskIdInUrl) return;
 
         const confirmed = window.confirm(
-            `Soll der Ansprechpartner mit der ID "${contactPersonIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
+            `Soll die Aufgabe mit der ID "${taskIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
         );
 
         if (!confirmed) return; // Stop action
 
         // Delete process
         const response = await fetch(
-            `http://localhost:8080/api/customer/contact-persons/${contactPersonIdInUrl}`,
+            `http://localhost:8080/api/project/tasks/${taskIdInUrl}`,
             {method: "DELETE"}
         );
 
         if (response.ok) {
-            setMessage('Der Ansprechpartner wurde erfolgreich gelöscht!');
-            handleBack(customerIdInUrl)
+            setMessage('Die Aufgabe wurde erfolgreich gelöscht!');
+            handleBack(projectIdInUrl)
         } else {
             setMessage('Löschen fehlgeschlagen.');
         }
@@ -151,22 +148,15 @@ function CreateEditTask() {
 
     return [
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
-            React.createElement('h2', {key: 'headline'}, contactPersonIdInUrl ? "Bestehenden Ansprechpartner bearbeiten" : "Neuen Ansprechpartner von '" + customerName + "' anlegen"),
+            React.createElement('h2', {key: 'headline'}, taskIdInUrl ? "Bestehende Aufgabe bearbeiten" : "Neue Aufgabe für das Projekt '" + projectTitle + "' anlegen"),
             React.createElement(TextField, {
-                key: 'name', required: true, variant: "outlined", className: "full-width", label: "Name", value: name,
-                onChange: (e) => setName(e.target.value)
+                key: 'title', required: true, variant: "outlined", className: "full-width", label: "Titel", value: title,
+                onChange: (e) => setTitle(e.target.value)
             }, null),
-            React.createElement(TextField, {
-                key: 'email', required: true, variant: "outlined", label: "E-Mail", value: email,
-                onChange: (e) => setEmail(e.target.value)
-            }, null),
-            React.createElement(TextField, {
-                key: 'telefone', variant: "outlined", label: "Telefonnummer", value: telefone,
-                onChange: (e) => setTelefone(e.target.value)
-            }, null),
-            !noEqualContactPersonInSystem ? React.createElement('p', {key: "contact-person-already-exists-error", className: "full-width"}, "Ein Ansprechpartner mit dieser E-Mail existiert bereits.") : null,
-            message ? React.createElement('p', {key: "contact-person-error", className: "full-width"}, message) : null,
-            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleCancel, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewContactPerson})
+            React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}, null),
+            !noEqualTaskInSystem ? React.createElement('p', {key: "task-already-exists-error", className: "full-width"}, "Eine Aufgabe mit diesem Titel existiert bereits.") : null,
+            message ? React.createElement('p', {key: "task-error", className: "full-width"}, message) : null,
+            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleCancel, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewTask})
         ])
     ]
 }

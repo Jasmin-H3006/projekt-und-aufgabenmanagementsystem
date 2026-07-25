@@ -120,7 +120,7 @@ function ProjectTasks() {
         Toolbar,
         {key: 'project-tasks-introduction', className: 'introduction-with-btn pl-0 pt-3'}, [
             React.createElement('h3', {key: 'tasks-introduction-header', className: 'pl-2'}, "Aufgaben"),
-            React.createElement(Button, {key: 'btn-new-task', className: 'btn-new-task', color: 'primary', variant: 'contained', href: '../create-edit-task/create-edit-task.html'}, "Neue Aufgabe anlegen")
+            React.createElement(Button, {key: 'btn-new-task', className: 'btn-new-task', color: 'primary', variant: 'contained', href: '../create-edit-task/create-edit-task.html?projectId=' + projectIdInUrl}, "Neue Aufgabe anlegen")
         ]
     );
 
