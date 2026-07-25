@@ -187,21 +187,7 @@ function CreateEditRole() {
             adminAccess: prev.adminAccess,
             allProjectsAccess: prev.allProjectsAccess,
             createProjectsAccess: checked,
-            editAvailableProjectsAccess: checked,
-            createAndEditTasksAccess: checked,
-            customerPageAccess: prev.customerPageAccess
-        }));
-    };
-
-    const handleEditAvailableProjectsAccessChange = (e) => {
-        const checked = e.target.checked;
-
-        setRights(prev => ({
-            ...prev,
-            adminAccess: prev.adminAccess,
-            allProjectsAccess: prev.allProjectsAccess,
-            createProjectsAccess: prev.createProjectsAccess,
-            editAvailableProjectsAccess: checked,
+            editAvailableProjectsAccess: prev.editAvailableProjectsAccess,
             createAndEditTasksAccess: checked,
             customerPageAccess: prev.customerPageAccess
         }));
@@ -210,7 +196,6 @@ function CreateEditRole() {
     const isAdmin = rights.adminAccess; // To disable other rights when the Admin-Access is enabled
     const isAllProjectsAccess = rights.allProjectsAccess;
     const isCreateProjectsAccess = rights.createProjectsAccess;
-    const isEditAvailableProjectsAccess = rights.editAvailableProjectsAccess;
 
     return (
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
@@ -259,8 +244,8 @@ function CreateEditRole() {
                     key: "edit-available-projects-access",
                     control: React.createElement(Checkbox, {
                         checked: rights.editAvailableProjectsAccess,
-                        onChange: handleEditAvailableProjectsAccessChange,
-                        disabled: isAdmin || isAllProjectsAccess || isCreateProjectsAccess
+                        onChange: handleChange("editAvailableProjectsAccess"),
+                        disabled: isAdmin || isAllProjectsAccess
                     }),
                     label: "Einsehbare Projekte bearbeiten"}
                 ),
@@ -269,7 +254,7 @@ function CreateEditRole() {
                     control: React.createElement(Checkbox, {
                         checked: rights.createAndEditTasksAccess,
                         onChange: handleChange("createAndEditTasksAccess"),
-                        disabled: isAdmin || isAllProjectsAccess || isCreateProjectsAccess || isEditAvailableProjectsAccess
+                        disabled: isAdmin || isAllProjectsAccess || isCreateProjectsAccess
                     }),
                     label: "Neue Aufgaben anlegen und bestehende bearbeiten"}
                 )

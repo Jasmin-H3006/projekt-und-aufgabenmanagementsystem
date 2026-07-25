@@ -7,6 +7,7 @@ import theme from "../../css/theme-provider.js";
 import {ProjectsTableHeader} from "../../js/projects-table.js";
 import {requireLogin} from "../../js/session-handling.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -61,10 +62,14 @@ function MyProjectsTable() {
         window.location.href='../project-page/project-page.html?projectId=' + projectId
     }
 
+    const editProject = (projectId) => {
+        window.location.href='../create-edit-project/create-edit-project.html?projectId=' + projectId
+    };
+
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'projects-introduction', className: 'table-introduction pl-0 pt-3'},
+            {key: 'projects-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Meine Projekte"),
                 React.createElement(Button, {key: 'btn-new-project', className: 'btn-new-project', color: 'primary', variant: 'contained', href: '../create-edit-project/create-edit-project.html'}, "Neues Projekt anlegen")
@@ -90,7 +95,11 @@ function MyProjectsTable() {
                             React.createElement(TableCell, {key: 'project-customer'}, project.customer?.name  ?? "-"),
                             React.createElement(TableCell, {key: 'project-progress'}, 'Fortschritt'),
                             React.createElement(TableCell, {key: 'project-manager'}, project.projectManager?.username  ?? "-"),
-                            React.createElement(TableCell, {key: 'project-user'}, project.users?.username ?? "-"),
+                            React.createElement(TableCell, {key: 'project-user'},
+                                project.users && project.users.length > 0
+                                ? project.users.map(user => user.username).join(", ")
+                                : "-"
+                            ),
                             React.createElement(TableCell, {key: 'project-deadline'}, project.deadline ?? "-"),
                             React.createElement(
                                 TableCell,
@@ -103,7 +112,19 @@ function MyProjectsTable() {
                                     ),
                                     null,
                                 ]
-                            )
+                            ),
+                            React.createElement(
+                                TableCell,
+                                { key: "project-edit" },
+                                [
+                                    React.createElement(
+                                        IconButton,
+                                        { key: "edit-project-icon-btn", onClick: () => editProject(project.id) },
+                                        React.createElement(EditIcon, { fontSize: "small" })
+                                    ),
+                                    null,
+                                ]
+                            ),
                         )
                     )
                 ),

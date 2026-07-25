@@ -1,6 +1,5 @@
 package com.managementsystem.backend.model;
 
-import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -19,9 +18,15 @@ import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
 import com.managementsystem.backend.model.CustomerContactPerson;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data // Generiert Getter & Setter
+
+// @Data bei JPA vermeiden
+@Getter
+@Setter
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

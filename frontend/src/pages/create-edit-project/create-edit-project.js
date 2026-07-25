@@ -29,14 +29,14 @@ function Page() {
 
 function CreateEditProject() {
     const [customers, setCustomers] = useState([]);
-    const [customerId, setCustomerId] = useState("");
-    const [customerContactPersons, setCustomerContactPersons] = useState([]);
-    const [customerContactPersonIds, setCustomerContactPersonIds] = useState([]);
+    const [customerId, setCustomerId] = useState(null);
+    const [contactPersons, setContactPersons] = useState([]);
+    const [contactPersonIds, setContactPersonIds] = useState([]);
     const [projectManagers, setProjectManagers] = useState([]);
-    const [projectManagerId, setProjectManagerId] = useState("");
+    const [projectManagerId, setProjectManagerId] = useState(null);
     const [users, setUsers] = useState([]);
     const [userIds, setUserIds] = useState([]);
-    const [deadline, setDeadline] = useState(dayjs());
+    const [deadline, setDeadline] = useState(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
@@ -47,7 +47,7 @@ function CreateEditProject() {
     const [message, setMessage] = useState('');
 
     const urlParams = new URLSearchParams(window.location.search);
-    const projectIdInUrl = urlParams.get("id");
+    const projectIdInUrl = urlParams.get("projectId");
 
     useEffect(() => {
         fetch("http://localhost:8080/api/projects/get-all")
@@ -58,23 +58,27 @@ function CreateEditProject() {
             .then(res => res.json())
             .then(customers => setCustomers(customers));
 
-        if (customerId) {
-            fetch(`http://localhost:8080/api/customer/contact-persons/customer/${customerId}`)
-                .then(res => res.json())
-                .then(customerContactPersons => setCustomerContactPersons(customerContactPersons));
-        } else {
-            fetch("http://localhost:8080/api/customer/contact-persons/get-all")
-                .then(res => res.json())
-                .then(customerContactPersons => setCustomerContactPersons(customerContactPersons));
-        }
-
         fetch("http://localhost:8080/api/users/get-all")
             .then(res => res.json())
             .then(users => {
                 setUsers(users)
                 setProjectManagers(users.filter(user => user.role.createProjectsAccess));
             });
+    }, []);
 
+    useEffect(() => {
+        if (customerId) {
+            fetch(`http://localhost:8080/api/customer/contact-persons/customer/${customerId}`)
+                .then(res => res.json())
+                .then(contactPersons => setContactPersons(contactPersons));
+        } else {
+            fetch("http://localhost:8080/api/customer/contact-persons/get-all")
+                .then(res => res.json())
+                .then(contactPersons => setContactPersons(contactPersons));
+        }
+    }, [customerId]);
+
+    useEffect(() => {
         if (!projectIdInUrl) {
             setCreateNewProject(true);
             return;
@@ -84,12 +88,23 @@ function CreateEditProject() {
             .then(r => r.json())
             .then(project => {
                 setTitle(project.title);
+                setCustomerId(Number(project.customer.id));
+                setProjectManagerId(Number(project.projectManager.id));
+                setContactPersonIds(project.contactPersons ? project.contactPersons.map(cp => Number(cp.id)) : []);
+                setUserIds(project.users ? project.users.map(u => Number(u.id)) : []);
+                setDeadline(project.deadline ? dayjs(project.deadline) : null);
                 setDescription(project.description);
-                setDeadline(project.deadline);
             });
+    }, [projectIdInUrl]);
 
-    }, [users, customerId, projectIdInUrl]);
-
+    // Reset contactPersons when changing customer
+    useEffect(() => {
+        setContactPersonIds(prev =>
+            prev.filter(id =>
+                contactPersons.some(cp => Number(cp.id) === Number(id))
+            )
+        );
+    }, [contactPersons]);
 
     const handleBack = () => {
         window.location.href = "../home/home.html";
@@ -101,10 +116,10 @@ function CreateEditProject() {
             title,
             description,
             deadline: deadline ? deadline.format('YYYY-MM-DD') : null,
-            customerId: customerId,
-            projectManagerId: projectManagerId,
-            userIds: userIds ? userIds.map(Number) : null,
-            customerContactPersonIds: customerContactPersonIds ? customerContactPersonIds.map(Number) : null
+            customerId: Number(customerId),
+            projectManagerId: Number(projectManagerId),
+            userIds: userIds.length > 0 ? userIds.map(Number) : null,
+            contactPersonIds: contactPersonIds.length > 0 ? contactPersonIds.map(Number) : null
         }
 
         // Reset Messages after a new click
@@ -117,16 +132,16 @@ function CreateEditProject() {
             setMessage('Die Bezeichnung darf nicht leer sein.');
             return;
         }
-        if(customerId === "") {
+        if(customerId === null) {
             setMessage('Bitte einen Kunden auswählen.');
             return;
         }
-        if(projectManagerId === "") {
+        if(projectManagerId === null) {
             setMessage('Bitte einen Projektleiter auswählen.');
             return;
         }
-        if(customerContactPersonIds.length === 0) {
-            setMessage('Bitte einen Ansprechpartner vom Kunden auswählen.');
+        if(contactPersonIds.length === 0) {
+            setMessage('Bitte mindestens einen Ansprechpartner auswählen.');
             return;
         }
         if(description === "") {
@@ -137,12 +152,12 @@ function CreateEditProject() {
         if(!editProject) {
             // Creating a new project (not edit an already existing one)
             const responseCheck = await fetch(
-                'http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(title) + '&customerId=' + encodeURIComponent(customerId) + '&deadline=' + encodeURIComponent(payload.deadline)
+                'http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(payload.title) + '&customerId=' + encodeURIComponent(payload.customerId) + '&deadline=' + encodeURIComponent(payload.deadline)
             );
             if (!responseCheck.ok) return;
-            const exists = await responseCheck.json();
 
-            if (exists) {
+            // If exists
+            if (await responseCheck.json()) {
                 setNoEqualProjectInSystem(false);
                 return;
             }
@@ -198,19 +213,19 @@ function CreateEditProject() {
             React.createElement('h2', {key: 'headline'}, projectIdInUrl ? "Bestehendes Projekt bearbeiten" : "Neues Projekt anlegen"),
             React.createElement(TextField, {key: 'title', required: true, variant: "outlined", value: title, label: "Bezeichnung", onChange: (e) => setTitle(e.target.value)}, null),
             React.createElement(TextField,
-                {key: 'customer', required: true, select: true, value: customerId, variant: "outlined", label: "Kunde", onChange: (e) => setCustomerId(e.target.value),},
+                {key: 'customer', required: true, select: true, value: customerId ?? "", variant: "outlined", label: "Kunde", onChange: (e) => setCustomerId(Number(e.target.value)),},
                 customers.map(customer =>
                     React.createElement(MenuItem, { key: customer.id, value: customer.id }, customer.name)
                 )
             ),
             React.createElement(TextField,
-                {key: 'project-manager', required: true, select: true, value: projectManagerId, variant: "outlined", label: "Projektleiter",
+                {key: 'project-manager', required: true, select: true, value: projectManagerId ?? "", variant: "outlined", label: "Projektleiter",
                     onChange: (e) => {
-                        const selectedProjectManagerId = e.target.value
+                        const selectedProjectManagerId = Number(e.target.value);
                         setProjectManagerId(selectedProjectManagerId)
                         setUserIds(prev =>
                             prev.filter(
-                                id => Number(id) !== Number(selectedProjectManagerId)
+                                id => Number(id) !== selectedProjectManagerId
                             )
                         )
                     },
@@ -219,32 +234,24 @@ function CreateEditProject() {
                     React.createElement(MenuItem, { key: projectManager.id, value: projectManager.id }, projectManager.username)
                 )
             ),
-            /*React.createElement(
-                TextField,
-                {key: 'contact-person', required: true, select: true, value: customerContactPersonIds, variant: "outlined", label: "Ansprechpartner", onChange: (e) => setCustomerContactPersonIds(e.target.value),},
-                customerContactPersons.map(contactPerson =>
-                    React.createElement(MenuItem, { key: contactPerson.id, value: contactPerson.id }, contactPerson.name + ' (' + contactPerson.email + ')')
-                )
-            ),
-
-             */
             React.createElement(FormControl, {key: "contact-person-select-field"},
                 React.createElement(InputLabel,{key: "contact-person-select-label", id: "contact-person-select-label"}, "Ansprechpartner"),
                 React.createElement(
                     Select,
                     {
-                        key: "contact-person-select", multiple: true, required: true, value: customerContactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
-                        onChange: (e) => setCustomerContactPersonIds(e.target.value),
+                        key: "contact-person-select", multiple: true, required: true, value: contactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
+                        onChange: (e) =>
+                            setContactPersonIds(Array.isArray(e.target.value) ? e.target.value.map(Number) : []),
                         renderValue: selected => React.createElement(Box,
                             {key: 'contact-person-select-box', className: 'select-box'},
                             selected.map(id => {
                                 const numericId = Number(id);
-                                const ccp = customerContactPersons.find(customerContactPerson => Number(customerContactPerson.id) === numericId);
+                                const ccp = contactPersons.find(contactPerson => Number(contactPerson.id) === numericId);
                                 return React.createElement(Chip, {key: id, label: ccp ? ccp.name : null})
                             })
                         )
                     },
-                    customerContactPersons.map(contactPerson =>
+                    contactPersons.map(contactPerson =>
                         React.createElement(MenuItem, { key: contactPerson.id, value: contactPerson.id }, contactPerson.name + ' (' + contactPerson.email + ')')
                     )
                 ),
@@ -255,7 +262,7 @@ function CreateEditProject() {
                     Select,
                     {
                         key: "user-select", multiple: true, value: userIds, variant: "outlined", labelId: "user-select-label", label: "Beteiligte Mitarbeiter",
-                        onChange: (e) => setUserIds(e.target.value),
+                        onChange: (e) => setUserIds(Array.isArray(e.target.value) ? e.target.value.map(Number) : []),
                         renderValue: selected => React.createElement(Box,
                             {key: 'user-select-box', className: 'select-box'},
                             selected.map(id => {

@@ -1,6 +1,5 @@
 package com.managementsystem.backend.model;
 
-import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,14 +12,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+
+// @Data bei JPA vermeiden
+@Getter
+@Setter
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "customer-contact-person")
-
 
 public class CustomerContactPerson {
     @Id

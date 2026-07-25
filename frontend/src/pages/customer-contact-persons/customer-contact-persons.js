@@ -62,7 +62,7 @@ function CustomerContactPersonsOverview() {
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'contact-persons-introduction', className: 'table-introduction pl-0 pt-3'},
+            {key: 'contact-persons-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Ansprechpartner des Kunden '" + name + "'"),
                 React.createElement(Button, {key: 'btn-new-contact-person', className: 'btn-new-contact-person', color: 'primary', variant: 'contained', href: '../create-edit-contact-person/create-edit-contact-person.html?customerId=' + customerIdInUrl}, "Neuen Ansprechpartner anlegen")

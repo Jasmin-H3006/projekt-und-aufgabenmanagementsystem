@@ -1,6 +1,5 @@
 package com.managementsystem.backend.model;
 
-import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -16,9 +15,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+
+// @Data bei JPA vermeiden
+@Getter
+@Setter
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,6 +1,5 @@
 package com.managementsystem.backend.model;
 
-import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,9 +16,16 @@ import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
 import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data // Generiert Getter & Setter
+
+// Ersatz für @Data, da es bei Entity-Beziehungen zu rekursiven Referenzen und Serialisierungsproblemen führen kann
+@Getter
+@Setter
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,5 +58,6 @@ public class User {
 
     // Join with Project-Table
     @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 }

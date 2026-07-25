@@ -1,0 +1,11 @@
+.project-info {
+    display: inline-block;
+
+    &.intro {
+        font-weight: bolder;
+    }
+
+    &.info {
+        padding-left: .5rem;
+    }
+}

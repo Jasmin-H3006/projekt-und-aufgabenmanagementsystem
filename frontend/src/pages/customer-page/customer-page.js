@@ -57,7 +57,7 @@ function CustomerOverview() {
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'customers-introduction', className: 'table-introduction pl-0 pt-3'},
+            {key: 'customers-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Kunden"),
                 React.createElement(Button, {key: 'btn-new-customer', className: 'btn-new-customer', color: 'primary', variant: 'contained', href: '../create-edit-customer/create-edit-customer.html'}, "Neuen Kunden anlegen")

@@ -18,7 +18,8 @@ export function ProjectsTableHeader() {
                         React.createElement(TableCell, {key: 'projects-manager'}, 'Projektleiter'),
                         React.createElement(TableCell, {key: 'projects-user'}, 'Beteiligte Mitarbeiter'),
                         React.createElement(TableCell, {key: 'projects-deadline'}, 'Frist zur Fertigstellung'),
-                        React.createElement(TableCell, {key: 'projects-show'}, 'Projekt ansehen')
+                        React.createElement(TableCell, {key: 'projects-show'}, 'Projekt ansehen'),
+                        React.createElement(TableCell, {key: 'projects-edit'}, "Projekt bearbeiten")
                     ]
                 ),
             ]

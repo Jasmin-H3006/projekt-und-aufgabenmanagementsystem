@@ -49,7 +49,7 @@ function UserOverview() {
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'users-introduction', className: 'table-introduction pl-0 pt-3'},
+            {key: 'users-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Benutzer"),
                 React.createElement(Button, {key: 'btn-new-user', className: 'btn-new-user', color: 'primary', variant: 'contained', href: '../create-edit-user/create-edit-user.html'}, "Neuen Benutzer anlegen")
@@ -124,7 +124,7 @@ function RoleOverview() {
     const tableIntroduction = (
         React.createElement(
             Toolbar,
-            {key: 'roles-introduction', className: 'table-introduction pl-0 pt-3'},
+            {key: 'roles-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Rollen"),
                 React.createElement(Button, {key: 'btn-new-role', className: 'btn-new-role', color: 'primary', variant: 'contained', href: '../create-edit-role/create-edit-role.html'}, "Neue Rolle anlegen")
