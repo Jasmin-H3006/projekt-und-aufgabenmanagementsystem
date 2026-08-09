@@ -1,6 +1,5 @@
-import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
+import {React, useEffect, useState, ReactDOM, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
 import { HexColorPicker } from "react-colorful";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
 function Page() {
     const [username, setUsername] = useState("");
@@ -16,8 +15,6 @@ function Page() {
 function CreateEditTaskState() {
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
-
-    const [colorWheelColor, setColorWheelColor] = useState("#aabbcc");
 
     const [noEqualTaskStateInSystem, setNoEqualTaskStateInSystem] = useState(true);
     const [message, setMessage] = useState('');
@@ -135,11 +132,11 @@ function CreateEditTaskState() {
                 onChange: (e) => setColor(e.target.value)
             }, null),
             React.createElement("div", {key: 'color-wheel-container'},[
-                React.createElement("strong", {key: 'color-wheel-headline'}, `Gewählte Farbe: ${colorWheelColor}`),
+                React.createElement("strong", {key: 'color-wheel-headline'}, `Gewählte Farbe: ${color}`),
 
                 React.createElement("div", {key: 'color-wheel', className: 'color-wheel pt-1'}, [
-                    React.createElement(HexColorPicker, {key: 'color-wheel-picker', className: 'color-wheel-picker', color: colorWheelColor, onChange: setColorWheelColor}, `Gewählte Farbe: ${colorWheelColor}`),
-                    React.createElement("div", {key: "color-wheel-preview", style: {backgroundColor: colorWheelColor}, className: 'color-wheel-preview'})
+                    React.createElement(HexColorPicker, {key: 'color-wheel-picker', className: 'color-wheel-picker', color: color, onChange: setColor}),
+                    React.createElement("div", {key: "color-wheel-preview", style: {backgroundColor: color}, className: 'color-wheel-preview'})
                 ])
             ]),
             !noEqualTaskStateInSystem ? React.createElement('p', {key: "task-state-already-exists-error", className: "full-width"}, "Dieser Status existiert bereits.") : null,
