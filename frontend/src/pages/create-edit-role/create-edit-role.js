@@ -1,5 +1,7 @@
 import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
-import {FormGroup, FormControlLabel, Checkbox}  from "@mui/material";
+import {FormGroup, FormControlLabel, Checkbox, Box} from "@mui/material";
+import {FooterComponent} from "../../js/footer-component.js";
+import {pageBuilder} from "../../js/page-builder.js";
 function Page() {
     const [username, setUsername] = useState("");
     const [user, setUser] = useState("");
@@ -8,12 +10,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return React.createElement(
-        ThemeProvider,
-        { theme: theme },
-        React.createElement(MenuComponent, { user }),
-        React.createElement(CreateEditRole)
-    );
+    return pageBuilder(user, [React.createElement(CreateEditRole)])
 }
 
 function CreateEditRole() {

@@ -10,6 +10,8 @@ import {MenuComponent} from '../../js/menu-component.js';
 import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
+import {FooterComponent} from "../../js/footer-component.js";
+import {pageBuilder} from "../../js/page-builder.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const projectIdInUrl = urlParams.get("projectId");
@@ -25,14 +27,7 @@ function Page() {
 
     const backLink = '../home/home.html';
 
-    return React.createElement(
-        ThemeProvider,
-        { theme },
-        React.createElement(MenuComponent, { user }),
-        React.createElement(BackButton, { pageLink: backLink }),
-        React.createElement(ProjectOverview),
-        React.createElement(ProjectTasks)
-    );
+    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(ProjectOverview), React.createElement(ProjectTasks)])
 }
 
 function ProjectOverview() {

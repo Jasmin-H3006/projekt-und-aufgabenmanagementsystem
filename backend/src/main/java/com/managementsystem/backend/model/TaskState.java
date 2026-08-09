@@ -28,4 +28,6 @@ public class TaskState {
 
     @Column(unique = true)
     private String name;
+
+    private String color;
 }

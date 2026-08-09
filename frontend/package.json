@@ -6,19 +6,20 @@
     "dev": "vite"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@fontsource/roboto": "^5.2.10",
-    "@mui/icons-material": "^9.0.1",
-    "@mui/material": "^9.0.1",
-    "@mui/x-date-pickers": "^9.1.0",
-    "dayjs": "^1.11.20"
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@fontsource/roboto": "5.2.10",
+    "@mui/icons-material": "9.0.1",
+    "@mui/material": "9.0.1",
+    "@mui/x-date-pickers": "9.1.0",
+    "dayjs": "1.11.20",
+    "react-colorful": "5.8.0"
   },
   "devDependencies": {
-    "vite": "^8.0.10"
+    "vite": "8.0.10"
   }
 }

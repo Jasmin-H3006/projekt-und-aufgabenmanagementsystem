@@ -4,6 +4,7 @@ import {Button, TextField} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "../../css/theme-provider.js";
 import {MenuComponentLogin} from "../../js/menu-component-login.js";
+import {FooterComponent} from "../../js/footer-component.js";
 
 function RegisterAdmin() {
     // Registration is only one time (if there is no admin) possible to configure the system and create employees
@@ -78,8 +79,9 @@ const root = ReactDOM.createRoot(container);
 root.render(
     React.createElement(
         ThemeProvider,
-        { theme: theme },
+        { theme },[
         React.createElement(MenuComponentLogin),
-        React.createElement(RegisterAdmin)
+        React.createElement(RegisterAdmin),
+        React.createElement(FooterComponent)]
     )
 );

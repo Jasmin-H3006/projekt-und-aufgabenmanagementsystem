@@ -17,6 +17,8 @@ import {MenuComponent} from '../../js/menu-component.js';
 import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
+import {FooterComponent} from "../../js/footer-component.js";
+import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -28,13 +30,7 @@ function Page() {
 
     const backLink = '../home/home.html';
 
-    return React.createElement(
-        ThemeProvider,
-        { theme },
-        React.createElement(MenuComponent, { user }),
-        React.createElement(BackButton,{ pageLink: backLink }),
-        React.createElement(CustomerOverview)
-    );
+    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(CustomerOverview)])
 }
 
 function CustomerOverview() {

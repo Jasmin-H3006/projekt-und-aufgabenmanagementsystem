@@ -43,7 +43,8 @@ public interface Dtos {
     ) {}
     @Builder
     public record NewTaskStateDTO(
-        @NotEmpty String name
+        @NotEmpty String name,
+        @NotEmpty String color
     ) {}
     @Builder
     public record NewProjectDTO(

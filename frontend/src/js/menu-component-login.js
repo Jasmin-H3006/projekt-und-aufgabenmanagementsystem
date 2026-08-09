@@ -2,7 +2,6 @@ import React from "react";
 import {AppBar, Typography} from "@mui/material";
 
 export function MenuComponentLogin() {
-
     return React.createElement(
         AppBar,
         {

@@ -10,6 +10,10 @@
     padding-top: 3rem;
 }
 
+.pt-1 {
+    padding-top: 1rem;
+}
+
 .ml-2 {
     margin-left: 2rem !important;
 }
@@ -19,5 +23,5 @@
 }
 
 .back-btn {
-    border: 1px solid #843B6B !important; /* Primary color */
+    border: 1px solid var(--primary) !important;
 }

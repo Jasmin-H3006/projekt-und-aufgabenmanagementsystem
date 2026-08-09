@@ -2,7 +2,7 @@
     margin-left: 3rem;
     max-width: 90%;
 
-    &.user-table-container {
+    &.user-table-container, &.task-state-table-container {
         max-width: 50%;
     }
 

@@ -14,4 +14,20 @@ public class TaskStateService {
     public TaskState createTaskState(TaskState taskState) {
         return taskStateRepository.save(taskState);
     }
+
+    public java.util.List<TaskState> getAllTaskStates() {
+        return taskStateRepository.findAll();
+    }
+
+    public boolean taskStateExists(String name) {
+        return taskStateRepository.existsByName(name);
+    }
+
+    public TaskState getTaskStateById(Long id) {
+        return taskStateRepository.findById(id).orElseThrow(() -> new RuntimeException("Task state not found"));
+    }
+
+    public void deleteTaskState(Long id) {
+        taskStateRepository.deleteById(id);
+    }
 }

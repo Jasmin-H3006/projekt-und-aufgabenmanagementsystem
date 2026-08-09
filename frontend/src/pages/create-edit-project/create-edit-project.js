@@ -10,6 +10,8 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {requireLogin} from "../../js/session-handling.js";
+import {FooterComponent} from "../../js/footer-component.js";
+import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -19,12 +21,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return React.createElement(
-        ThemeProvider,
-        { theme: theme },
-        React.createElement(MenuComponent, { user }),
-        React.createElement(CreateEditProject)
-    );
+    return pageBuilder(user, [React.createElement(CreateEditProject)])
 }
 
 function CreateEditProject() {

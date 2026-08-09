@@ -8,13 +8,15 @@ import {
     TableCell,
     Toolbar,
     TableHead,
-    IconButton
+    IconButton, Box
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import {ThemeProvider} from "@mui/material/styles";
 import {MenuComponent} from '../../js/menu-component.js';
 import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
+import {FooterComponent} from "../../js/footer-component.js";
+import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -24,13 +26,13 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return React.createElement(
-        ThemeProvider,
-        { theme },
-        React.createElement(MenuComponent, { user }),
-        React.createElement(UserOverview),
-        React.createElement(RoleOverview)
-    );
+    return pageBuilder(user,
+        [
+            React.createElement(UserOverview),
+            React.createElement(RoleOverview),
+            React.createElement(TaskStatesOverview)
+        ]
+    )
 }
 
 function UserOverview() {
@@ -51,7 +53,7 @@ function UserOverview() {
             Toolbar,
             {key: 'users-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
-                React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Benutzer"),
+                React.createElement('h3', {key: 'introduction-header-users', className: 'pl-2'}, "Benutzer"),
                 React.createElement(Button, {key: 'btn-new-user', className: 'btn-new-user', color: 'primary', variant: 'contained', href: '../create-edit-user/create-edit-user.html'}, "Neuen Benutzer anlegen")
             ]
         )
@@ -126,7 +128,7 @@ function RoleOverview() {
             Toolbar,
             {key: 'roles-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
-                React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Rollen"),
+                React.createElement('h3', {key: 'introduction-header-roles', className: 'pl-2'}, "Rollen"),
                 React.createElement(Button, {key: 'btn-new-role', className: 'btn-new-role', color: 'primary', variant: 'contained', href: '../create-edit-role/create-edit-role.html'}, "Neue Rolle anlegen")
             ]
         )
@@ -190,6 +192,80 @@ function RoleOverview() {
         ) : React.createElement("p", {key: 'hint-no-roles', className: 'pl-2'}, "Es wurden noch keine Rollen definiert.")
     );
 
+    return [tableIntroduction, table];
+}
+
+function TaskStatesOverview() {
+    const [taskStates, setTaskStates] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/task-states/get-all")
+            .then(res => res.json())
+            .then(taskStates => setTaskStates(taskStates));
+    }, []);
+
+    const editTaskState = (taskStateId) => {
+        window.location.href='../create-edit-task-state/create-edit-task-state.html?id=' + taskStateId
+    };
+
+    const tableIntroduction = (
+        React.createElement(
+            Toolbar,
+            {key: 'task-states-introduction', className: 'introduction-with-btn pl-0 pt-3'},
+            [
+                React.createElement('h3', {key: 'introduction-header-task-states', className: 'pl-2'}, "Status von Aufgaben"),
+                React.createElement(Button, {key: 'btn-new-task-state', className: 'btn-new-task-state', color: 'primary', variant: 'contained', href: '../create-edit-task-state/create-edit-task-state.html'}, "Neuen Status anlegen")
+            ]
+        )
+    );
+
+    const table = (
+        taskStates.length > 0 ? React.createElement(
+            Table,
+            {key: 'task-state-table-container', className: 'table-container task-state-table-container', size: 'small'},
+            [
+                React.createElement(
+                    TableHead,
+                    {key: 'task-state-table-head', className: 'task-state-table-head pl-2'},
+                    [
+                        React.createElement(
+                            TableRow,
+                            {key: 'task-state-table-columns'},
+                            [
+                                React.createElement(TableCell, {key: 'task-states-name'}, 'Status'),
+                                React.createElement(TableCell, {key: 'task-states-color'}, 'Farbe'),
+                                React.createElement(TableCell, {key: 'task-states-edit'}, "Status bearbeiten")
+                            ]
+                        ),
+                    ]
+                ),
+                React.createElement(
+                    TableBody,
+                    {key: 'task-state-table-body'},
+                    taskStates.map(taskState =>
+                        React.createElement(
+                            TableRow,
+                            { key: taskState.id },
+                            React.createElement(TableCell, {key: 'task-state-name'}, taskState.name),
+                            React.createElement(TableCell, {key: 'task-state-color'}, taskState.color),
+                            React.createElement(
+                                TableCell,
+                                { key: "task-state-edit" },
+                                [
+                                    React.createElement(
+                                        IconButton,
+                                        { key: "edit-task-state-icon-btn", onClick: () => editTaskState(taskState.id) },
+                                        React.createElement(EditIcon, { fontSize: "small" })
+                                    ),
+                                    null,
+                                ]
+                            ),
+                        )
+                    )
+                ),
+            ]
+        ) : React.createElement("p", {key: 'hint-no-task-states', className: 'pl-2'}, "Aktuell sind keine Status für Aufgaben hinterlegt.")
+    );
     return [tableIntroduction, table];
 }
 

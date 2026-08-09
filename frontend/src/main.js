@@ -4,6 +4,7 @@ import {Button, TextField} from "@mui/material";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "./css/theme-provider.js";
 import {MenuComponentLogin} from "./js/menu-component-login.js";
+import {FooterComponent} from "./js/footer-component.js";
 
 function LogInForm() {
 
@@ -88,8 +89,9 @@ const root = ReactDOM.createRoot(container);
 root.render(
     React.createElement(
         ThemeProvider,
-        { theme: theme },
+        { theme },[
         React.createElement(MenuComponentLogin),
         React.createElement(LogInForm),
+        React.createElement(FooterComponent)]
     )
 );
