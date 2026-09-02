@@ -24,6 +24,7 @@ import com.managementsystem.backend.service.CustomerContactPersonService;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -77,7 +78,7 @@ public class ProjectController {
 
         // Check if the combination of title, customer and deadline has changed and if the new combination already exists
         boolean combinationChanged = !existing.getTitle().equals(dto.title())
-            || !existing.getDeadline().equals(dto.deadline())
+            || !Objects.equals(existing.getDeadline(), dto.deadline())
             || !existing.getCustomer().getId().equals(dto.customerId());
 
         if (combinationChanged && service.projectExists(dto.title(), dto.deadline(), dto.customerId())) {
@@ -117,8 +118,8 @@ public class ProjectController {
     }
 
     @GetMapping("/project-exists")
-    public ResponseEntity<Boolean> projectExists(@RequestParam String title, @RequestParam String deadline, @RequestParam Long customerId) {
-        java.time.LocalDate parsedDeadline = java.time.LocalDate.parse(deadline);
+    public ResponseEntity<Boolean> projectExists(@RequestParam String title, @RequestParam(required = false) String deadline, @RequestParam Long customerId) {
+        java.time.LocalDate parsedDeadline = (deadline == null || deadline.isEmpty()) ? null : java.time.LocalDate.parse(deadline);
         return ResponseEntity.ok(service.projectExists(title, parsedDeadline, customerId));
     }
 

@@ -12,12 +12,8 @@ import {
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {ThemeProvider} from "@mui/material/styles";
-import {MenuComponent} from '../../js/menu-component.js';
-import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {

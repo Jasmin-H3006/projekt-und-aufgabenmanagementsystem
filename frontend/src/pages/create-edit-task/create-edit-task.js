@@ -17,6 +17,8 @@ function Page() {
 function CreateEditTask() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [taskStates, setTaskStates] = useState([])
+    const [taskStateId, setTaskStateId] = useState(null)
     const [projectTitle, setProjectTitle] = useState("");
 
     const [tasks, setTasks] = useState([]);
@@ -25,13 +27,17 @@ function CreateEditTask() {
     const [message, setMessage] = useState('');
 
     const urlParams = new URLSearchParams(window.location.search);
-    const taskIdInUrl = urlParams.get("id");
+    const taskIdInUrl = urlParams.get("projectTaskId");
     const projectIdInUrl = urlParams.get("projectId");
 
     useEffect(() => {
         fetch("http://localhost:8080/api/tasks/get-all")
             .then(res => res.json())
             .then(data => setTasks(data));
+
+        fetch("http://localhost:8080/api/task-states/get-all")
+            .then(res => res.json())
+            .then(data => setTaskStates(data));
 
         if (!projectIdInUrl) return;
 
@@ -44,11 +50,12 @@ function CreateEditTask() {
             return;
         }
 
-        fetch(`http://localhost:8080/api/project/tasks/${taskIdInUrl}`)
+        fetch(`http://localhost:8080/api/tasks/${taskIdInUrl}`)
             .then(r => r.json())
             .then(task => {
                 setTitle(task.title)
                 setDescription(task.description)
+                setTaskStateId(task.taskState ? Number(task.taskState.id) : null);
             });
     }, [projectIdInUrl, taskIdInUrl]);
 
@@ -65,6 +72,7 @@ function CreateEditTask() {
         e.preventDefault();
         const payload = {
             title,
+            taskStateId: Number(taskStateId),
             description,
             projectId: projectIdInUrl
         }
@@ -78,7 +86,7 @@ function CreateEditTask() {
         if(!editTask) {
             // Creating a new task (not edit an already existing one)
             const responseCheck = await fetch(
-                'http://localhost:8080/api/project/tasks/task-exists?title=' + encodeURIComponent(title)
+                'http://localhost:8080/api/tasks/task-exists?title=' + encodeURIComponent(title)
             );
             if (!responseCheck.ok) return;
             const exists = await responseCheck.json();
@@ -93,13 +101,16 @@ function CreateEditTask() {
             setMessage('Der Titel der Aufgabe darf nicht leer sein.');
             return;
         }
-
+        if(taskStateId === null) {
+            setMessage('Bitte einen Status für die Aufgabe wählen.');
+            return;
+        }
         if(description === "") {
             setMessage('Die Beschreibung darf nicht leer sein.');
             return;
         }
 
-        const responseUrl = editTask ? `http://localhost:8080/api/project/tasks/${taskIdInUrl}` : "http://localhost:8080/api/project/tasks/create";
+        const responseUrl = editTask ? `http://localhost:8080/api/tasks/${taskIdInUrl}` : "http://localhost:8080/api/tasks/create";
         const method = editTask ? "PUT" : "POST";
 
         // Save process
@@ -132,7 +143,7 @@ function CreateEditTask() {
 
         // Delete process
         const response = await fetch(
-            `http://localhost:8080/api/project/tasks/${taskIdInUrl}`,
+            `http://localhost:8080/api/tasks/${taskIdInUrl}`,
             {method: "DELETE"}
         );
 
@@ -148,9 +159,15 @@ function CreateEditTask() {
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
             React.createElement('h2', {key: 'headline'}, taskIdInUrl ? "Bestehende Aufgabe bearbeiten" : "Neue Aufgabe für das Projekt '" + projectTitle + "' anlegen"),
             React.createElement(TextField, {
-                key: 'title', required: true, variant: "outlined", className: "full-width", label: "Titel", value: title,
+                key: 'title', required: true, variant: "outlined", label: "Titel", value: title,
                 onChange: (e) => setTitle(e.target.value)
             }, null),
+            React.createElement(TextField,
+                {key: 'task-state', required: true, select: true, value: taskStateId ?? "", variant: "outlined", label: "Status", onChange: (e) => setTaskStateId(Number(e.target.value)),},
+                taskStates.map(taskState =>
+                    React.createElement(MenuItem, { key: taskState.id, value: taskState.id }, taskState.name)
+                )
+            ),
             React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}, null),
             !noEqualTaskInSystem ? React.createElement('p', {key: "task-already-exists-error", className: "full-width"}, "Eine Aufgabe mit diesem Titel existiert bereits.") : null,
             message ? React.createElement('p', {key: "task-error", className: "full-width"}, message) : null,

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import com.managementsystem.backend.model.Project;
 import com.managementsystem.backend.service.ProjectService;
+import com.managementsystem.backend.service.TaskStateService;
+import com.managementsystem.backend.model.TaskState;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -26,22 +28,28 @@ public class TaskController {
 
     private final TaskService service;
     private final ProjectService projectService;
+    private final TaskStateService taskStateService;
 
     @PostMapping("/create")
     public String createTask(@RequestBody NewTaskDTO dto) {
+        Project project = projectService.getProjectById(dto.projectId());
+        TaskState taskState = taskStateService.getTaskStateById(dto.taskStateId());
+
         service.createTask(Task.builder()
             .title(dto.title())
             .description(dto.description())
+            .project(project)
+            .taskState(taskState)
             .build()
         );
         return "Task created successfully";
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody NewTaskDTO dto) {
         Task existing = service.getTaskById(id);
         Project project = projectService.getProjectById(dto.projectId());
+        TaskState taskState = taskStateService.getTaskStateById(dto.taskStateId());
 
         // Check if title is being changed and if the new title already exists
         if (!existing.getTitle().equals(dto.title()) && service.taskExists(dto.title())) {
@@ -51,6 +59,7 @@ public class TaskController {
         existing.setTitle(dto.title());
         existing.setDescription(dto.description());
         existing.setProject(project);
+        existing.setTaskState(taskState);
 
         return ResponseEntity.ok(service.createTask(existing));
     }

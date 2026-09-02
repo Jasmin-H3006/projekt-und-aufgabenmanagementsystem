@@ -2,16 +2,13 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {
     Button,
-    Container,
+    IconButton,
     Toolbar
 } from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import {MenuComponent} from '../../js/menu-component.js';
-import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
+import EditIcon from '@mui/icons-material/Edit';
 
 const urlParams = new URLSearchParams(window.location.search);
 const projectIdInUrl = urlParams.get("projectId");
@@ -110,6 +107,17 @@ function ProjectOverview() {
 }
 
 function ProjectTasks() {
+    const [projectTasks, setProjectTasks] = useState([])
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/tasks/projects/${projectIdInUrl}`)
+            .then(res => res.json())
+            .then(projectTasks => setProjectTasks(projectTasks));
+    }, [projectIdInUrl]);
+
+    const editProjectTask = (projectIdInUrl, projectTaskId) => {
+        window.location.href='../create-edit-task/create-edit-task.html?projectId=' + projectIdInUrl + '&projectTaskId=' + projectTaskId
+    };
 
     const introduction = React.createElement(
         Toolbar,
@@ -119,9 +127,36 @@ function ProjectTasks() {
         ]
     );
 
-    const tasks = React.createElement(
-        Container, {key: 'tasks-container'}, "test"
-    );
+    const tasks =
+        // Aufgaben-Container
+        React.createElement(
+            'div', {key: 'tasks-container', className: 'tasks-container pl-5 pr-5 pt-2'},
+            // Einzelnen Aufgaben-Container
+            projectTasks.length > 0 ? projectTasks.map (projectTask =>
+                React.createElement(
+                    'div', {key: 'task-container-' + projectTask.id, className: 'task-container'},
+                    React.createElement(
+                        'div', {key: 'task-title-container', className: 'task-title-container'}, [
+                        React.createElement('h3', {key: 'task-title'}, projectTask.title),
+                        React.createElement(
+                            'div',
+                            { key: 'task-edit', className: 'task-edit'},
+                            React.createElement(
+                                IconButton,
+                                { key: 'edit-task-icon-btn', className: 'edit-task-icon-btn', onClick: () => editProjectTask(projectIdInUrl, projectTask.id) },
+                                React.createElement(EditIcon, { fontSize: "small" })
+                            )
+                        )]
+                    ),
+                    React.createElement(
+                        'p', {key: 'task-description', className: 'task-description'}, projectTask.description
+                    ),
+                    React.createElement(
+                        'div', {key: 'task-state', className: 'task-state', style: {backgroundColor: projectTask.taskState.color}}, 'Status: ' + projectTask.taskState.name
+                    )
+                )
+            ) : React.createElement("p", {key: 'hint-no-tasks', className: 'pl-2'}, "Aktuell sind keine Aufgaben vorhanden.")
+        );
 
     return [introduction, tasks]
 }

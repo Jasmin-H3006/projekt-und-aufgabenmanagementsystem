@@ -149,7 +149,7 @@ function CreateEditProject() {
         if(!editProject) {
             // Creating a new project (not edit an already existing one)
             const responseCheck = await fetch(
-                'http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(payload.title) + '&customerId=' + encodeURIComponent(payload.customerId) + '&deadline=' + encodeURIComponent(payload.deadline)
+                'http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(payload.title) + '&customerId=' + encodeURIComponent(payload.customerId) + '&deadline=' + (payload.deadline ? encodeURIComponent(payload.deadline) : '')
             );
             if (!responseCheck.ok) return;
 
@@ -232,11 +232,11 @@ function CreateEditProject() {
                 )
             ),
             React.createElement(FormControl, {key: "contact-person-select-field"},
-                React.createElement(InputLabel,{key: "contact-person-select-label", id: "contact-person-select-label"}, "Ansprechpartner"),
+                React.createElement(InputLabel,{key: "contact-person-select-label", id: "contact-person-select-label", required: true,}, "Ansprechpartner"),
                 React.createElement(
                     Select,
                     {
-                        key: "contact-person-select", multiple: true, required: true, value: contactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
+                        key: "contact-person-select", multiple: true, value: contactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
                         onChange: (e) =>
                             setContactPersonIds(Array.isArray(e.target.value) ? e.target.value.map(Number) : []),
                         renderValue: selected => React.createElement(Box,

@@ -39,7 +39,8 @@ public interface Dtos {
     public record NewTaskDTO(
         @NotEmpty String title,
         @NotEmpty String description,
-        @NotEmpty Long projectId
+        @NotEmpty Long projectId,
+        @NotNull Long taskStateId
     ) {}
     @Builder
     public record NewTaskStateDTO(

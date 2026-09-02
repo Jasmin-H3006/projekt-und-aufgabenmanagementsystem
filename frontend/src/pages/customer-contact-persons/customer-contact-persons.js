@@ -40,11 +40,11 @@ function CustomerContactPersonsOverview() {
     const customerIdInUrl = urlParams.get("customerId");
 
     useEffect(() => {
+        if (!customerIdInUrl) return;
+
         fetch(`http://localhost:8080/api/customer/contact-persons/customer/${customerIdInUrl}`)
             .then(res => res.json())
             .then(contactPersons => setContactPersons(contactPersons));
-
-        if (!customerIdInUrl) return;
 
         fetch(`http://localhost:8080/api/customers/${customerIdInUrl}`)
             .then(r => r.json())

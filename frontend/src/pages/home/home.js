@@ -1,16 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography, IconButton, Box} from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import {MenuComponent} from '../../js/menu-component.js';
-import theme from "../../css/theme-provider.js";
 import {ProjectsTableHeader} from "../../js/projects-table.js";
 import {requireLogin} from "../../js/session-handling.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
-import {BackButton} from "../../js/back-button.js";
 
 function Page() {
     const [username, setUsername] = useState("");
