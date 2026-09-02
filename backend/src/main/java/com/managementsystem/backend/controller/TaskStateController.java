@@ -29,6 +29,8 @@ public class TaskStateController {
         service.createTaskState(TaskState.builder()
             .name(dto.name())
             .color(dto.color())
+            .fontColorBlack(dto.fontColorBlack())
+            .taskDoneState(dto.taskDoneState())
             .build()
         );
         return "Task state created successfully";
@@ -45,6 +47,8 @@ public class TaskStateController {
 
         existing.setName(dto.name());
         existing.setColor(dto.color());
+        existing.setFontColorBlack(dto.fontColorBlack());
+        existing.setTaskDoneState(dto.taskDoneState());
 
         return ResponseEntity.ok(service.createTaskState(existing));
     }

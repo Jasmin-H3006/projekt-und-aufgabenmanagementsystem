@@ -152,7 +152,7 @@ function ProjectTasks() {
                         'p', {key: 'task-description', className: 'task-description'}, projectTask.description
                     ),
                     React.createElement(
-                        'div', {key: 'task-state', className: 'task-state', style: {backgroundColor: projectTask.taskState.color}}, 'Status: ' + projectTask.taskState.name
+                        'div', {key: 'task-state', className: 'task-state', style: {backgroundColor: projectTask.taskState.color, color: projectTask.taskState.fontColorBlack ? 'black' : 'white'}}, 'Status: ' + projectTask.taskState.name
                     )
                 )
             ) : React.createElement("p", {key: 'hint-no-tasks', className: 'pl-2'}, "Aktuell sind keine Aufgaben vorhanden.")

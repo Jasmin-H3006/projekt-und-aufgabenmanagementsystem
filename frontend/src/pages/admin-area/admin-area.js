@@ -8,14 +8,10 @@ import {
     TableCell,
     Toolbar,
     TableHead,
-    IconButton, Box
+    IconButton
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import {ThemeProvider} from "@mui/material/styles";
-import {MenuComponent} from '../../js/menu-component.js';
-import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
@@ -247,7 +243,7 @@ function TaskStatesOverview() {
                             TableRow,
                             { key: taskState.id },
                             React.createElement(TableCell, {key: 'task-state-name'}, taskState.name),
-                            React.createElement(TableCell, {key: 'task-state-color'}, taskState.color),
+                            React.createElement(TableCell, {key: 'task-state-color', style: {backgroundColor: taskState.color, color: taskState.fontColorBlack ? 'black' : 'white'}}, taskState.color),
                             React.createElement(
                                 TableCell,
                                 { key: "task-state-edit" },

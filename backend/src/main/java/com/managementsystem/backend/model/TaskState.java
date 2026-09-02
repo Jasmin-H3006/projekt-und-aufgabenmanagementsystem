@@ -30,4 +30,6 @@ public class TaskState {
     private String name;
 
     private String color;
+    private Boolean fontColorBlack = true;
+    private Boolean taskDoneState = false;
 }

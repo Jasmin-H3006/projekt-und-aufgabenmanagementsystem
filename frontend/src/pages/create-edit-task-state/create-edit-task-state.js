@@ -1,6 +1,7 @@
 import {React, useEffect, useState, ReactDOM, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
 import { HexColorPicker } from "react-colorful";
 import {pageBuilder} from "../../js/page-builder.js";
+import {FormControl, FormLabel, RadioGroup, FormControlLabel, Radio} from "@mui/material";
 function Page() {
     const [username, setUsername] = useState("");
     const [user, setUser] = useState("");
@@ -15,6 +16,8 @@ function Page() {
 function CreateEditTaskState() {
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
+    const [fontColorBlack, setFontColorBlack] = useState(true);
+    const [taskDoneState, setTaskDoneState] = useState(false);
 
     const [noEqualTaskStateInSystem, setNoEqualTaskStateInSystem] = useState(true);
     const [message, setMessage] = useState('');
@@ -34,6 +37,8 @@ function CreateEditTaskState() {
             .then(taskState => {
                 setName(taskState.name);
                 setColor(taskState.color);
+                setFontColorBlack(taskState.fontColorBlack);
+                setTaskDoneState(taskState.taskDoneState);
             });
     }, [taskStateIdInUrl]);
 
@@ -45,7 +50,9 @@ function CreateEditTaskState() {
         e.preventDefault();
         const payload = {
             name,
-            color
+            color,
+            fontColorBlack,
+            taskDoneState
         }
 
         // Reset Messages after a new click
@@ -67,13 +74,20 @@ function CreateEditTaskState() {
             }
         }
 
-        if(name === "") {
+        if (name === "") {
             setMessage('Die Status-Bezeichnung darf nicht leer sein.');
             return;
         }
-
-        if(color === "") {
+        if (color === "") {
             setMessage('Bitte eine Farbe angeben.');
+            return;
+        }
+        if (taskDoneState === null || taskDoneState === undefined) {
+            setMessage('Bitte angeben, ob es sich um einen Erledigt-Status handelt.');
+            return;
+        }
+        if (fontColorBlack === null || fontColorBlack === undefined) {
+            setMessage('Bitte eine Schriftfarbe angeben.');
             return;
         }
 
@@ -128,17 +142,35 @@ function CreateEditTaskState() {
             React.createElement(TextField, {key: 'name', required: true, variant: "outlined", label: "Bezeichnung",  value: name,
                 onChange: (e) => setName(e.target.value)
             }, null),
-            React.createElement(TextField, {key: 'color', required: true, variant: "outlined", label: "Farbe in Hexa (#XXXXXX)",  value: color,
+            React.createElement(FormControl, {key: 'task-done-state-control'},
+                React.createElement(FormLabel, {key: 'task-done-state-label'}, "Handelt es sich um einen Erledigt-Status?"),
+                React.createElement(RadioGroup, {key: 'task-done-state-group', value: taskDoneState ? 'task-done-state' : 'task-not-done-state', onChange: (e) => setTaskDoneState(e.target.value === 'task-done-state')},
+                    React.createElement(FormControlLabel, {key: 'task-done-state', value: 'task-done-state', control: React.createElement(Radio), label: 'Ja'}),
+                    React.createElement(FormControlLabel, {key: 'task-not-done-state', value: 'task-not-done-state', control: React.createElement(Radio), label: 'Nein'})
+                )
+            ),
+            React.createElement(TextField, {key: 'color', required: true, variant: "outlined", label: "Hintergrundfarbe in Hexa (#XXXXXX)",  value: color,
                 onChange: (e) => setColor(e.target.value)
             }, null),
+            React.createElement(FormControl, {key: 'font-color-control'},
+                React.createElement(FormLabel, {key: 'font-color-label'}, "Schriftfarbe (Bitte die Lesbarkeit auf der Hintergrundfarbe prüfen)"),
+                React.createElement(RadioGroup, {key: 'font-color-group', value: fontColorBlack ? 'black' : 'white', onChange: (e) => setFontColorBlack(e.target.value === 'black')},
+                    React.createElement(FormControlLabel, {key: 'black', value: 'black', control: React.createElement(Radio), label: 'Schwarz'}),
+                    React.createElement(FormControlLabel, {key: 'white', value: 'white', control: React.createElement(Radio), label: 'Weiß'})
+                )
+            ),
             React.createElement("div", {key: 'color-wheel-container'},[
                 React.createElement("strong", {key: 'color-wheel-headline'}, `Gewählte Farbe: ${color}`),
 
                 React.createElement("div", {key: 'color-wheel', className: 'color-wheel pt-1'}, [
                     React.createElement(HexColorPicker, {key: 'color-wheel-picker', className: 'color-wheel-picker', color: color, onChange: setColor}),
-                    React.createElement("div", {key: "color-wheel-preview", style: {backgroundColor: color}, className: 'color-wheel-preview'})
+                    React.createElement("div", {key: "color-wheel-preview", style: {backgroundColor: color}, className: 'color-wheel-preview'},
+                        React.createElement("p", {key: "color-wheel-text", style: {color: fontColorBlack ? 'black' : 'white'}, className: 'color-wheel-text'}, 'Schriftfarbe')
+                    )
                 ])
             ]),
+
+
             !noEqualTaskStateInSystem ? React.createElement('p', {key: "task-state-already-exists-error", className: "full-width"}, "Dieser Status existiert bereits.") : null,
             message ? React.createElement('p', {key: "task-state-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewTaskState})
