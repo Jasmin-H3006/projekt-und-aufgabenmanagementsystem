@@ -46,6 +46,21 @@ function MyProjectsTable() {
     useEffect(() => {
         fetch("http://localhost:8080/api/projects/get-all")
             .then(res => res.json())
+            .then(projects =>
+                Promise.all(
+                    projects.map(project =>
+                        fetch(`http://localhost:8080/api/tasks/projects/${project.id}`)
+                            .then(res => res.json())
+                            .then(tasks => ({
+                                ...project,
+                                taskCounts: {
+                                    total: tasks.length,
+                                    done: tasks.filter(t => t?.taskState?.taskDoneState).length
+                                }
+                            }))
+                    )
+                )
+            )
             .then(projects => setProjects(projects));
     }, []);
 
@@ -84,7 +99,8 @@ function MyProjectsTable() {
                             React.createElement(TableCell, {key: 'project-id'}, project.id),
                             React.createElement(TableCell, {key: 'project-name'}, project.title),
                             React.createElement(TableCell, {key: 'project-customer'}, project.customer?.name  ?? "-"),
-                            React.createElement(TableCell, {key: 'project-progress'}, 'Fortschritt'),
+                            React.createElement(TableCell, {key: 'project-progress'},
+                                `${project.taskCounts.total > 0 ? Math.round((project.taskCounts.done / project.taskCounts.total) * 100) : 0}%`),
                             React.createElement(TableCell, {key: 'project-manager'}, project.projectManager?.username  ?? "-"),
                             React.createElement(TableCell, {key: 'project-user'},
                                 project.users && project.users.length > 0

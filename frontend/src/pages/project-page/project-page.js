@@ -35,6 +35,7 @@ function ProjectOverview() {
     const [users, setUsers] = useState([]);
     const [deadline, setDeadline] = useState("");
     const [description, setDescription] = useState("");
+    const [taskCounts, setTaskCounts] = useState({ total: 0, done: 0 });
 
     useEffect(() => {
         if (!projectIdInUrl) return;
@@ -49,6 +50,14 @@ function ProjectOverview() {
                 setDeadline(project.deadline)
                 setDescription(project.description)
             });
+
+        fetch(`http://localhost:8080/api/tasks/projects/${projectIdInUrl}`)
+            .then(res => res.json())
+            .then(tasks => {
+                const total = Array.isArray(tasks) ? tasks.length : 0;
+                const done = Array.isArray(tasks) ? tasks.filter(t => t?.taskState?.taskDoneState === true).length : 0;
+                setTaskCounts({ total, done });
+            })
     }, [projectIdInUrl]);
 
     const introduction = React.createElement(
@@ -97,6 +106,10 @@ function ProjectOverview() {
             React.createElement('p', {key: 'deadline-intro', className: 'project-info intro'}, "Frist zur Fertigstellung:"),
             React.createElement('p', {key: 'deadline', className: 'project-info info'}, deadline ? deadline : "-"),
         ]),
+        React.createElement('div', {key: 'progress-container'}, [
+            React.createElement('p', {key: 'progress-intro', className: 'project-info intro'}, "Fortschritt:"),
+            React.createElement('p', {key: 'progress', className: 'project-info info'}, `${taskCounts.done}/${taskCounts.total} Aufgaben erledigt`),
+        ]),
         React.createElement('div', {key: 'description-container'}, [
             React.createElement('p', {key: 'description-intro', className: 'project-info intro'}, "Beschreibung:"),
             React.createElement('p', {key: 'description', className: 'project-info info'}, description),
@@ -108,11 +121,17 @@ function ProjectOverview() {
 
 function ProjectTasks() {
     const [projectTasks, setProjectTasks] = useState([])
+    const [taskCounts, setTaskCounts] = useState({ total: 0, done: 0 });
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/tasks/projects/${projectIdInUrl}`)
             .then(res => res.json())
-            .then(projectTasks => setProjectTasks(projectTasks));
+            .then(projectTasks => setProjectTasks(projectTasks))
+            .then(tasks => {
+                const total = Array.isArray(tasks) ? tasks.length : 0;
+                const done = Array.isArray(tasks) ? tasks.filter(t => t?.taskState?.taskDoneState === true).length : 0;
+                setTaskCounts({ total, done });
+            })
     }, [projectIdInUrl]);
 
     const editProjectTask = (projectIdInUrl, projectTaskId) => {
