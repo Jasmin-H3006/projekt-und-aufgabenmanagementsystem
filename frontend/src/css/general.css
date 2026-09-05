@@ -2,6 +2,10 @@
     padding-left: 0 !important;
 }
 
+.pl-1 {
+    padding-left: 1rem;
+}
+
 .pl-2 {
     padding-left: 2rem;
 }
@@ -10,8 +14,21 @@
     padding-left: 5rem;
 }
 
+.pr-1 {
+    padding-right: 1rem;
+}
+
 .pr-5 {
     padding-right: 5rem;
+}
+
+@media (min-width: 1200px) {
+    .pr-md-up-5 {
+        padding-right: 5rem;
+    }
+    .pl-md-up-5 {
+        padding-left: 5rem;
+    }
 }
 
 .pt-1 {
@@ -32,6 +49,10 @@
 
 .mt-3 {
     margin-top: 3rem !important;
+}
+
+.mr-0-5 {
+    margin-right: .5rem !important;
 }
 
 .back-btn {

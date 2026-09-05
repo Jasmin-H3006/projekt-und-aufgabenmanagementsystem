@@ -119,7 +119,7 @@ function RoleOverview() {
         window.location.href='../create-edit-role/create-edit-role.html?id=' + roleId
     };
 
-    const tableIntroduction = (
+    const roleCardsIntroduction = (
         React.createElement(
             Toolbar,
             {key: 'roles-introduction', className: 'introduction-with-btn pl-0 pt-3'},
@@ -130,65 +130,43 @@ function RoleOverview() {
         )
     );
 
-    const table = (
-        roles.length > 0 ? React.createElement(
-            Table,
-            {key: 'role-table-container', className: 'table-container role-table-container', size: 'small'},
-            [
+    const roleCards =
+        // Rollen-Container
+        React.createElement(
+            'div', {key: 'roles-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            // Einzelne Rollen-Container
+            roles.length > 0 ? roles.map (role =>
                 React.createElement(
-                    TableHead,
-                    {key: 'role-table-head', className: 'role-table-head pl-2'},
-                    [
-                        React.createElement(
-                            TableRow,
-                            {key: 'role-table-columns'},
-                            [
-                                React.createElement(TableCell, {key: 'roles-name'}, 'Rolle'),
-                                React.createElement(TableCell, {key: 'roles-admin-access'}, 'Admin-Zugang'),
-                                React.createElement(TableCell, {key: 'roles-all-projects-access'}, 'Einsicht in alle Projekte'),
-                                React.createElement(TableCell, {key: 'roles-create-projects-access'}, 'Neue Projekte anlegen'),
-                                React.createElement(TableCell, {key: 'roles-edit-available-projects-access'}, 'Einsehbare Projekte bearbeiten'),
-                                React.createElement(TableCell, {key: 'roles-create-and-edit-tasks-access'}, 'Neue Aufgaben anlegen und bestehende bearbeiten'),
-                                React.createElement(TableCell, {key: 'roles-customer-page-access'}, 'Zugang zur Kunden-Übersicht'),
-                                React.createElement(TableCell, {key: 'roles-edit'}, "Rolle bearbeiten")
-                            ]
-                        ),
-                    ]
-                ),
-                React.createElement(
-                    TableBody,
-                    {key: 'role-table-body'},
-                    roles.map(role =>
-                        React.createElement(
-                            TableRow,
-                            { key: role.id },
-                            React.createElement(TableCell, {key: 'role-name'}, role.name),
-                            React.createElement(TableCell, {key: 'role-admin-access'}, role.adminAccess ? "Ja" : "Nein"),
-                            React.createElement(TableCell, {key: 'role-all-projects-access'}, role.allProjectsAccess ? "Ja" : "Nein"),
-                            React.createElement(TableCell, {key: 'role-create-projects-access'}, role.createProjectsAccess ? "Ja" : "Nein"),
-                            React.createElement(TableCell, {key: 'role-edit-available-projects-access'}, role.editAvailableProjectsAccess ? "Ja" : "Nein"),
-                            React.createElement(TableCell, {key: 'role-create-and-edit-tasks-access'}, role.createAndEditTasksAccess ? "Ja" : "Nein"),
-                            React.createElement(TableCell, {key: 'role-customer-page-access'}, role.customerPageAccess ? "Ja" : "Nein"),
+                    'div', {key: 'role-container-' + role.id, className: 'card-container'},
+                    React.createElement(
+                        'div', {key: 'role-title-container', className: 'card-title-container'}, [
+                            React.createElement('h3', {key: 'role-title'}, role.name),
                             React.createElement(
-                                TableCell,
-                                { key: "role-edit" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "edit-role-icon-btn", onClick: () => editRole(role.id) },
-                                        React.createElement(EditIcon, { fontSize: "small" })
-                                    ),
-                                    null,
-                                ]
-                            ),
-                        )
+                                'div',
+                                { key: 'edit-role', className: 'edit-card-element'},
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'edit-role-icon-btn', className: 'card-element-icon-btn', onClick: () => editRole(role.id) },
+                                    React.createElement(EditIcon, { fontSize: "small" })
+                                )
+                            )
+                        ]
+                    ),
+                    React.createElement(
+                        'div', {key: 'role-infos-container'}, [
+                            React.createElement('p', {key: 'role-info-admin-access'}, role.adminAccess ? "Admin-Zugang: Ja" : "Admin-Zugang: Nein"),
+                            React.createElement('p', {key: 'role-info-all-projects-access'}, role.allProjectsAccess ? "Einsicht in alle Projekte: Ja" : "Einsicht in alle Projekte: Nein"),
+                            React.createElement('p', {key: 'role-info-create-projects-access'}, role.createProjectsAccess ? "Neue Projekte anlegen: Ja" : "Neue Projekte anlegen: Nein"),
+                            React.createElement('p', {key: 'role-info-edit-available-projects-access'}, role.editAvailableProjectsAccess ? "Einsehbare Projekte bearbeiten: Ja" : "Einsehbare Projekte bearbeiten: Nein"),
+                            React.createElement('p', {key: 'role-info-create-and-edit-tasks-access'}, role.createAndEditTasksAccess ? "Aufgaben anlegen und bearbeiten: Ja" : "Aufgaben anlegen und bearbeiten: Nein"),
+                            React.createElement('p', {key: 'role-info-customer-page-access'}, role.customerPageAccess ? "Zugang zur Kunden-Übersicht: Ja" : "Zugang zur Kunden-Übersicht: Nein")
+                        ]
                     )
-                ),
-            ]
-        ) : React.createElement("p", {key: 'hint-no-roles', className: 'pl-2'}, "Es wurden noch keine Rollen definiert.")
-    );
+                )
+            ) : React.createElement("p", {key: 'hint-no-roles', className: 'pl-2'}, "Es wurden noch keine Rollen definiert.")
+        );
 
-    return [tableIntroduction, table];
+    return [roleCardsIntroduction, roleCards];
 }
 
 function TaskStatesOverview() {

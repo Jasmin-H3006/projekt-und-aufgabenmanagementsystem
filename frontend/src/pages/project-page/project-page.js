@@ -149,29 +149,29 @@ function ProjectTasks() {
     const tasks =
         // Aufgaben-Container
         React.createElement(
-            'div', {key: 'tasks-container', className: 'tasks-container pl-5 pr-5 pt-2'},
+            'div', {key: 'tasks-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
             // Einzelnen Aufgaben-Container
             projectTasks.length > 0 ? projectTasks.map (projectTask =>
                 React.createElement(
-                    'div', {key: 'task-container-' + projectTask.id, className: 'task-container'},
+                    'div', {key: 'task-container-' + projectTask.id, className: 'card-container'},
                     React.createElement(
-                        'div', {key: 'task-title-container', className: 'task-title-container'}, [
+                        'div', {key: 'task-title-container', className: 'card-title-container'}, [
                         React.createElement('h3', {key: 'task-title'}, projectTask.title),
                         React.createElement(
                             'div',
-                            { key: 'task-edit', className: 'task-edit'},
+                            { key: 'edit-task', className: 'edit-card-element'},
                             React.createElement(
                                 IconButton,
-                                { key: 'edit-task-icon-btn', className: 'edit-task-icon-btn', onClick: () => editProjectTask(projectIdInUrl, projectTask.id) },
+                                { key: 'edit-task-icon-btn', className: 'card-element-icon-btn', onClick: () => editProjectTask(projectIdInUrl, projectTask.id) },
                                 React.createElement(EditIcon, { fontSize: "small" })
                             )
                         )]
                     ),
                     React.createElement(
-                        'p', {key: 'task-description', className: 'task-description'}, projectTask.description
+                        'p', {key: 'task-description', className: 'card-description'}, projectTask.description
                     ),
                     React.createElement(
-                        'div', {key: 'task-state', className: 'task-state', style: {backgroundColor: projectTask.taskState.color, color: projectTask.taskState.fontColorBlack ? 'black' : 'white'}}, 'Status: ' + projectTask.taskState.name
+                        'div', {key: 'task-state', className: 'task-card-state', style: {backgroundColor: projectTask.taskState.color, color: projectTask.taskState.fontColorBlack ? 'black' : 'white'}}, 'Status: ' + projectTask.taskState.name
                     )
                 )
             ) : React.createElement("p", {key: 'hint-no-tasks', className: 'pl-2'}, "Aktuell sind keine Aufgaben vorhanden.")

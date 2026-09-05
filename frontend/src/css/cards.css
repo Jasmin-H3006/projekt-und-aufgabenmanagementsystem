@@ -1,0 +1,58 @@
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    @media (max-width: 1200px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.card-container {
+    border: 2px solid var(--primary);
+    padding: 1rem;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+    .card-title-container {
+        display: flex;
+
+        h3 {
+            width: 80%;
+
+            &.card-with-two-buttons {
+                @media (min-width: 768px) {
+                    width: 70%;
+                }
+            }
+        }
+
+        .edit-card-element {
+            width: 20%;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+
+            &.view-card-element {
+                width: 30%;
+            }
+
+            .card-element-icon-btn {
+                border: 1px solid var(--primary) !important;
+            }
+        }
+    }
+
+    .card-title-container, .card-description {
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--light);
+    }
+
+    /* Task cards */
+    .task-card-state {
+        border-radius: 2rem;
+        padding: .5rem 1rem .5rem 1rem;
+    }
+}

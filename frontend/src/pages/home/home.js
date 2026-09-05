@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {Button, Table, TableBody, TableRow, TableCell, Toolbar, Typography, IconButton, Box} from "@mui/material";
-import {ProjectsTableHeader} from "../../js/projects-table.js";
+import {Button, Toolbar, Typography, IconButton} from "@mui/material";
 import {requireLogin} from "../../js/session-handling.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,7 +14,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(Intro, {username}), React.createElement(ToCustomerPage, {user}), React.createElement(MyProjectsTable)])
+    return pageBuilder(user, [React.createElement(Intro, {username}), React.createElement(ToCustomerPage, {user}), React.createElement(MyProjectsCards)])
 }
 
 function Intro({username}) {
@@ -40,7 +39,7 @@ function ToCustomerPage({user}) {
     );
 }
 
-function MyProjectsTable() {
+function MyProjectsCards() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
@@ -72,7 +71,7 @@ function MyProjectsTable() {
         window.location.href='../create-edit-project/create-edit-project.html?projectId=' + projectId
     };
 
-    const tableIntroduction = (
+    const projectCardsIntroduction = (
         React.createElement(
             Toolbar,
             {key: 'projects-introduction', className: 'introduction-with-btn pl-0 pt-3'},
@@ -83,63 +82,50 @@ function MyProjectsTable() {
         )
     );
 
-    const table = (
-        projects.length > 0 ? React.createElement(
-            Table,
-            {key: 'projects-table', className: 'table-container projects-table-container', size: 'small'},
-            [
-                React.createElement(ProjectsTableHeader),
+    const projectCards =
+        // Projekte-Container
+        React.createElement(
+            'div', {key: 'my-projects-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            // Einzelnen Projekt-Container
+            projects.length > 0 ? projects.map (project =>
                 React.createElement(
-                    TableBody,
-                    {key: 'projects-table-body'},
-                    projects.map(project =>
-                        React.createElement(
-                            TableRow,
-                            { key: project.id },
-                            React.createElement(TableCell, {key: 'project-id'}, project.id),
-                            React.createElement(TableCell, {key: 'project-name'}, project.title),
-                            React.createElement(TableCell, {key: 'project-customer'}, project.customer?.name  ?? "-"),
-                            React.createElement(TableCell, {key: 'project-progress'},
-                                `${project.taskCounts.total > 0 ? Math.round((project.taskCounts.done / project.taskCounts.total) * 100) : 0}%`),
-                            React.createElement(TableCell, {key: 'project-manager'}, project.projectManager?.username  ?? "-"),
-                            React.createElement(TableCell, {key: 'project-user'},
-                                project.users && project.users.length > 0
-                                ? project.users.map(user => user.username).join(", ")
-                                : "-"
-                            ),
-                            React.createElement(TableCell, {key: 'project-deadline'}, project.deadline ?? "-"),
+                    'div', {key: 'my-project-container-' + project.id, className: 'card-container'},
+                    React.createElement(
+                        'div', {key: 'my-project-title-container', className: 'card-title-container'}, [
+                            React.createElement('h3', {key: 'my-project-title', className: 'card-with-two-buttons'}, project.title),
                             React.createElement(
-                                TableCell,
-                                { key: "project-view" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "view-project", onClick: () => viewProject(project.id) },
-                                        React.createElement(VisibilityIcon, { fontSize: "small" })
-                                    ),
-                                    null,
-                                ]
-                            ),
-                            React.createElement(
-                                TableCell,
-                                { key: "project-edit" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "edit-project-icon-btn", onClick: () => editProject(project.id) },
-                                        React.createElement(EditIcon, { fontSize: "small" })
-                                    ),
-                                    null,
-                                ]
-                            ),
-                        )
+                                'div',
+                                { key: 'edit-my-project', className: 'edit-card-element view-card-element'},
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'view-my-project-icon-btn', className: 'card-element-icon-btn mr-0-5', onClick: () => viewProject(project.id) },
+                                    React.createElement(VisibilityIcon, { fontSize: "small" })
+                                ),
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'edit-my-project-icon-btn', className: 'card-element-icon-btn', onClick: () => editProject(project.id) },
+                                    React.createElement(EditIcon, { fontSize: "small" })
+                                )
+                            )
+                        ]
+                    ),
+                    React.createElement('p', {key: 'my-project-description', className: 'card-description'}, project.description),
+                    React.createElement(
+                        'div', {key: 'my-project-infos-container'}, [
+                            React.createElement('p', {key: 'my-project-info-id'}, `ID: ${project.id}`),
+                            React.createElement('p', {key: 'my-project-info-customer'}, `Kunde: ${project.customer.name}`),
+                            React.createElement('p', {key: 'my-project-info-project-manager'}, `Projektleiter: ${project.projectManager.username}`),
+                            React.createElement('p', {key: 'my-project-info-project-user'},  project.users && project.users.length > 0
+                                ? `Beteiligte Mitarbeiter: ${project.users.map(user => user.username).join(", ")}` : "Beteiligte Mitarbeiter: -"),
+                            React.createElement('p', {key: 'my-project-info-project-deadline'}, project.deadline ? `Frist: ${project.deadline}` : "Frist: -"),
+                            React.createElement('p', {key: 'my-project-info-project-progress'}, `Fortschritt: ${project.taskCounts.total > 0 ? Math.round((project.taskCounts.done / project.taskCounts.total) * 100) : "-"}%`)
+                        ]
                     )
-                ),
-            ]
-        ) : React.createElement("p", {key: 'hint-no-projects', className: 'pl-2'}, "Aktuell sind keine Projekte vorhanden.")
-    );
+                )
+            ) : React.createElement("p", {key: 'hint-no-my-projects', className: 'pl-2'}, "Aktuell sind keine Projekte für Sie vorhanden.")
+        );
 
-    return [tableIntroduction, table];
+    return [projectCardsIntroduction, projectCards];
 }
 
 // Komponente in den DOM rendern

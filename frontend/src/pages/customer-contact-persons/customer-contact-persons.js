@@ -2,21 +2,12 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {
     Button,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
     Toolbar,
-    TableHead,
     IconButton
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import {ThemeProvider} from "@mui/material/styles";
-import {MenuComponent} from '../../js/menu-component.js';
-import theme from "../../css/theme-provider.js";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
@@ -55,7 +46,7 @@ function CustomerContactPersonsOverview() {
         window.location.href='../create-edit-contact-person/create-edit-contact-person.html?id=' + contactPersonId + '&customerId=' + customerIdInUrl
     };
 
-    const tableIntroduction = (
+    const customerContactPersonCardsIntroduction = (
         React.createElement(
             Toolbar,
             {key: 'contact-persons-introduction', className: 'introduction-with-btn pl-0 pt-3'},
@@ -66,56 +57,39 @@ function CustomerContactPersonsOverview() {
         )
     );
 
-    const table = (
-        contactPersons.length > 0 ? React.createElement(
-            Table,
-            {key: 'contact-person-table-container', className: 'table-container contact-person-table-container', size: 'small'},
-            [
+    const customerContactPersonCards =
+        // Ansprechpartner-Container
+        React.createElement(
+            'div', {key: 'customer-contact-persons-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            // Einzelnen Ansprechpartner-Container
+            contactPersons.length > 0 ? contactPersons.map (contactPerson =>
                 React.createElement(
-                    TableHead,
-                    {key: 'contact-person-table-head', className: 'contact-person-table-head pl-2'},
-                    [
-                        React.createElement(
-                            TableRow,
-                            {key: 'contact-person-table-columns'},
-                            [
-                                React.createElement(TableCell, {key: 'contact-persons-name'}, 'Ansprechpartner'),
-                                React.createElement(TableCell, {key: 'contact-persons-email'}, 'E-Mail'),
-                                React.createElement(TableCell, {key: 'contact-persons-tel'}, 'Telefonnummer'),
-                                React.createElement(TableCell, {key: 'contact-persons-edit'}, "Ansprechpartner bearbeiten")
-                            ]
-                        ),
-                    ]
-                ),
-                React.createElement(
-                    TableBody,
-                    {key: 'contact-person-table-body'},
-                    contactPersons.map(contactPerson =>
-                        React.createElement(
-                            TableRow,
-                            { key: contactPerson.id },
-                            React.createElement(TableCell, {key: 'contact-person-name'}, contactPerson.name),
-                            React.createElement(TableCell, {key: 'contact-person-email'}, contactPerson.email),
-                            React.createElement(TableCell, {key: 'contact-person-tel'}, contactPerson.telefone === "" ? "-" : contactPerson.telefone),
+                    'div', {key: 'customer-contact-person-container-' + contactPerson.id, className: 'card-container'},
+                    React.createElement(
+                        'div', {key: 'customer-contact-person-title-container', className: 'card-title-container'}, [
+                            React.createElement('h3', {key: 'customer-contact-person-name'}, contactPerson.name),
                             React.createElement(
-                                TableCell,
-                                { key: "contact-person-edit" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "edit-contact-person-icon-btn", onClick: () => editContactPerson(contactPerson.id) },
-                                        React.createElement(EditIcon, { fontSize: "small" })
-                                    )
-                                ]
+                                'div',
+                                { key: 'edit-customer-contact-person', className: 'edit-card-element'},
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'edit-customer-contact-person-icon-btn', className: 'card-element-icon-btn', onClick: () => editContactPerson(contactPerson.id) },
+                                    React.createElement(EditIcon, { fontSize: "small" })
+                                )
                             )
-                        )
+                        ]
+                    ),
+                    React.createElement(
+                        'div', {key: 'customer-contact-person-infos-container'}, [
+                            React.createElement('p', {key: 'customer-contact-person-info-email'}, contactPerson.email ? `E-Mail: ${contactPerson.email}` : `E-Mail: -`),
+                            React.createElement('p', {key: 'customer-contact-person-info-telefone'}, contactPerson.telefone ? `Tel.: ${contactPerson.telefone}` : `Tel.: -`)
+                        ]
                     )
-                ),
-            ]
-        ) : React.createElement("p", {key: 'hint-no-contact-person', className: 'pl-2'}, "Aktuell sind keine Ansprechpartner für diesen Kunden vorhanden.")
-    );
+                )
+            ) : React.createElement("p", {key: 'hint-no-customer-contact-persons', className: 'pl-2'}, "Aktuell sind keine Ansprechpartner für diesen Kunden vorhanden.")
+        );
 
-    return [tableIntroduction, table];
+    return [customerContactPersonCardsIntroduction, customerContactPersonCards];
 }
 
 // Komponente in den DOM rendern

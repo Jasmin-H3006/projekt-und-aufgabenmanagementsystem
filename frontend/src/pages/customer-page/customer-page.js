@@ -2,12 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {
     Button,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
     Toolbar,
-    TableHead,
     IconButton
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -46,7 +41,7 @@ function CustomerOverview() {
         window.location.href='../customer-contact-persons/customer-contact-persons.html?customerId=' + customerId
     }
 
-    const tableIntroduction = (
+    const customerCardsIntroduction = (
         React.createElement(
             Toolbar,
             {key: 'customers-introduction', className: 'introduction-with-btn pl-0 pt-3'},
@@ -57,70 +52,39 @@ function CustomerOverview() {
         )
     );
 
-    const table = (
-        customers.length > 0 ? React.createElement(
-            Table,
-            {key: 'customer-table-container', className: 'table-container customer-table-container', size: 'small'},
-            [
+    const customerCards =
+        // Kunden-Container
+        React.createElement(
+            'div', {key: 'customers-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            // Einzelnen Kunden-Container
+            customers.length > 0 ? customers.map (customer =>
                 React.createElement(
-                    TableHead,
-                    {key: 'customer-table-head', className: 'customer-table-head pl-2'},
-                    [
-                        React.createElement(
-                            TableRow,
-                            {key: 'customer-table-columns'},
-                            [
-                                React.createElement(TableCell, {key: 'customers-name'}, 'Kunde'),
-                                React.createElement(TableCell, {key: 'customers-website'}, 'Website'),
-                                React.createElement(TableCell, {key: 'customers-number-of-contact-persons'}, 'Anzahl Ansprechpartner'),
-                                React.createElement(TableCell, {key: 'customers-number-of-active-projects'}, 'Anzahl aktiver Projekte'),
-                                React.createElement(TableCell, {key: 'customers-edit'}, "Kunde bearbeiten"),
-                                React.createElement(TableCell, {key: 'customers-contact-persons-view'}, "Ansprechpartner einsehen"),
-                            ]
-                        ),
-                    ]
-                ),
-                React.createElement(
-                    TableBody,
-                    {key: 'customer-table-body'},
-                    customers.map(customer =>
-                        React.createElement(
-                            TableRow,
-                            { key: customer.id },
-                            React.createElement(TableCell, {key: 'customer-name'}, customer.name),
-                            React.createElement(TableCell, {key: 'customer-website'}, customer.website === "" ? "-" : customer.website),
+                    'div', {key: 'customer-container-' + customer.id, className: 'card-container'},
+                    React.createElement(
+                        'div', {key: 'customer-title-container', className: 'card-title-container'}, [
+                            React.createElement('h3', {key: 'customer-name', className: 'card-with-two-buttons'}, customer.name),
                             React.createElement(
-                                TableCell,
-                                { key: "customer-edit" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "edit-customer-icon-btn", onClick: () => editCustomer(customer.id) },
-                                        React.createElement(EditIcon, { fontSize: "small" })
-                                    ),
-                                    null,
-                                ]
-                            ),
-                            React.createElement(
-                                TableCell,
-                                { key: "customer-contact-persons-view" },
-                                [
-                                    React.createElement(
-                                        IconButton,
-                                        { key: "view-customer-contact-persons", onClick: () => viewCustomerContactPersons(customer.id) },
-                                        React.createElement(VisibilityIcon, { fontSize: "small" })
-                                    ),
-                                    null,
-                                ]
+                                'div',
+                                { key: 'edit-customer', className: 'edit-card-element view-card-element'},
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'view-customer-icon-btn', className: 'card-element-icon-btn mr-0-5', onClick: () => viewCustomerContactPersons(customer.id) },
+                                    React.createElement(VisibilityIcon, { fontSize: "small" })
+                                ),
+                                React.createElement(
+                                    IconButton,
+                                    { key: 'edit-customer-icon-btn', className: 'card-element-icon-btn', onClick: () => editCustomer(customer.id) },
+                                    React.createElement(EditIcon, { fontSize: "small" })
+                                )
                             )
-                        )
-                    )
-                ),
-            ]
-        ) : React.createElement("p", {key: 'hint-no-customers', className: 'pl-2'}, "Aktuell sind keine Kunden vorhanden.")
-    );
+                        ]
+                    ),
+                    React.createElement('p', {key: 'customer-website'}, customer.website ? `Website: ${customer.website}` : `Website: -`)
+                )
+            ) : React.createElement("p", {key: 'hint-no-customers', className: 'pl-2'}, "Aktuell sind keine Kunden vorhanden.")
+        );
 
-    return [tableIntroduction, table];
+    return [customerCardsIntroduction, customerCards];
 }
 
 // Komponente in den DOM rendern
