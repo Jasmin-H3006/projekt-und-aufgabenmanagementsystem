@@ -18,13 +18,13 @@ function Page() {
     const [user, setUser] = useState("");
 
     useEffect(() => {
-        requireLogin(setUsername, false, false, false, false, false, true)
+        requireLogin(setUsername)
             .then(setUser);
     }, []);
 
     const backLink = '../home/home.html';
 
-    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(ProjectOverview), React.createElement(ProjectTasks)])
+    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(ProjectOverview), React.createElement(ProjectTasks, {user})])
 }
 
 function ProjectOverview() {
@@ -119,20 +119,23 @@ function ProjectOverview() {
     return [introduction, infos]
 }
 
-function ProjectTasks() {
+function ProjectTasks({user}) {
     const [projectTasks, setProjectTasks] = useState([])
     const [taskCounts, setTaskCounts] = useState({ total: 0, done: 0 });
 
     useEffect(() => {
+        if (!user) return;
+
         fetch(`http://localhost:8080/api/tasks/projects/${projectIdInUrl}`)
             .then(res => res.json())
-            .then(projectTasks => setProjectTasks(projectTasks))
             .then(tasks => {
-                const total = Array.isArray(tasks) ? tasks.length : 0;
-                const done = Array.isArray(tasks) ? tasks.filter(t => t?.taskState?.taskDoneState === true).length : 0;
-                setTaskCounts({ total, done });
-            })
-    }, [projectIdInUrl]);
+                setProjectTasks(tasks);
+                setTaskCounts({
+                    total: Array.isArray(tasks) ? tasks.length : 0,
+                    done: Array.isArray(tasks) ? tasks.filter(t => t?.taskState?.taskDoneState === true).length : 0
+                });
+            });
+    }, [projectIdInUrl, user]);
 
     const editProjectTask = (projectIdInUrl, projectTaskId) => {
         window.location.href='../create-edit-task/create-edit-task.html?projectId=' + projectIdInUrl + '&projectTaskId=' + projectTaskId
@@ -142,7 +145,7 @@ function ProjectTasks() {
         Toolbar,
         {key: 'project-tasks-introduction', className: 'introduction-with-btn pl-0 pt-3'}, [
             React.createElement('h3', {key: 'tasks-introduction-header', className: 'pl-2'}, "Aufgaben"),
-            React.createElement(Button, {key: 'btn-new-task', className: 'btn-new-task', color: 'primary', variant: 'contained', href: '../create-edit-task/create-edit-task.html?projectId=' + projectIdInUrl}, "Neue Aufgabe anlegen")
+            user.createAndEditTasksAccess ? React.createElement(Button, {key: 'btn-new-task', className: 'btn-new-task', color: 'primary', variant: 'contained', href: '../create-edit-task/create-edit-task.html?projectId=' + projectIdInUrl}, "Neue Aufgabe anlegen") : null
         ]
     );
 
@@ -157,7 +160,7 @@ function ProjectTasks() {
                     React.createElement(
                         'div', {key: 'task-title-container', className: 'card-title-container'}, [
                         React.createElement('h3', {key: 'task-title'}, projectTask.title),
-                        React.createElement(
+                        user.createAndEditTasksAccess ? React.createElement(
                             'div',
                             { key: 'edit-task', className: 'edit-card-element'},
                             React.createElement(
@@ -165,7 +168,7 @@ function ProjectTasks() {
                                 { key: 'edit-task-icon-btn', className: 'card-element-icon-btn', onClick: () => editProjectTask(projectIdInUrl, projectTask.id) },
                                 React.createElement(EditIcon, { fontSize: "small" })
                             )
-                        )]
+                        ): null]
                     ),
                     React.createElement(
                         'p', {key: 'task-description', className: 'card-description'}, projectTask.description

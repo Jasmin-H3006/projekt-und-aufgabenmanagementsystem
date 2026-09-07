@@ -23,8 +23,8 @@ public class TaskService {
         return taskRepository.findByProjectId(projectId);
     }
 
-    public boolean taskExists(String title) {
-        return taskRepository.existsByTitle(title);
+    public boolean taskExistsByTitleAndProjectId(String title, Long projectId) {
+        return taskRepository.existsByTitleAndProjectId(title, projectId);
     }
 
     public Task getTaskById(Long id) {

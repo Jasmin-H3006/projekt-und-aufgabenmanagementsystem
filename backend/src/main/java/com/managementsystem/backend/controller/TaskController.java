@@ -52,7 +52,7 @@ public class TaskController {
         TaskState taskState = taskStateService.getTaskStateById(dto.taskStateId());
 
         // Check if title is being changed and if the new title already exists
-        if (!existing.getTitle().equals(dto.title()) && service.taskExists(dto.title())) {
+        if (!existing.getTitle().equals(dto.title()) && service.taskExistsByTitleAndProjectId(dto.title(), dto.projectId())) {
             return ResponseEntity.status(409).build();
         }
 
@@ -74,9 +74,9 @@ public class TaskController {
         return service.getTasksByProjectId(projectId);
     }
 
-    @GetMapping("/task-exists")
-    public ResponseEntity<Boolean> taskExists(@RequestParam String title) {
-        return ResponseEntity.ok(service.taskExists(title));
+    @GetMapping("/task-exists-in-project")
+    public ResponseEntity<Boolean> taskExistsInProject(@RequestParam String title, @RequestParam Long projectId) {
+        return ResponseEntity.ok(service.taskExistsByTitleAndProjectId(title, projectId));
     }
 
     @GetMapping("/{id}")

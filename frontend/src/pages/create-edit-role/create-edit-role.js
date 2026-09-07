@@ -1,6 +1,5 @@
-import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
-import {FormGroup, FormControlLabel, Checkbox, Box} from "@mui/material";
-import {FooterComponent} from "../../js/footer-component.js";
+import {React, useEffect, useState, ReactDOM, TextField, requireLogin, FormButtons} from "../../imports/create-edit-forms-imports.js";
+import {FormGroup, FormControlLabel, Checkbox} from "@mui/material";
 import {pageBuilder} from "../../js/page-builder.js";
 function Page() {
     const [username, setUsername] = useState("");

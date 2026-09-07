@@ -61,6 +61,7 @@ public interface Dtos {
     ) {}
     @Builder
     public record CurrentUserDTO(
+        Long id,
         String username,
         boolean adminAccess,
         boolean allProjectsAccess,

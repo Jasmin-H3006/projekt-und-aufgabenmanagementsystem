@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.HashSet;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 
@@ -27,16 +28,14 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "task")
+@Table(name = "task", uniqueConstraints = { @UniqueConstraint(columnNames = {"title", "project_id"})})
 
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String title;
-
     private String description;
 
     // FK

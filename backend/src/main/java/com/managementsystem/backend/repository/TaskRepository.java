@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     Task findByTitle(String title);
-    boolean existsByTitle(String title);
+    boolean existsByTitleAndProjectId(String title, Long projectId);
     List<Task> findByProjectId(Long projectId);
 }

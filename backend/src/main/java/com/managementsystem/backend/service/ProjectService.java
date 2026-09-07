@@ -16,8 +16,16 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public java.util.List<Project> getAllProjects() {
+    public List<Project> getAllProjects() {
         return projectRepository.findAll();
+    }
+
+    public List<Project> getMyProjects(Long userId) {
+        return projectRepository.findByUserId(userId);
+    }
+
+    public List<Project> getOtherProjects(Long userId) {
+        return projectRepository.findByNotUserId(userId);
     }
 
     public boolean projectExists(String title, java.time.LocalDate deadline, Long customerId) {

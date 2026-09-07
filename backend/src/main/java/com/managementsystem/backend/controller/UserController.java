@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import com.managementsystem.backend.model.Role;
 import com.managementsystem.backend.service.RoleService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,16 +27,20 @@ public class UserController {
 
     private final UserService service;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/create")
     public String createUser(@RequestBody NewUserDTO dto) {
         Role role = roleService.getRoleById(dto.roleId());
-        service.createUser(User.builder()
+        User.UserBuilder userBuilder = User.builder()
             .username(dto.username())
-            //.password(dto.password())
-            .role(role)
-            .build()
-        );
+            .role(role);
+
+        if (dto.password() != null && !dto.password().isBlank()) {
+            userBuilder.password(passwordEncoder.encode(dto.password()));
+        }
+
+        service.createUser(userBuilder.build());
         return "User created successfully";
     }
 
@@ -51,7 +56,19 @@ public class UserController {
         Role role = roleService.getRoleById(dto.roleId());
 
         existing.setUsername(dto.username());
+        if (dto.password() != null && !dto.password().isBlank()) {
+            existing.setPassword(passwordEncoder.encode(dto.password()));
+        }
         existing.setRole(role);
+
+        return ResponseEntity.ok(service.createUser(existing));
+    }
+
+    @PutMapping("/{id}/reset-password")
+    public ResponseEntity<User> resetUserPassword(@PathVariable Long id) {
+        User existing = service.getUserById(id);
+
+        existing.setPassword(null);
 
         return ResponseEntity.ok(service.createUser(existing));
     }

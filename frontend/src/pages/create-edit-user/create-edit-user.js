@@ -1,6 +1,6 @@
-import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
-import {FooterComponent} from "../../js/footer-component.js";
+import {React, useEffect, useState, ReactDOM, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
 import {pageBuilder} from "../../js/page-builder.js";
+import {Button} from "@mui/material";
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -120,7 +120,6 @@ function CreateEditUser() {
 
         if (!confirmed) return; // Stop action
 
-
         // Delete process
         const response = await fetch(
             `http://localhost:8080/api/users/${userIdInUrl}`,
@@ -134,6 +133,32 @@ function CreateEditUser() {
             setMessage('Löschen fehlgeschlagen.');
         }
     };
+
+    const handleResetPassword = async(e) => {
+        e.preventDefault();
+        if (!userIdInUrl) return;
+
+        const confirmed = window.confirm(
+            `Soll das Passwort des Nutzers mit der ID "${userIdInUrl}" wirklich zurückgesetzt werden? Diese Aktion kann nicht rückgängig gemacht werden.`
+        );
+        if (!confirmed) return; // Stop action
+
+        // Reset password
+        const response = await fetch(
+            `http://localhost:8080/api/users/${userIdInUrl}/reset-password`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: "" })
+            }
+        );
+
+        if (response.ok) {
+            setMessage('Das Passwort des Nutzers wurde erfolgreich zurückgesetzt!');
+        } else {
+            setMessage('Das Zurücksetzen des Passworts ist fehlgeschlagen.');
+        }
+    }
 
     return [
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
@@ -150,7 +175,8 @@ function CreateEditUser() {
             ),
             !noEqualUserInSystem ? React.createElement('p', {key: "user-already-exists-error", className: "full-width"}, "Dieser Nutzer existiert bereits.") : null,
             message ? React.createElement('p', {key: "user-error", className: "full-width"}, message) : null,
-            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewUser})
+            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewUser}),
+            userIdInUrl ? React.createElement(Button, {key: 'reset-password', type: 'button', color: 'warning', variant: 'contained', onClick: handleResetPassword}, 'Passwort zurücksetzen') : null
         ])
     ]
 }

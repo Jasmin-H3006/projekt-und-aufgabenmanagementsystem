@@ -74,6 +74,7 @@ public class AuthController {
         Role role = user.getRole();
 
         CurrentUserDTO dto = new CurrentUserDTO(
+            user.getId(),
             user.getUsername(),
             role.getAdminAccess(),
             role.getAllProjectsAccess(),

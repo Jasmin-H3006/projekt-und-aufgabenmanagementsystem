@@ -7,7 +7,7 @@ function Page() {
     const [username, setUsername] = useState("");
     const [user, setUser] = useState("");
     useEffect(() => {
-        requireLogin(setUsername, false, false, false, false, true, false)
+        requireLogin(setUsername, false, false, false, false, true)
             .then(setUser);
     }, []);
 
@@ -86,7 +86,7 @@ function CreateEditTask() {
         if(!editTask) {
             // Creating a new task (not edit an already existing one)
             const responseCheck = await fetch(
-                'http://localhost:8080/api/tasks/task-exists?title=' + encodeURIComponent(title)
+                'http://localhost:8080/api/tasks/task-exists-in-project?title=' + encodeURIComponent(title) + '&projectId=' + projectIdInUrl
             );
             if (!responseCheck.ok) return;
             const exists = await responseCheck.json();
@@ -124,7 +124,7 @@ function CreateEditTask() {
             setMessage('Die Aufgabe wurde erfolgreich angelegt/bearbeitet!');
             handleBack(projectIdInUrl)
         } else if (response.status === 409) {
-            setMessage('Es gibt bereits eine Aufgabe mit diesem Titel.');
+            setMessage('In diesem Projekt gibt es bereits eine Aufgabe mit diesem Titel.');
         } else {
             setMessage('Aktion fehlgeschlagen.');
         }
@@ -169,7 +169,7 @@ function CreateEditTask() {
                 )
             ),
             React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}, null),
-            !noEqualTaskInSystem ? React.createElement('p', {key: "task-already-exists-error", className: "full-width"}, "Eine Aufgabe mit diesem Titel existiert bereits.") : null,
+            !noEqualTaskInSystem ? React.createElement('p', {key: "task-already-exists-error", className: "full-width"}, "In diesem Projekt gibt es bereits eine Aufgabe mit diesem Titel.") : null,
             message ? React.createElement('p', {key: "task-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleCancel, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewTask})
         ])

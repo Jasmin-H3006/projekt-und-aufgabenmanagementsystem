@@ -117,6 +117,16 @@ public class ProjectController {
         return service.getAllProjects();
     }
 
+    @GetMapping("/get-my-projects")
+    public List<Project> getMyProjects(@RequestParam Long userId) {
+        return service.getMyProjects(userId);
+    }
+
+    @GetMapping("/get-other-projects")
+    public List<Project> getOtherProjects(@RequestParam Long userId) {
+        return service.getOtherProjects(userId);
+    }
+
     @GetMapping("/project-exists")
     public ResponseEntity<Boolean> projectExists(@RequestParam String title, @RequestParam(required = false) String deadline, @RequestParam Long customerId) {
         java.time.LocalDate parsedDeadline = (deadline == null || deadline.isEmpty()) ? null : java.time.LocalDate.parse(deadline);

@@ -8,6 +8,7 @@ import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.model.Role;
 import com.managementsystem.backend.dto.Dtos.NewUserDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public boolean adminExists() {
         // Check if there is already an user with a role that has admin access
@@ -46,7 +48,7 @@ public class AuthService {
 
         User u = new User();
         u.setUsername(dto.username());
-        u.setPassword(dto.password());
+        u.setPassword(passwordEncoder.encode(dto.password()));
         u.setRole(adminRole);
         userRepository.save(u);
 

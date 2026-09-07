@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
 import ReactDOM from 'react-dom/client';
-import {ThemeProvider} from "@mui/material/styles";
-import theme from "../../css/theme-provider.js";
-import {MenuComponent} from '../../js/menu-component.js';
 import {FormButtons} from "../../js/form-buttons.js";
 import {TextField, MenuItem, Box, Chip, Select, FormControl, InputLabel} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -10,7 +7,6 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {requireLogin} from "../../js/session-handling.js";
-import {FooterComponent} from "../../js/footer-component.js";
 import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {
