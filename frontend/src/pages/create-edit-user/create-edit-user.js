@@ -10,10 +10,10 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditUser)])
+    return pageBuilder(user, [React.createElement(CreateEditUser, {user})])
 }
 
-function CreateEditUser() {
+function CreateEditUser({user}) {
     const [users, setUsers] = useState([]);
     const [username, setUsername] = useState("");
 
@@ -23,6 +23,9 @@ function CreateEditUser() {
     const [createNewUser, setCreateNewUser] = useState(false); // First, it's assumed that the user only wants to edit
     const [noEqualUserInSystem, setNoEqualUserInSystem] = useState(true);
     const [message, setMessage] = useState('');
+
+    const [invitationLink, setInvitationLink] = useState("");
+    const [invitationExpiry, setInvitationExpiry] = useState("");
 
     const urlParams = new URLSearchParams(window.location.search);
     const userIdInUrl = urlParams.get("id");
@@ -100,8 +103,15 @@ function CreateEditUser() {
         });
 
         if (response.ok) {
-            setMessage('Der Nutzer wurde erfolgreich angelegt/bearbeitet!');
-            handleBack()
+            if (!editUser) {
+                // Invitation link
+                const responseData = await response.json();
+                setInvitationLink(responseData.registrationLink);
+                setInvitationExpiry(responseData.expiresAt);
+            } else {
+                setMessage('Der Nutzer wurde erfolgreich bearbeitet!');
+                handleBack()
+            }
         } else if (response.status === 409) {
             setMessage('Es gibt bereits einen Nutzer mit diesem Benutzernamen.');
         } else {
@@ -144,16 +154,12 @@ function CreateEditUser() {
         if (!confirmed) return; // Stop action
 
         // Reset password
-        const response = await fetch(
-            `http://localhost:8080/api/users/${userIdInUrl}/reset-password`,
-            {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password: "" })
-            }
-        );
+        const response = await fetch(`http://localhost:8080/api/users/${userIdInUrl}/reset-password`,{method: "PUT"});
 
         if (response.ok) {
+            const data = await response.json();
+            setInvitationLink(data.registrationLink);
+            setInvitationExpiry(data.expiresAt);
             setMessage('Das Passwort des Nutzers wurde erfolgreich zurückgesetzt!');
         } else {
             setMessage('Das Zurücksetzen des Passworts ist fehlgeschlagen.');
@@ -176,7 +182,14 @@ function CreateEditUser() {
             !noEqualUserInSystem ? React.createElement('p', {key: "user-already-exists-error", className: "full-width"}, "Dieser Nutzer existiert bereits.") : null,
             message ? React.createElement('p', {key: "user-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewUser}),
-            userIdInUrl ? React.createElement(Button, {key: 'reset-password', type: 'button', color: 'warning', variant: 'contained', onClick: handleResetPassword}, 'Passwort zurücksetzen') : null
+            userIdInUrl ? React.createElement(Button, {key: 'reset-password', type: 'button', color: 'warning', variant: 'contained', onClick: handleResetPassword}, 'Passwort zurücksetzen') : null,
+            // (userIdInUrl && !user.active && invitationLink) ? React.createElement('p', {key: "user-invitation-link", className: "full-width"}, `Aktivierungslink: ${invitationLink}`) : null
+            invitationLink ? React.createElement('div', {key: 'invitation-container', className: 'invitation-container full-width'}, [
+                React.createElement('h3', {key: 'invitation-title'}, 'Einladungslink'),
+                React.createElement('p', {key: 'invitation-text'}, invitationLink),
+                invitationExpiry ? React.createElement('small', {key: 'expiry-info'}, `Verfällt: ${new Date(invitationExpiry).toLocaleString('de-DE')}`) : null,
+                React.createElement(Button, {key: 'copy-button', className: 'ml-2', variant: 'outlined', size: 'small', onClick: () => {navigator.clipboard.writeText(invitationLink); alert('Link kopiert!');}}, 'In Zwischenablage kopieren')
+            ]) : null,
         ])
     ]
 }

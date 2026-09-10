@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.repository.UserRepository;
 import com.managementsystem.backend.repository.RoleRepository;
 import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.model.UserStatus;
 import com.managementsystem.backend.model.Role;
 import com.managementsystem.backend.dto.Dtos.NewUserDTO;
 import org.springframework.http.ResponseEntity;
@@ -29,26 +30,23 @@ public class AuthService {
             return ResponseEntity.status(409).body("An Admin user already exists. Please log in with the existing Admin account or contact your administrator.");
         }
 
-        // If there is no Role named "Admin" in the database, the first registered user will be assigned to an new role "Admin"
-        Role adminRole = roleRepository.findByName("Admin");
-        String adminRoleName = (adminRole == null) ? "Admin" : "Admin-Neu";
-
-        // Create Admin role if it doesn't exist
-        if (adminRole == null) {
-            adminRole = new Role();
-            adminRole.setName(adminRoleName);
-            adminRole.setAdminAccess(true);
-            adminRole.setAllProjectsAccess(true);
-            adminRole.setCreateProjectsAccess(true);
-            adminRole.setEditAvailableProjectsAccess(true);
-            adminRole.setCreateAndEditTasksAccess(true);
-            adminRole.setCustomerPageAccess(true);
-            adminRole = roleRepository.save(adminRole);
-        }
+        Role adminRole = roleRepository.findByAdminAccessTrue();
+         if (adminRole == null) {
+            Role newAdminRole = new Role();
+             newAdminRole.setName("Admin-Neu");
+             newAdminRole.setAdminAccess(true);
+             newAdminRole.setAllProjectsAccess(true);
+             newAdminRole.setCreateProjectsAccess(true);
+             newAdminRole.setEditAvailableProjectsAccess(true);
+             newAdminRole.setCreateAndEditTasksAccess(true);
+             newAdminRole.setCustomerPageAccess(true);
+             adminRole = roleRepository.save(newAdminRole);
+         };
 
         User u = new User();
         u.setUsername(dto.username());
         u.setPassword(passwordEncoder.encode(dto.password()));
+        u.setStatus(UserStatus.ACTIVE);
         u.setRole(adminRole);
         userRepository.save(u);
 

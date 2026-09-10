@@ -19,6 +19,8 @@ import jakarta.persistence.Column;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 
@@ -42,6 +44,10 @@ public class User {
 
     @JsonIgnore
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
 
     // FK
     @ManyToOne(fetch = FetchType.LAZY)

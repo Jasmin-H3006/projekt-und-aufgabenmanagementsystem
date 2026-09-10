@@ -53,7 +53,6 @@ public class AuthController {
         return result;
     }
 
-    // Beispiel: /api/auth/logout
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

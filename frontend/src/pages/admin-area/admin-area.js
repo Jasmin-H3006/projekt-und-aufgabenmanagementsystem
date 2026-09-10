@@ -70,6 +70,7 @@ function UserOverview() {
                             [
                                 React.createElement(TableCell, {key: 'users-username'}, 'Benutzername'),
                                 React.createElement(TableCell, {key: 'users-role'}, 'Rolle'),
+                                React.createElement(TableCell, {key: 'users-state'}, 'Status'),
                                 React.createElement(TableCell, {key: 'users-edit'}, "Benutzer bearbeiten")
                             ]
                         ),
@@ -84,6 +85,7 @@ function UserOverview() {
                             { key: user.id },
                             React.createElement(TableCell, {key: 'user-username'}, user.username),
                             React.createElement(TableCell, {key: 'user-role'}, user.role.name),
+                            React.createElement(TableCell, {key: 'user-state'}, (user.status === "ACTIVE") ? "Aktiv" : "Inaktiv"),
                             React.createElement(
                                 TableCell,
                                 { key: "user-edit" },

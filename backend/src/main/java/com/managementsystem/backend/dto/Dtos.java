@@ -5,13 +5,23 @@ import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
 import com.managementsystem.backend.model.Role;
+import java.time.Instant;
 
 public interface Dtos {
     @Builder
     public record NewUserDTO(
         @NotEmpty String username,
-        String password,
+        @NotEmpty String password,
+        @NotNull String status,
         @NotEmpty Long roleId
+    ) {}
+    @Builder
+    public record NewUserInvitationDTO(
+        @NotEmpty Long userId,
+        @NotEmpty String registrationLink,
+        @NotEmpty Instant expiresAt,
+        @NotEmpty Instant usedAt,
+        @NotEmpty Instant createdAt
     ) {}
     @Builder
     public record NewRoleDTO(
