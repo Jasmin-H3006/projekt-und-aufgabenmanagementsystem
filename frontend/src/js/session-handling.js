@@ -14,6 +14,10 @@ export function requireLogin(
         })
         .then(user => {
             if (!user) return null;
+            if (user.userStatus !== "ACTIVE") {
+                window.location.href = "/";
+                return null;
+            }
             if (setUsername) setUsername(user.username);
             if(
                 (needsAdminAccess && !user.adminAccess) ||

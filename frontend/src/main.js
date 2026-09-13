@@ -17,6 +17,15 @@ function LogInForm() {
 
         const user = { username, password };
 
+        if(username === "") {
+            setMessage('Bitte den Benutzernamen angeben.');
+            return;
+        }
+        if(password === " " || password === null) {
+            setMessage('Bitte das Passwort angeben.');
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:8080/api/auth/log-in', {
                 method: 'POST',
@@ -58,12 +67,12 @@ function LogInForm() {
                 React.createElement('h2', {key: "user-log-in"}, "Anmelden"),
                 React.createElement(TextField,
                     {
-                        key: "username", variant: "outlined", label: "Benutzername", value: username,
+                        key: "username", variant: "outlined", label: "Benutzername", required: true, value: username,
                         onChange: (e) => setUsername(e.target.value)
                     }, null),
                 React.createElement(TextField,
                     {
-                        key: "password", variant: "outlined", label: "Passwort", value: password,
+                        key: "password", variant: "outlined", label: "Passwort", type: "password", required: true, value: password,
                         onChange: (e) => setPassword(e.target.value)
                     }, null),
                 message ? React.createElement('p', {key: "admin-error", className: "full-width"}, message) : null,

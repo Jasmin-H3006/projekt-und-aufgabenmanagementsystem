@@ -85,5 +85,6 @@ public class UserInvitationService {
     // Delete invitations
     public void deleteInvitationsForUser(User user) {
         userInvitationRepository.deleteByUser(user);
+        userInvitationRepository.flush();
     }
 }

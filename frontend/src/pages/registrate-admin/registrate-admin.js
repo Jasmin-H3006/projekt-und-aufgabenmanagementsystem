@@ -11,6 +11,7 @@ function RegisterAdmin() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
@@ -18,8 +19,23 @@ function RegisterAdmin() {
 
         const user = { username, password };
 
+        if (password !== confirmPassword) {
+            setMessage('Die Passwörter stimmen nicht überein');
+            return;
+        }
+
+        if(username === "") {
+            setMessage('Bitte einen Benutzernamen angeben.');
+            return;
+        }
+
+        if(password === " " || password === null) {
+            setMessage('Bitte ein Passwort angeben.');
+            return;
+        }
+
         try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
+            const response = await fetch('http://localhost:8080/api/auth/register-admin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,11 +66,14 @@ function RegisterAdmin() {
                 React.createElement('h2', {key: "admin-register"}, "Als Admin Registrieren"),
                 React.createElement(TextField,
                     {
-                        key: "admin-username", variant: "outlined", label: "Benutzername", value: username,
+                        key: "admin-username", className: "full-width", variant: "outlined", label: "Benutzername", value: username,
                         onChange: (e) => setUsername(e.target.value)
                     }, null),
-                React.createElement(TextField, {key: "admin-password", variant: "outlined", label: "Passwort", value: password,
+                React.createElement(TextField, {key: "admin-password-first-try", variant: "outlined", label: "Passwort", type: "password", required: true, value: password,
                     onChange: (e) => setPassword(e.target.value)
+                }, null),
+                React.createElement(TextField, {key: "admin-password-second-try", variant: "outlined", label: "Passwort wiederholen", type: "password", required: true, value: confirmPassword,
+                    onChange: (e) => setConfirmPassword(e.target.value)
                 }, null),
                 message ? React.createElement('p', {key: "admin-error", className: "full-width"}, message) : null,
                 React.createElement(

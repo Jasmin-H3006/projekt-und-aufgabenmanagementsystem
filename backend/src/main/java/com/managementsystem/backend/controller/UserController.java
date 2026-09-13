@@ -19,6 +19,8 @@ import com.managementsystem.backend.model.Role;
 import com.managementsystem.backend.service.RoleService;
 import com.managementsystem.backend.model.UserStatus;
 import com.managementsystem.backend.dto.Dtos.NewUserInvitationDTO;
+import com.managementsystem.backend.dto.Dtos.ActivateUserDTO;
+import com.managementsystem.backend.service.UserInvitationService;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,6 +30,7 @@ public class UserController {
 
     private final UserService service;
     private final RoleService roleService;
+    private final UserInvitationService userInvitationService;
 
     @PostMapping("/create")
     public ResponseEntity<NewUserInvitationDTO> createUser(@RequestBody NewUserDTO dto) {
@@ -58,6 +61,12 @@ public class UserController {
         existing.setRole(role);
 
         return ResponseEntity.ok(service.updateUser(existing));
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<User> activateUser(@PathVariable Long id, @RequestBody ActivateUserDTO dto) {
+        service.activateUser(id, dto.token(), dto.password());
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/reset-password")

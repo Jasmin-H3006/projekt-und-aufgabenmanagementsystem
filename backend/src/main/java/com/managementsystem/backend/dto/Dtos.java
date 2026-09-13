@@ -24,6 +24,11 @@ public interface Dtos {
         @NotEmpty Instant createdAt
     ) {}
     @Builder
+    public record ActivateUserDTO(
+        @NotEmpty String token,
+        @NotEmpty String password
+    ) {}
+    @Builder
     public record NewRoleDTO(
         @NotEmpty String name,
         @NotEmpty Boolean adminAccess,
@@ -78,6 +83,7 @@ public interface Dtos {
         boolean createProjectsAccess,
         boolean editAvailableProjectsAccess,
         boolean createAndEditTasksAccess,
-        boolean customerPageAccess
+        boolean customerPageAccess,
+        String userStatus
     ) {}
 }

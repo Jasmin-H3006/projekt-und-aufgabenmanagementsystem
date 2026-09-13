@@ -27,8 +27,9 @@ function CreateEditUser({user}) {
     const [invitationLink, setInvitationLink] = useState("");
     const [invitationExpiry, setInvitationExpiry] = useState("");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const userIdInUrl = urlParams.get("id");
+    const [userIdInUrl, setUserIdInUrl] = useState(
+        new URLSearchParams(window.location.search).get("id")
+    );
 
     useEffect(() => {
         fetch("http://localhost:8080/api/users/get-all")
@@ -75,8 +76,8 @@ function CreateEditUser({user}) {
                 'http://localhost:8080/api/users/user-exists?username=' + encodeURIComponent(username)
             );
             if (!responseCheck.ok) return;
-            const exists = await responseCheck.json();
 
+            const exists = await responseCheck.json();
             if (exists) {
                 setNoEqualUserInSystem(false);
                 return;
@@ -108,6 +109,17 @@ function CreateEditUser({user}) {
                 const responseData = await response.json();
                 setInvitationLink(responseData.registrationLink);
                 setInvitationExpiry(responseData.expiresAt);
+
+                // Write userId in URL
+                setUserIdInUrl(responseData.userId);
+                window.history.replaceState(
+                    null,
+                    "",
+                    `${window.location.pathname}?id=${responseData.userId}`
+                );
+                // User is now an already existing user (important for editing in the same window in which the user was created)
+                setCreateNewUser(false);
+                setMessage('Der Nutzer wurde erfolgreich angelegt!');
             } else {
                 setMessage('Der Nutzer wurde erfolgreich bearbeitet!');
                 handleBack()
@@ -181,11 +193,11 @@ function CreateEditUser({user}) {
             ),
             !noEqualUserInSystem ? React.createElement('p', {key: "user-already-exists-error", className: "full-width"}, "Dieser Nutzer existiert bereits.") : null,
             message ? React.createElement('p', {key: "user-error", className: "full-width"}, message) : null,
-            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewUser}),
+            React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewUser, userForm: true}),
             userIdInUrl ? React.createElement(Button, {key: 'reset-password', type: 'button', color: 'warning', variant: 'contained', onClick: handleResetPassword}, 'Passwort zurücksetzen') : null,
-            // (userIdInUrl && !user.active && invitationLink) ? React.createElement('p', {key: "user-invitation-link", className: "full-width"}, `Aktivierungslink: ${invitationLink}`) : null
             invitationLink ? React.createElement('div', {key: 'invitation-container', className: 'invitation-container full-width'}, [
-                React.createElement('h3', {key: 'invitation-title'}, 'Einladungslink'),
+                React.createElement('h3', {key: 'invitation-title'}, 'Aktivierungslink'),
+                React.createElement('strong', {key: 'invitation-hint-text'}, "Bitte kopieren Sie sich den Link in die Zwischenablage, da er nur einmal angezeigt wird."),
                 React.createElement('p', {key: 'invitation-text'}, invitationLink),
                 invitationExpiry ? React.createElement('small', {key: 'expiry-info'}, `Verfällt: ${new Date(invitationExpiry).toLocaleString('de-DE')}`) : null,
                 React.createElement(Button, {key: 'copy-button', className: 'ml-2', variant: 'outlined', size: 'small', onClick: () => {navigator.clipboard.writeText(invitationLink); alert('Link kopiert!');}}, 'In Zwischenablage kopieren')

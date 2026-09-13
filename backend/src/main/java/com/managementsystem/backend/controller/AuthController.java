@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.dto.Dtos.NewUserDTO;
 import com.managementsystem.backend.service.AuthService;
@@ -21,6 +22,11 @@ import com.managementsystem.backend.dto.Dtos.CurrentUserDTO;
 import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.model.Role;
 import com.managementsystem.backend.repository.UserRepository;
+import com.managementsystem.backend.model.UserInvitation;
+import com.managementsystem.backend.repository.UserInvitationRepository;
+import com.managementsystem.backend.service.UserInvitationService;
+import com.managementsystem.backend.model.UserStatus;
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,9 +37,11 @@ public class AuthController {
      private final AuthService authService;
      private final LoginService loginService;
      private final UserRepository userRepository;
+     private final UserInvitationRepository userInvitationRepository;
+     private final UserInvitationService userInvitationService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody NewUserDTO dto) {
+    @PostMapping("/register-admin")
+    public ResponseEntity<String> registerAdmin(@RequestBody NewUserDTO dto) {
         return authService.registerAdmin(dto);
     }
 
@@ -80,7 +88,8 @@ public class AuthController {
             role.getCreateProjectsAccess(),
             role.getEditAvailableProjectsAccess(),
             role.getCreateAndEditTasksAccess(),
-            role.getCustomerPageAccess()
+            role.getCustomerPageAccess(),
+            user.getStatus().name()
         );
 
         return ResponseEntity.ok(dto);
@@ -89,5 +98,33 @@ public class AuthController {
     @GetMapping("/admin-exists")
     public ResponseEntity<Boolean> adminExists() {
         return ResponseEntity.ok(authService.adminExists());
+    }
+
+    @GetMapping("/invitation-user")
+    public ResponseEntity<CurrentUserDTO> invitationUser(@RequestParam String token) {
+        String tokenHash = userInvitationService.hashToken(token);
+        UserInvitation invitation = userInvitationRepository.findByTokenHash(tokenHash)
+            .orElseThrow(() -> new RuntimeException("Invitation not found"));
+
+        if (invitation.getUsedAt() != null) {
+            throw new RuntimeException("Invitation has already been used");
+        }
+
+        if (invitation.getExpiresAt().isBefore(Instant.now())) {
+            throw new RuntimeException("Invitation has expired");
+        }
+
+        User user = invitation.getUser();
+
+        if (user.getStatus() != UserStatus.INVITED) {
+            throw new RuntimeException("User is not awaiting activation");
+        }
+
+        return ResponseEntity.ok(new CurrentUserDTO(
+            user.getId(),
+            user.getUsername(),
+            false, false, false, false, false, false,
+            user.getStatus().name()
+        ));
     }
 }
