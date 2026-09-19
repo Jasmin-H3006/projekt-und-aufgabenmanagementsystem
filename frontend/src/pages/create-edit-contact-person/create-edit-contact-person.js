@@ -9,7 +9,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditContactPerson)])
+    return pageBuilder(user, [React.createElement(CreateEditContactPerson, {key: 'create-edit-contact-person'})])
 }
 
 function CreateEditContactPerson() {

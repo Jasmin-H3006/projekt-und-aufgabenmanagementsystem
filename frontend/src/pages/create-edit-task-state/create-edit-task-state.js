@@ -10,7 +10,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditTaskState)])
+    return pageBuilder(user, [React.createElement(CreateEditTaskState, {key: 'create-edit-task-state'})])
 }
 
 function CreateEditTaskState() {

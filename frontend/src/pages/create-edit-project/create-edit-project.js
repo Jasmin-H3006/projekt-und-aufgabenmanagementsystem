@@ -17,7 +17,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditProject)])
+    return pageBuilder(user, [React.createElement(CreateEditProject, {key: 'create-edit-project'})])
 }
 
 function CreateEditProject() {

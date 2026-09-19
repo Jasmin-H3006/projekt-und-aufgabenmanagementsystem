@@ -1,11 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-    Button,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
+import {Button, Table, TableBody, TableRow, TableCell,
     Toolbar,
     TableHead,
     IconButton
@@ -24,9 +19,9 @@ function Page() {
 
     return pageBuilder(user,
         [
-            React.createElement(UserOverview),
-            React.createElement(RoleOverview),
-            React.createElement(TaskStatesOverview)
+            React.createElement(UserOverview, {key: 'user-overview'}),
+            React.createElement(RoleOverview, {key: 'role-overview'}),
+            React.createElement(TaskStatesOverview, {key: 'task-states-overview'})
         ]
     )
 }

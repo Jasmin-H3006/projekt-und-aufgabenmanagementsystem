@@ -62,7 +62,7 @@ function LogInForm() {
     return (
         React.createElement(
             "form",
-            {className: "log-in-form", onSubmit: handleSubmit},
+            {key: "log-in-form", className: "log-in-form", onSubmit: handleSubmit},
             [
                 React.createElement('h2', {key: "user-log-in"}, "Anmelden"),
                 React.createElement(TextField,
@@ -98,9 +98,9 @@ const root = ReactDOM.createRoot(container);
 root.render(
     React.createElement(
         ThemeProvider,
-        { theme },[
-        React.createElement(MenuComponentLogin),
-        React.createElement(LogInForm),
-        React.createElement(FooterComponent)]
+        { key: "theme-provider", theme },[
+        React.createElement(MenuComponentLogin, {key: "menu-component-login"}),
+        React.createElement(LogInForm, {key: "login-form"}),
+        React.createElement(FooterComponent, {key: "footer-component"})]
     )
 );

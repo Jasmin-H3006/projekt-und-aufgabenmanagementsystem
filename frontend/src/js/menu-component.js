@@ -46,11 +46,11 @@ export function MenuComponent({user}) {
             // Dropdown
             React.createElement(
                 Tooltip,
-                { key: "dropdown"},
+                { key: "dropdown-container"},
                 React.createElement(
                     IconButton,
-                    {onClick: handleClick, color: 'inherit'},
-                    React.createElement(MenuIcon, {className: 'menu-dropdown-icon'}, null)
+                    {key: "dropdown-btn", onClick: handleClick, color: 'inherit'},
+                    React.createElement(MenuIcon, {key: 'dropdown-icon', className: 'menu-dropdown-icon'}, null)
                 )
             ),
         ]
@@ -60,7 +60,7 @@ export function MenuComponent({user}) {
         Menu,
         {
             anchorEl,
-            key: 'menu-dropdown-menu',
+            key: 'menu-dropdown-container',
             open,
             onClose: handleClose,
             onClick: handleClose,
@@ -72,8 +72,8 @@ export function MenuComponent({user}) {
                 [
                     React.createElement(
                         ListItemIcon,
-                        { key: "home-icon" },
-                        React.createElement(HomeIcon, { fontSize: "small" })
+                        { key: "home-icon-container" },
+                        React.createElement(HomeIcon, { key: "home-icon", fontSize: "small" })
                     ),
                     "Startseite",
                 ]
@@ -84,8 +84,8 @@ export function MenuComponent({user}) {
                 [
                     React.createElement(
                         ListItemIcon,
-                        { key: "admin-area-icon" },
-                        React.createElement(AdminPanelSettings, { fontSize: "small" })
+                        { key: "admin-area-icon-container" },
+                        React.createElement(AdminPanelSettings, { key: "admin-area-icon", fontSize: "small" })
                     ),
                     "Admin-Bereich",
                 ]
@@ -96,8 +96,8 @@ export function MenuComponent({user}) {
                 [
                     React.createElement(
                         ListItemIcon,
-                        { key: "logout-icon" },
-                        React.createElement(Logout, { fontSize: "small" })
+                        { key: "logout-icon-container" },
+                        React.createElement(Logout, { key: "logout-icon", fontSize: "small" })
                     ),
                     "Ausloggen",
                 ]
@@ -105,5 +105,5 @@ export function MenuComponent({user}) {
         ]
     );
 
-    return React.createElement(AppBar, {position: 'static'}, [topBar, menu]);
+    return React.createElement(AppBar, {key: "menu-app-bar", position: 'static'}, [topBar, menu]);
 }

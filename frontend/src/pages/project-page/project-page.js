@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-    Button,
-    IconButton,
-    Toolbar
-} from "@mui/material";
+import {Button, IconButton, Toolbar} from "@mui/material";
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
 import {pageBuilder} from "../../js/page-builder.js";
@@ -24,7 +20,7 @@ function Page() {
 
     const backLink = '../home/home.html';
 
-    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(ProjectOverview), React.createElement(ProjectTasks, {user})])
+    return pageBuilder(user, [React.createElement(BackButton, {key: 'back-button', pageLink: backLink}), React.createElement(ProjectOverview, {key: 'project-overview'}), React.createElement(ProjectTasks, {key: 'project-tasks-overview', user})])
 }
 
 function ProjectOverview() {

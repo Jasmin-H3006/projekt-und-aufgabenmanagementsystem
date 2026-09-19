@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-    Button,
-    Toolbar,
-    IconButton
-} from "@mui/material";
+import { Button, Toolbar, IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
@@ -20,7 +16,7 @@ function Page() {
 
     const backLink = '../customer-page/customer-page.html'
 
-    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(CustomerContactPersonsOverview)])
+    return pageBuilder(user, [React.createElement(BackButton, {key: 'back-button', pageLink: backLink}), React.createElement(CustomerContactPersonsOverview, {key: 'customer-contact-persons-overview'})])
 }
 
 function CustomerContactPersonsOverview() {

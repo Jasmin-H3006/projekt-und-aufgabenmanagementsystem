@@ -21,7 +21,7 @@ function Page() {
 
     const backLink = '../home/home.html';
 
-    return pageBuilder(user, [React.createElement(BackButton, {pageLink: backLink}), React.createElement(CustomerOverview)])
+    return pageBuilder(user, [React.createElement(BackButton, {key: 'back-button', pageLink: backLink}), React.createElement(CustomerOverview, {key: 'customer-overview'})])
 }
 
 function CustomerOverview() {

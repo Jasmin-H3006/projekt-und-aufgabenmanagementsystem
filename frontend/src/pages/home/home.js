@@ -14,18 +14,14 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(Intro, {username}), React.createElement(ToCustomerPage, {user}), React.createElement(ProjectsCards, {user})])
+    return pageBuilder(user, [React.createElement(Intro, {key: 'intro', username}), React.createElement(ToCustomerPage, {key: 'to-customer-page', user}), React.createElement(ProjectsCards, {key: 'projects-card', user})])
 }
 
 function Intro({username}) {
     return React.createElement(
-        Typography,
+        "h2",
         {key: 'mane-intro', className: 'pl-2'},
-        React.createElement(
-            "h2",
-            {key: 'welcome'},
-            `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
-        )
+        `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
     )
 }
 
@@ -85,7 +81,7 @@ function ProjectsCards({user}) {
 }
 
 function ProjectCardsIntroduction(user, myProjects = true) {
-    // Other-Projects-Section is not available for those without allProjectsAccess
+    // "Other Projects"-Section is not available for those without allProjectsAccess
     if (!myProjects && !user.allProjectsAccess) return;
     return React.createElement(
         Toolbar,
@@ -97,7 +93,7 @@ function ProjectCardsIntroduction(user, myProjects = true) {
     )
 }
 function ProjectCardElements(projects, user, myProjects = true) {
-    // Other-Projects-Section is not available for those without allProjectsAccess
+    // "Other Projects"-Section is not available for those without allProjectsAccess
     if (!myProjects && !user.allProjectsAccess) return;
 
     const viewProject = (projectId) => {
@@ -108,47 +104,49 @@ function ProjectCardElements(projects, user, myProjects = true) {
         window.location.href='../create-edit-project/create-edit-project.html?projectId=' + projectId
     };
 
+    const projectGroup = myProjects ? "my" : "other";
+
     return (
         // Projekte-Container
         React.createElement(
-            'div', {key: myProjects ? 'my-projects-container' : 'other-projects-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            'div', {key: `${projectGroup}-projects-container`, className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
             // Einzelnen Projekt-Container
             projects.length > 0 ? projects.map (project =>
                 React.createElement(
-                    'div', {key: myProjects ? 'my-project-container-' + project.id : 'other-project-container-' + project.id, className: 'card-container'},
+                    'div', {key: `${projectGroup}-project-container-` + project.id, className: 'card-container'},
                     React.createElement(
-                        'div', {key: myProjects ? 'my-project-title-container' : 'other-project-title-container', className: 'card-title-container'}, [
-                            React.createElement('h3', {key: myProjects ? 'my-project-title' : 'other-project-title', className: user.editAvailableProjectsAccess ? 'card-with-two-buttons' : 'card-with-one-button'}, project.title),
+                        'div', {key: `${projectGroup}-project-title-container-` + project.id, className: 'card-title-container'}, [
+                            React.createElement('h3', {key: `${projectGroup}-project-title-` + project.id, className: user.editAvailableProjectsAccess ? 'card-with-two-buttons' : 'card-with-one-button'}, project.title),
                             React.createElement(
                                 'div',
-                                { key: myProjects ? 'edit-my-project' : 'edit-other-project', className: 'edit-card-element view-card-element'},
+                                { key: `edit-${projectGroup}-project-` + project.id, className: 'edit-card-element view-card-element'},
                                 React.createElement(
                                     IconButton,
-                                    { key: myProjects ? 'view-my-project-icon-btn' : 'view-other-project-icon-btn', className: 'card-element-icon-btn mr-0-5', onClick: () => viewProject(project.id) },
-                                    React.createElement(VisibilityIcon, { fontSize: "small" })
+                                    { key: `view-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn mr-0-5', onClick: () => viewProject(project.id) },
+                                    React.createElement(VisibilityIcon, { key: `view-${projectGroup}-project-icon-` + project.id, fontSize: "small" })
                                 ),
                                 user.editAvailableProjectsAccess ? React.createElement(
                                     IconButton,
-                                    { key: myProjects ? 'edit-my-project-icon-btn' : 'edit-other-project-icon-btn', className: 'card-element-icon-btn', onClick: () => editProject(project.id) },
-                                    React.createElement(EditIcon, { fontSize: "small" })
+                                    { key: `edit-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn', onClick: () => editProject(project.id) },
+                                    React.createElement(EditIcon, { key: `edit-${projectGroup}-project-icon-` + project.id, fontSize: "small" })
                                 ) : null
                             )
                         ]
                     ),
-                    React.createElement('p', {key: myProjects ? 'my-project-description' : 'other-project-description', className: 'card-description'}, project.description),
+                    React.createElement('p', {key: `${projectGroup}-project-description-` + project.id, className: 'card-description'}, project.description),
                     React.createElement(
-                        'div', {key: myProjects ? 'my-project-infos-container' : 'other-project-infos-container'}, [
-                            React.createElement('p', {key: myProjects ? 'my-project-info-id' : 'other-project-info-id'}, `ID: ${project.id}`),
-                            React.createElement('p', {key: myProjects ? 'my-project-info-customer' : 'other-project-info-customer'}, `Kunde: ${project.customer.name}`),
-                            React.createElement('p', {key: myProjects ? 'my-project-info-project-manager' : 'other-project-info-project-manager'}, `Projektleiter: ${project.projectManager.username}`),
-                            React.createElement('p', {key: myProjects ? 'my-project-info-project-user' : 'other-project-info-project-user'},  project.users && project.users.length > 0
+                        'div', {key: `${projectGroup}-project-infos-container-` + project.id}, [
+                            React.createElement('p', {key: `${projectGroup}-project-info-id-` + project.id}, `ID: ${project.id}`),
+                            React.createElement('p', {key: `${projectGroup}-project-info-customer-` + project.id}, `Kunde: ${project.customer.name}`),
+                            React.createElement('p', {key: `${projectGroup}-project-info-project-manager-` + project.id}, `Projektleiter: ${project.projectManager.username}`),
+                            React.createElement('p', {key: `${projectGroup}-project-info-project-user-` + project.id},  project.users && project.users.length > 0
                                 ? `Beteiligte Mitarbeiter: ${project.users.map(user => user.username).join(", ")}` : "Beteiligte Mitarbeiter: -"),
-                            React.createElement('p', {key: myProjects ? 'my-project-info-project-deadline' : 'other-project-info-project-deadline'}, project.deadline ? `Frist: ${project.deadline}` : "Frist: -"),
-                            React.createElement('p', {key: myProjects ? 'my-project-info-project-progress' : 'other-project-info-project-progress'}, `Fortschritt: ${project.taskCounts.total > 0 ? Math.round((project.taskCounts.done / project.taskCounts.total) * 100) : "-"}%`)
+                            React.createElement('p', {key: `${projectGroup}-project-info-project-deadline-` + project.id}, project.deadline ? `Frist: ${project.deadline}` : "Frist: -"),
+                            React.createElement('p', {key: `${projectGroup}-project-info-project-progress-` + project.id}, `Fortschritt: ${project.taskCounts.total > 0 ? Math.round((project.taskCounts.done / project.taskCounts.total) * 100) : "-"}%`)
                         ]
                     )
                 )
-            ) : React.createElement("p", {key: myProjects ? 'hint-no-my-projects' : 'hint-no-other-projects', className: 'pl-2'}, myProjects ? "Aktuell sind keine Projekte für Sie vorhanden." : "Aktuell gibt es keine weiteren Projekte.")
+            ) : React.createElement("p", {key: `hint-no-${projectGroup}-projects`, className: 'pl-2'}, myProjects ? "Aktuell sind keine Projekte für Sie vorhanden." : "Aktuell gibt es keine weiteren Projekte.")
         )
     );
 }
@@ -156,4 +154,4 @@ function ProjectCardElements(projects, user, myProjects = true) {
 // Komponente in den DOM rendern
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));
+root.render(React.createElement(Page, {key: 'page'}));

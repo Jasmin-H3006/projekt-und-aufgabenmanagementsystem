@@ -97,8 +97,8 @@ root.render(
     React.createElement(
         ThemeProvider,
         { theme },[
-        React.createElement(MenuComponentLogin),
-        React.createElement(RegisterAdmin),
-        React.createElement(FooterComponent)]
+        React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
+        React.createElement(RegisterAdmin, {key: 'register-admin'}),
+        React.createElement(FooterComponent, {key: 'footer-component'})]
     )
 );

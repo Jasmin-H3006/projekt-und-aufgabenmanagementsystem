@@ -11,7 +11,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditTask)])
+    return pageBuilder(user, [React.createElement(CreateEditTask, {key: 'create-edit-task'})])
 }
 
 function CreateEditTask() {

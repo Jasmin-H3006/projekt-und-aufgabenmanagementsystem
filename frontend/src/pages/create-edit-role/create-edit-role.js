@@ -9,7 +9,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditRole)])
+    return pageBuilder(user, [React.createElement(CreateEditRole, {key: 'create-edit-role'})])
 }
 
 function CreateEditRole() {

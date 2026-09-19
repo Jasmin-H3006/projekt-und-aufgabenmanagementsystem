@@ -10,7 +10,7 @@ function Page() {
             .then(setUser);
     }, []);
 
-    return pageBuilder(user, [React.createElement(CreateEditUser, {user})])
+    return pageBuilder(user, [React.createElement(CreateEditUser, {key: 'create-edit-user', user})])
 }
 
 function CreateEditUser({user}) {
