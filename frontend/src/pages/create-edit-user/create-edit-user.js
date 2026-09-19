@@ -89,7 +89,7 @@ function CreateEditUser({user}) {
             return;
         }
         if(roleId === "") {
-            setMessage('Jedem Nutzer muss eine Rolle zugeordnet werden.');
+            setMessage('Bitte eine Rolle wählen.');
             return;
         }
 
@@ -136,6 +136,11 @@ function CreateEditUser({user}) {
 
         if (!userIdInUrl) return;
 
+        if (Number(userIdInUrl) === user.id) {
+            setMessage('Als Administrator können Sie Ihren eigenen Account nicht löschen. So soll sichergestellt werden, dass immer mindestens ein Administrator im System vorhanden ist. Wenn es keinen Administrator im System gibt, hat jeder die Möglichkeit, den ersten Admin-Zugang einzurichten.');
+            return;
+        }
+
         const confirmed = window.confirm(
             `Soll der Nutzer mit der ID "${userIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
         );
@@ -151,6 +156,8 @@ function CreateEditUser({user}) {
         if (response.ok) {
             setMessage('Der Nutzer wurde erfolgreich gelöscht!');
             handleBack()
+        } else if (response.status === 403) {
+            setMessage('Löschen fehlgeschlagen. Bitte prüfen Sie, ob der Nutzer noch einem Projekt zugeordnet ist.');
         } else {
             setMessage('Löschen fehlgeschlagen.');
         }

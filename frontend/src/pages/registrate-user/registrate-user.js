@@ -30,11 +30,14 @@ function RegisterUser() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if(password.trim() === "") {
+            setMessage('Bitte ein Passwort angeben.');
+            return;
+        }
         if (password !== confirmPassword) {
             setMessage('Die Passwörter stimmen nicht überein');
             return;
         }
-
         if (!userId || !token) {
             setMessage('Der Einladungslink ist ungültig oder konnte nicht geladen werden.');
             return;

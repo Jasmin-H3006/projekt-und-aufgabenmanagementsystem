@@ -4,12 +4,15 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.model.Task;
 import com.managementsystem.backend.repository.TaskRepository;
+import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.service.ProjectService;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final ProjectService projectService;
 
     public Task createTask(Task task) {
         return taskRepository.save(task);
@@ -29,6 +32,10 @@ public class TaskService {
 
     public Task getTaskById(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+    }
+
+    public boolean canAccessTask(User user, Task task) {
+        return projectService.canAccessProject(user, task.getProject());
     }
 
     public void deleteTask(Long id) {

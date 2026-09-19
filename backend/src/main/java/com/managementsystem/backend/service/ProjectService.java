@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.model.Project;
 import com.managementsystem.backend.repository.ProjectRepository;
 import java.util.List;
+import com.managementsystem.backend.model.User;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,14 @@ public class ProjectService {
 
     public Project getProjectById(Long id) {
         return projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+    }
+
+    public boolean canAccessProject(User user, Project project) {
+        if (user.getRole().getAllProjectsAccess()){
+            return true;
+        }
+
+        return user.getProjects().contains(project);
     }
 
     public void deleteProject(Long id) {

@@ -42,6 +42,8 @@ function CreateEditProject() {
     const urlParams = new URLSearchParams(window.location.search);
     const projectIdInUrl = urlParams.get("projectId");
 
+    const maxLength = 500;
+
     useEffect(() => {
         fetch("http://localhost:8080/api/projects/get-all")
             .then(res => res.json())
@@ -77,8 +79,15 @@ function CreateEditProject() {
             return;
         }
 
-        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`)
-            .then(r => r.json())
+        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`,
+            {credentials: "include"} // Have the browser send the session token
+        )
+            .then(r => {
+                if (!r.ok) {
+                    throw new Error(`HTTP ${r.status}`);
+                }
+                return r.json();
+            })
             .then(project => {
                 setTitle(project.title);
                 setCustomerId(Number(project.customer.id));
@@ -139,6 +148,10 @@ function CreateEditProject() {
         }
         if(description === "") {
             setMessage('Bitte eine Beschreibung für das Projekt hinterlegen.');
+            return;
+        }
+        if(description.length > maxLength) {
+            setMessage(`Die Beschreibung darf nicht länger als ${maxLength} Zeichen sein.`);
             return;
         }
 

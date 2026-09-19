@@ -40,6 +40,8 @@ public class Project {
 
     private String title;
     private LocalDate deadline;
+
+    @Column(length = 500)
     private String description;
 
     // FK

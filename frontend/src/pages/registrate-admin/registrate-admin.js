@@ -19,18 +19,16 @@ function RegisterAdmin() {
 
         const user = { username, password };
 
-        if (password !== confirmPassword) {
-            setMessage('Die Passwörter stimmen nicht überein');
-            return;
-        }
-
-        if(username === "") {
+        if(username.trim() === "") {
             setMessage('Bitte einen Benutzernamen angeben.');
             return;
         }
-
-        if(password === " " || password === null) {
+        if(password.trim() === "") {
             setMessage('Bitte ein Passwort angeben.');
+            return;
+        }
+        if (password !== confirmPassword) {
+            setMessage('Die Passwörter stimmen nicht überein');
             return;
         }
 

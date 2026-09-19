@@ -17,11 +17,11 @@ function LogInForm() {
 
         const user = { username, password };
 
-        if(username === "") {
+        if(username.trim() === "") {
             setMessage('Bitte den Benutzernamen angeben.');
             return;
         }
-        if(password === " " || password === null) {
+        if(password.trim() === "") {
             setMessage('Bitte das Passwort angeben.');
             return;
         }

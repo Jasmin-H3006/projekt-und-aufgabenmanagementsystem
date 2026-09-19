@@ -19,6 +19,9 @@ import com.managementsystem.backend.model.Project;
 import com.managementsystem.backend.service.ProjectService;
 import com.managementsystem.backend.service.TaskStateService;
 import com.managementsystem.backend.model.TaskState;
+import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -29,6 +32,7 @@ public class TaskController {
     private final TaskService service;
     private final ProjectService projectService;
     private final TaskStateService taskStateService;
+    private final UserRepository userRepository;
 
     @PostMapping("/create")
     public String createTask(@RequestBody NewTaskDTO dto) {
@@ -80,8 +84,21 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getTaskById(id));
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id, HttpSession session) {
+
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+
+        User user = userRepository.findByUsername(username);
+        Task task = service.getTaskById(id);
+
+        if (!service.canAccessTask(user, task)) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/{id}")

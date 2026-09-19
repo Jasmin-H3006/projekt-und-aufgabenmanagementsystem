@@ -29,7 +29,7 @@ export function MenuComponent({user}) {
             method: "POST",
             credentials: "include",
         });
-        window.location.href="../../../index.html"
+        window.location.replace("../../../index.html") // Replace so that it is not possible to return to the logged-in state by using the browser's back Button
     };
 
 

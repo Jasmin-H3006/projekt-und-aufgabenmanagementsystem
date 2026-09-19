@@ -7,7 +7,7 @@ export function requireLogin(
     return fetch("http://localhost:8080/api/auth/current-user", { credentials: "include" })
         .then(res => {
             if (!res.ok) {
-                window.location.href = "/";
+                window.location.replace("/");
                 return null;
             }
             return res.json();
@@ -15,7 +15,7 @@ export function requireLogin(
         .then(user => {
             if (!user) return null;
             if (user.userStatus !== "ACTIVE") {
-                window.location.href = "/";
+                window.location.replace("/");
                 return null;
             }
             if (setUsername) setUsername(user.username);

@@ -148,7 +148,7 @@ function ProjectCardElements(projects, user, myProjects = true) {
                         ]
                     )
                 )
-            ) : React.createElement("p", {key: myProjects ? 'hint-no-my-projects' : 'hint-no-other-projects', className: 'pl-2'}, myProjects ? "Aktuell sind keine Projekte für Sie vorhanden." : "Aktuell gibt es keine weiteren Projekte")
+            ) : React.createElement("p", {key: myProjects ? 'hint-no-my-projects' : 'hint-no-other-projects', className: 'pl-2'}, myProjects ? "Aktuell sind keine Projekte für Sie vorhanden." : "Aktuell gibt es keine weiteren Projekte.")
         )
     );
 }

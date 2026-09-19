@@ -1,6 +1,4 @@
-import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
-import {FooterComponent} from "../../js/footer-component.js";
-import {Box} from "@mui/material";
+import {React, useEffect, useState, ReactDOM, FormButtons, TextField, requireLogin} from "../../imports/create-edit-forms-imports.js";
 import {pageBuilder} from "../../js/page-builder.js";
 
 function Page() {

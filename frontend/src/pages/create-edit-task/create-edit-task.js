@@ -41,8 +41,11 @@ function CreateEditTask() {
 
         if (!projectIdInUrl) return;
 
-        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`)
-            .then(r => r.json())
+        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`, {credentials: "include"})
+            .then(r => {
+                if (!r.ok) window.location.href = "../home/home.html";
+                return r.json();
+            })
             .then(project => setProjectTitle(project.title));
 
         if (!taskIdInUrl) {
@@ -50,8 +53,11 @@ function CreateEditTask() {
             return;
         }
 
-        fetch(`http://localhost:8080/api/tasks/${taskIdInUrl}`)
-            .then(r => r.json())
+        fetch(`http://localhost:8080/api/tasks/${taskIdInUrl}`, {credentials: "include"})
+            .then(r => {
+                if (!r.ok) window.location.href = "../home/home.html";
+                return r.json();
+            })
             .then(task => {
                 setTitle(task.title)
                 setDescription(task.description)

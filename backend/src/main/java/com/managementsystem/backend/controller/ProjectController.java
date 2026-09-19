@@ -19,12 +19,14 @@ import com.managementsystem.backend.model.Customer;
 import com.managementsystem.backend.service.CustomerService;
 import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.service.UserService;
+import com.managementsystem.backend.repository.UserRepository;
 import com.managementsystem.backend.model.CustomerContactPerson;
 import com.managementsystem.backend.service.CustomerContactPersonService;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.Objects;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -36,6 +38,7 @@ public class ProjectController {
     private final CustomerService customerService;
     private final UserService userService;
     private final CustomerContactPersonService contactPersonService;
+    private final UserRepository userRepository;
 
     @PostMapping("/create")
     public ResponseEntity<Project> createProject(@RequestBody NewProjectDTO dto) {
@@ -134,8 +137,21 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getProjectById(id));
+    public ResponseEntity<Project> getProjectById(@PathVariable Long id, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+
+        User user = userRepository.findByUsername(username);
+        Project project = service.getProjectById(id);
+
+        if (!service.canAccessProject(user, project)) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
+        return ResponseEntity.ok(project);
     }
 
     @DeleteMapping("/{id}")

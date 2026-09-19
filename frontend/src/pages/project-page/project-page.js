@@ -39,8 +39,11 @@ function ProjectOverview() {
 
     useEffect(() => {
         if (!projectIdInUrl) return;
-        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`)
-            .then(r => r.json())
+        fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`, {credentials: "include"})
+            .then(r => {
+                if (!r.ok) window.location.href = "../home/home.html";
+                return r.json();
+            })
             .then(project => {
                 setTitle(project.title)
                 setCustomer(project.customer)
