@@ -6,6 +6,17 @@ import {MenuComponentLogin} from "../../js/menu-component-login.js";
 import {FooterComponent} from "../../js/footer-component.js";
 import {renderInDOM} from "../../js/page-builder.js";
 
+function Page() {
+    return React.createElement(
+        ThemeProvider, { key: "theme-provider", theme },[
+            React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
+            React.createElement(RegisterAdmin, {key: 'register-admin'}),
+            React.createElement(FooterComponent, {key: 'footer-component'})
+        ]
+    )
+}
+renderInDOM(Page) // DOM
+
 function RegisterAdmin() {
     // Registration is only one time (if there is no admin) possible to configure the system and create employees
 
@@ -74,13 +85,3 @@ function RegisterAdmin() {
         )
     );
 }
-
-// DOM
-const page = React.createElement(
-    ThemeProvider, { key: "theme-provider", theme },[
-        React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
-        React.createElement(RegisterAdmin, {key: 'register-admin'}),
-        React.createElement(FooterComponent, {key: 'footer-component'})
-    ]
-)
-renderInDOM(page)

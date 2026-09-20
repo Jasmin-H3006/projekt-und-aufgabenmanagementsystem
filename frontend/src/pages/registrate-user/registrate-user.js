@@ -6,6 +6,17 @@ import {MenuComponentLogin} from "../../js/menu-component-login.js";
 import {FooterComponent} from "../../js/footer-component.js";
 import {renderInDOM} from "../../js/page-builder.js";
 
+function Page() {
+    return React.createElement(
+        ThemeProvider, { key: "theme-provider", theme },[
+            React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
+            React.createElement(RegisterUser, {key: 'register-user'}),
+            React.createElement(FooterComponent, {key: 'footer-component'})
+        ]
+    )
+}
+renderInDOM(Page) // DOM
+
 function RegisterUser() {
     const [userId, setUserId] = useState('');
     const [username, setUsername] = useState('');
@@ -84,13 +95,3 @@ function RegisterUser() {
         ])
     );
 }
-
-// DOM
-const page = React.createElement(
-    ThemeProvider, { key: "theme-provider", theme },[
-        React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
-        React.createElement(RegisterUser, {key: 'register-user'}),
-        React.createElement(FooterComponent, {key: 'footer-component'})
-    ]
-)
-renderInDOM(page)
