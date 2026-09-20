@@ -2,21 +2,21 @@ package com.managementsystem.backend.controller;
 
 import com.managementsystem.backend.dto.Dtos.NewCustomerContactPersonDTO;
 import com.managementsystem.backend.model.CustomerContactPerson;
+import com.managementsystem.backend.model.Customer;
 import com.managementsystem.backend.service.CustomerContactPersonService;
+import com.managementsystem.backend.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.managementsystem.backend.model.Customer;
-import com.managementsystem.backend.service.CustomerService;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customer/contact-persons")

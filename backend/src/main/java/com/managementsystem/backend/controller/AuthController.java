@@ -1,6 +1,8 @@
 package com.managementsystem.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,24 +11,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
-import lombok.RequiredArgsConstructor;
-import com.managementsystem.backend.dto.Dtos.NewUserDTO;
-import com.managementsystem.backend.service.AuthService;
-import com.managementsystem.backend.service.LoginService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import java.util.List;
+import com.managementsystem.backend.dto.Dtos.NewUserDTO;
 import com.managementsystem.backend.dto.Dtos.CurrentUserDTO;
+import com.managementsystem.backend.service.AuthService;
+import com.managementsystem.backend.service.LoginService;
+import com.managementsystem.backend.service.UserInvitationService;
 import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.model.Role;
-import com.managementsystem.backend.repository.UserRepository;
-import com.managementsystem.backend.model.UserInvitation;
-import com.managementsystem.backend.repository.UserInvitationRepository;
-import com.managementsystem.backend.service.UserInvitationService;
 import com.managementsystem.backend.model.UserStatus;
+import com.managementsystem.backend.model.UserInvitation;
+import com.managementsystem.backend.repository.UserRepository;
+import com.managementsystem.backend.repository.UserInvitationRepository;
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -54,8 +53,7 @@ public class AuthController {
             // Store the username in the session
             session.setAttribute("username", dto.username());
 
-            UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(dto.username(), null, List.of());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(dto.username(), null, List.of());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         return result;

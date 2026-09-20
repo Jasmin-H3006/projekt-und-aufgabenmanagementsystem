@@ -2,30 +2,30 @@ package com.managementsystem.backend.controller;
 
 import com.managementsystem.backend.dto.Dtos.NewProjectDTO;
 import com.managementsystem.backend.model.Project;
+import com.managementsystem.backend.model.Customer;
+import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.model.CustomerContactPerson;
 import com.managementsystem.backend.service.ProjectService;
+import com.managementsystem.backend.service.CustomerService;
+import com.managementsystem.backend.service.UserService;
+import com.managementsystem.backend.service.CustomerContactPersonService;
+import com.managementsystem.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import com.managementsystem.backend.model.Customer;
-import com.managementsystem.backend.service.CustomerService;
-import com.managementsystem.backend.model.User;
-import com.managementsystem.backend.service.UserService;
-import com.managementsystem.backend.repository.UserRepository;
-import com.managementsystem.backend.model.CustomerContactPerson;
-import com.managementsystem.backend.service.CustomerContactPersonService;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -90,7 +90,6 @@ public class ProjectController {
 
         Customer customer = customerService.getCustomerById(dto.customerId());
         User projectManager = userService.getUserById(dto.projectManagerId());
-
 
         Set<User> users = dto.userIds() == null
             ? new HashSet<>()

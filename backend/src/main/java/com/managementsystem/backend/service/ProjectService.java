@@ -3,9 +3,9 @@ package com.managementsystem.backend.service;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.model.Project;
+import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.repository.ProjectRepository;
 import java.util.List;
-import com.managementsystem.backend.model.User;
 
 @Service
 @RequiredArgsConstructor

@@ -2,9 +2,9 @@ package com.managementsystem.backend.repository;
 
 import com.managementsystem.backend.model.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     Project findByTitle(String title);

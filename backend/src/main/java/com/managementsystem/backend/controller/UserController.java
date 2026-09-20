@@ -1,26 +1,25 @@
 package com.managementsystem.backend.controller;
 
 import com.managementsystem.backend.dto.Dtos.NewUserDTO;
+import com.managementsystem.backend.dto.Dtos.NewUserInvitationDTO;
+import com.managementsystem.backend.dto.Dtos.ActivateUserDTO;
 import com.managementsystem.backend.model.User;
+import com.managementsystem.backend.model.Role;
+import com.managementsystem.backend.model.UserStatus;
 import com.managementsystem.backend.service.UserService;
+import com.managementsystem.backend.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import com.managementsystem.backend.model.Role;
-import com.managementsystem.backend.service.RoleService;
-import com.managementsystem.backend.model.UserStatus;
-import com.managementsystem.backend.dto.Dtos.NewUserInvitationDTO;
-import com.managementsystem.backend.dto.Dtos.ActivateUserDTO;
-import com.managementsystem.backend.service.UserInvitationService;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,7 +29,6 @@ public class UserController {
 
     private final UserService service;
     private final RoleService roleService;
-    private final UserInvitationService userInvitationService;
 
     @PostMapping("/create")
     public ResponseEntity<NewUserInvitationDTO> createUser(@RequestBody NewUserDTO dto) {

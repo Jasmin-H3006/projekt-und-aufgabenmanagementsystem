@@ -4,8 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.model.Role;
-import com.managementsystem.backend.service.RoleService;
 import com.managementsystem.backend.model.TaskState;
+import com.managementsystem.backend.service.RoleService;
 import com.managementsystem.backend.service.TaskStateService;
 
 @Component

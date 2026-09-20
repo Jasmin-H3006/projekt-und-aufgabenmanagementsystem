@@ -2,10 +2,10 @@ package com.managementsystem.backend.dto;
 
 import lombok.Builder;
 import jakarta.validation.constraints.NotEmpty;
-import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
-import com.managementsystem.backend.model.Role;
+import java.time.LocalDate;
 import java.time.Instant;
+import com.managementsystem.backend.model.Role;
 
 public interface Dtos {
     @Builder

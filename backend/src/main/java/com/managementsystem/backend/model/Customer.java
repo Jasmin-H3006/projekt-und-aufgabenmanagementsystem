@@ -18,7 +18,6 @@ import jakarta.persistence.GenerationType;
 @AllArgsConstructor
 @Table(name = "customer")
 
-
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
