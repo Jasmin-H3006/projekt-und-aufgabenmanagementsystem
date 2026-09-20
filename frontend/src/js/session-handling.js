@@ -1,8 +1,6 @@
 export function requireLogin(
-    setUsername, needsAdminAccess,
-    needsAllProjectsAccess, needsCreateProjectsAccess,
-    needsEditAvailableProjectsAccess, needsCreateAndEditTasksAccess,
-    needsCustomerPageAccess
+    setUsername, needsAdminAccess, needsAllProjectsAccess, needsCreateProjectsAccess,
+    needsEditAvailableProjectsAccess, needsCreateAndEditTasksAccess, needsCustomerPageAccess
 ) {
     return fetch("http://localhost:8080/api/auth/current-user", { credentials: "include" })
         .then(res => {

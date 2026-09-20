@@ -1,5 +1,8 @@
-import {React, useEffect, useState, ReactDOM, FormButtons, TextField, requireLogin} from "../../imports/create-edit-forms-imports.js";
-import {pageBuilder} from "../../js/page-builder.js";
+import {React, useEffect, useState, FormButtons, TextField, requireLogin} from "../../imports/create-edit-forms-imports.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+import {responseFunctionPutPost} from "../../js/create-edit-forms.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -13,7 +16,6 @@ function Page() {
 }
 
 function CreateEditCustomer() {
-    const [customers, setCustomers] = useState([]);
     const [name, setName] = useState("");
     const [website, setWebsite] = useState("");
 
@@ -25,15 +27,12 @@ function CreateEditCustomer() {
     const customerIdInUrl = urlParams.get("id");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/customers/get-all")
-            .then(res => res.json())
-            .then(data => setCustomers(data));
-
         if (!customerIdInUrl) {
             setCreateNewCustomer(true);
             return;
         }
 
+        // Get the customer (for editing)
         fetch(`http://localhost:8080/api/customers/${customerIdInUrl}`)
             .then(r => r.json())
             .then(customer => {
@@ -42,51 +41,36 @@ function CreateEditCustomer() {
             });
     }, [customerIdInUrl]);
 
-    const handleBack = () => {
-        window.location.href = "../customer-page/customer-page.html";
-    };
+    const handleBack = () => { window.location.href = "../customer-page/customer-page.html" };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        const payload = {
-            name,
-            website
-        }
+        const payload = {name, website}
 
         // Reset Messages after a new click
         setMessage('');
         setNoEqualCustomerInSystem(true);
 
+        // Check inputs
+        if (name === "") {
+            setMessage('Der Kundenname darf nicht leer sein.');
+            return;
+        }
+
         const editCustomer = customerIdInUrl;
-
-        if(!editCustomer) {
+        if (!editCustomer) {
             // Creating a new customer (not edit an already existing one)
-            const responseCheck = await fetch(
-                'http://localhost:8080/api/customers/customer-exists?name=' + encodeURIComponent(name)
-            );
+            const responseCheck = await fetch('http://localhost:8080/api/customers/customer-exists?name=' + encodeURIComponent(name));
             if (!responseCheck.ok) return;
-            const exists = await responseCheck.json();
 
+            const exists = await responseCheck.json();
             if (exists) {
                 setNoEqualCustomerInSystem(false);
                 return;
             }
         }
 
-        if(name === "") {
-            setMessage('Der Kundenname darf nicht leer sein.');
-            return;
-        }
-
-        const responseUrl = editCustomer ? `http://localhost:8080/api/customers/${customerIdInUrl}` : "http://localhost:8080/api/customers/create";
-        const method = editCustomer ? "PUT" : "POST";
-
-        // Save process
-        const response = await fetch(responseUrl, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        const response = await responseFunctionPutPost(editCustomer, `http://localhost:8080/api/customers/${customerIdInUrl}`, "http://localhost:8080/api/customers/create", payload)
 
         if (response.ok) {
             setMessage('Der Kunde wurde erfolgreich angelegt/bearbeitet!');
@@ -100,20 +84,13 @@ function CreateEditCustomer() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-
         if (!customerIdInUrl) return;
 
-        const confirmed = window.confirm(
-            `Soll der Kunde mit der ID "${customerIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
-        );
-
+        const confirmed = window.confirm(`Soll der Kunde mit der ID "${customerIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`);
         if (!confirmed) return; // Stop action
 
         // Delete process
-        const response = await fetch(
-            `http://localhost:8080/api/customers/${customerIdInUrl}`,
-            {method: "DELETE"}
-        );
+        const response = await fetch(`http://localhost:8080/api/customers/${customerIdInUrl}`, {method: "DELETE"});
 
         if (response.ok) {
             setMessage('Der Kunde wurde erfolgreich gelöscht!');
@@ -129,19 +106,14 @@ function CreateEditCustomer() {
             React.createElement(TextField, {
                 key: 'name', required: true, variant: "outlined", label: "Kundenname", value: name,
                 onChange: (e) => setName(e.target.value)
-            }, null),
+            }),
             React.createElement(TextField, {
                 key: 'website', variant: "outlined", label: "Website", value: website,
                 onChange: (e) => setWebsite(e.target.value)
-            }, null),
+            }),
             !noEqualCustomerInSystem ? React.createElement('p', {key: "customer-already-exists-error", className: "full-width"}, "Dieser Kunde existiert bereits.") : null,
             message ? React.createElement('p', {key: "customer-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewCustomer})
         ])
     ]
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));

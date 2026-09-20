@@ -1,7 +1,8 @@
-import {React, useEffect, useState, ReactDOM, ThemeProvider, theme, MenuComponent, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
-import {FooterComponent} from "../../js/footer-component.js";
-import {Box} from "@mui/material";
-import {pageBuilder} from "../../js/page-builder.js";
+import {React, useEffect, useState, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+import {responseFunctionPutPost} from "../../js/create-edit-forms.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -21,7 +22,6 @@ function CreateEditTask() {
     const [taskStateId, setTaskStateId] = useState(null)
     const [projectTitle, setProjectTitle] = useState("");
 
-    const [tasks, setTasks] = useState([]);
     const [createNewTask, setCreateNewTask] = useState(false); // First, it's assumed that the user only wants to edit
     const [noEqualTaskInSystem, setNoEqualTaskInSystem] = useState(true);
     const [message, setMessage] = useState('');
@@ -31,16 +31,14 @@ function CreateEditTask() {
     const projectIdInUrl = urlParams.get("projectId");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/tasks/get-all")
-            .then(res => res.json())
-            .then(data => setTasks(data));
-
+        // Get all task states
         fetch("http://localhost:8080/api/task-states/get-all")
             .then(res => res.json())
             .then(data => setTaskStates(data));
 
         if (!projectIdInUrl) return;
 
+        // Get project
         fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`, {credentials: "include"})
             .then(r => {
                 if (!r.ok) window.location.href = "../home/home.html";
@@ -53,6 +51,7 @@ function CreateEditTask() {
             return;
         }
 
+        // Get task
         fetch(`http://localhost:8080/api/tasks/${taskIdInUrl}`, {credentials: "include"})
             .then(r => {
                 if (!r.ok) window.location.href = "../home/home.html";
@@ -65,9 +64,7 @@ function CreateEditTask() {
             });
     }, [projectIdInUrl, taskIdInUrl]);
 
-    const handleBack = (projectIdInUrl) => {
-        window.location.href = '../project-page/project-page.html?projectId=' + projectIdInUrl;
-    };
+    const handleBack = (projectIdInUrl) => { window.location.href = '../project-page/project-page.html?projectId=' + projectIdInUrl };
 
     const handleCancel = async (e) => {
         e.preventDefault();
@@ -88,43 +85,33 @@ function CreateEditTask() {
         setNoEqualTaskInSystem(true);
 
         const editTask = taskIdInUrl;
-
         if(!editTask) {
             // Creating a new task (not edit an already existing one)
-            const responseCheck = await fetch(
-                'http://localhost:8080/api/tasks/task-exists-in-project?title=' + encodeURIComponent(title) + '&projectId=' + projectIdInUrl
-            );
+            const responseCheck = await fetch('http://localhost:8080/api/tasks/task-exists-in-project?title=' + encodeURIComponent(title) + '&projectId=' + projectIdInUrl);
             if (!responseCheck.ok) return;
-            const exists = await responseCheck.json();
 
+            const exists = await responseCheck.json();
             if (exists) {
                 setNoEqualTaskInSystem(false);
                 return;
             }
         }
 
-        if(title === "") {
+        // Check inputs
+        if (title === "") {
             setMessage('Der Titel der Aufgabe darf nicht leer sein.');
             return;
         }
-        if(taskStateId === null) {
+        if (taskStateId === null) {
             setMessage('Bitte einen Status für die Aufgabe wählen.');
             return;
         }
-        if(description === "") {
+        if (description === "") {
             setMessage('Die Beschreibung darf nicht leer sein.');
             return;
         }
 
-        const responseUrl = editTask ? `http://localhost:8080/api/tasks/${taskIdInUrl}` : "http://localhost:8080/api/tasks/create";
-        const method = editTask ? "PUT" : "POST";
-
-        // Save process
-        const response = await fetch(responseUrl, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        const response = await responseFunctionPutPost(editTask, `http://localhost:8080/api/tasks/${taskIdInUrl}`, "http://localhost:8080/api/tasks/create", payload)
 
         if (response.ok) {
             setMessage('Die Aufgabe wurde erfolgreich angelegt/bearbeitet!');
@@ -138,20 +125,13 @@ function CreateEditTask() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-
         if (!taskIdInUrl) return;
 
-        const confirmed = window.confirm(
-            `Soll die Aufgabe mit der ID "${taskIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
-        );
-
+        const confirmed = window.confirm(`Soll die Aufgabe mit der ID "${taskIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`);
         if (!confirmed) return; // Stop action
 
         // Delete process
-        const response = await fetch(
-            `http://localhost:8080/api/tasks/${taskIdInUrl}`,
-            {method: "DELETE"}
-        );
+        const response = await fetch(`http://localhost:8080/api/tasks/${taskIdInUrl}`, {method: "DELETE"});
 
         if (response.ok) {
             setMessage('Die Aufgabe wurde erfolgreich gelöscht!');
@@ -167,22 +147,17 @@ function CreateEditTask() {
             React.createElement(TextField, {
                 key: 'title', required: true, variant: "outlined", label: "Titel", value: title,
                 onChange: (e) => setTitle(e.target.value)
-            }, null),
+            }),
             React.createElement(TextField,
-                {key: 'task-state', required: true, select: true, value: taskStateId ?? "", variant: "outlined", label: "Status", onChange: (e) => setTaskStateId(Number(e.target.value)),},
+                {key: 'task-state', required: true, select: true, value: taskStateId ?? "", variant: "outlined", label: "Status", onChange: (e) => setTaskStateId(Number(e.target.value))},
                 taskStates.map(taskState =>
                     React.createElement(MenuItem, { key: taskState.id, value: taskState.id }, taskState.name)
                 )
             ),
-            React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}, null),
+            React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}),
             !noEqualTaskInSystem ? React.createElement('p', {key: "task-already-exists-error", className: "full-width"}, "In diesem Projekt gibt es bereits eine Aufgabe mit diesem Titel.") : null,
             message ? React.createElement('p', {key: "task-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleCancel, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewTask})
         ])
     ]
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));

@@ -1,6 +1,9 @@
-import {React, useEffect, useState, ReactDOM, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
-import {pageBuilder} from "../../js/page-builder.js";
+import {React, useEffect, useState, FormButtons, TextField, MenuItem, requireLogin} from "../../imports/create-edit-forms-imports.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
 import {Button} from "@mui/material";
+import {responseFunctionPutPost} from "../../js/create-edit-forms.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -14,7 +17,6 @@ function Page() {
 }
 
 function CreateEditUser({user}) {
-    const [users, setUsers] = useState([]);
     const [username, setUsername] = useState("");
 
     const [roles, setRoles] = useState([]);
@@ -32,10 +34,7 @@ function CreateEditUser({user}) {
     );
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/users/get-all")
-            .then(res => res.json())
-            .then(data => setUsers(data));
-
+        // Get all roles
         fetch("http://localhost:8080/api/roles/get-all")
             .then(res => res.json())
             .then(data => setRoles(data));
@@ -45,6 +44,7 @@ function CreateEditUser({user}) {
             return;
         }
 
+        // Get user
         fetch(`http://localhost:8080/api/users/${userIdInUrl}`)
             .then(r => r.json())
             .then(user => {
@@ -53,28 +53,20 @@ function CreateEditUser({user}) {
             });
     }, [userIdInUrl]);
 
-    const handleBack = () => {
-        window.location.href = "../admin-area/admin-area.html";
-    };
+    const handleBack = () => { window.location.href = "../admin-area/admin-area.html" };
 
     const handleSave = async (e) => {
         e.preventDefault();
-        const payload = {
-            username,
-            roleId
-        }
+        const payload = {username, roleId}
 
         // Reset Messages after a new click
         setMessage('');
         setNoEqualUserInSystem(true)
 
         const editUser = userIdInUrl;
-
         if(!editUser) {
             // Creating a new user (not edit an already existing one)
-            const responseCheck = await fetch(
-                'http://localhost:8080/api/users/user-exists?username=' + encodeURIComponent(username)
-            );
+            const responseCheck = await fetch('http://localhost:8080/api/users/user-exists?username=' + encodeURIComponent(username));
             if (!responseCheck.ok) return;
 
             const exists = await responseCheck.json();
@@ -84,24 +76,17 @@ function CreateEditUser({user}) {
             }
         }
 
-        if(username === "") {
+        // Check inputs
+        if (username === "") {
             setMessage('Der Benutzername darf nicht leer sein.');
             return;
         }
-        if(roleId === "") {
+        if (roleId === "") {
             setMessage('Bitte eine Rolle wählen.');
             return;
         }
 
-        const responseUrl = editUser ? `http://localhost:8080/api/users/${userIdInUrl}` : "http://localhost:8080/api/users/create";
-        const method = editUser ? "PUT" : "POST";
-
-        // Save process
-        const response = await fetch(responseUrl, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        const response = await responseFunctionPutPost(editUser, `http://localhost:8080/api/users/${userIdInUrl}`, "http://localhost:8080/api/users/create", payload)
 
         if (response.ok) {
             if (!editUser) {
@@ -112,11 +97,8 @@ function CreateEditUser({user}) {
 
                 // Write userId in URL
                 setUserIdInUrl(responseData.userId);
-                window.history.replaceState(
-                    null,
-                    "",
-                    `${window.location.pathname}?id=${responseData.userId}`
-                );
+                window.history.replaceState(null, "", `${window.location.pathname}?id=${responseData.userId}`);
+
                 // User is now an already existing user (important for editing in the same window in which the user was created)
                 setCreateNewUser(false);
                 setMessage('Der Nutzer wurde erfolgreich angelegt!');
@@ -135,23 +117,16 @@ function CreateEditUser({user}) {
         e.preventDefault();
 
         if (!userIdInUrl) return;
-
         if (Number(userIdInUrl) === user.id) {
             setMessage('Als Administrator können Sie Ihren eigenen Account nicht löschen. So soll sichergestellt werden, dass immer mindestens ein Administrator im System vorhanden ist. Wenn es keinen Administrator im System gibt, hat jeder die Möglichkeit, den ersten Admin-Zugang einzurichten.');
             return;
         }
 
-        const confirmed = window.confirm(
-            `Soll der Nutzer mit der ID "${userIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
-        );
-
+        const confirmed = window.confirm(`Soll der Nutzer mit der ID "${userIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`);
         if (!confirmed) return; // Stop action
 
         // Delete process
-        const response = await fetch(
-            `http://localhost:8080/api/users/${userIdInUrl}`,
-            {method: "DELETE"}
-        );
+        const response = await fetch(`http://localhost:8080/api/users/${userIdInUrl}`, {method: "DELETE"});
 
         if (response.ok) {
             setMessage('Der Nutzer wurde erfolgreich gelöscht!');
@@ -167,9 +142,7 @@ function CreateEditUser({user}) {
         e.preventDefault();
         if (!userIdInUrl) return;
 
-        const confirmed = window.confirm(
-            `Soll das Passwort des Nutzers mit der ID "${userIdInUrl}" wirklich zurückgesetzt werden? Diese Aktion kann nicht rückgängig gemacht werden.`
-        );
+        const confirmed = window.confirm(`Soll das Passwort des Nutzers mit der ID "${userIdInUrl}" wirklich zurückgesetzt werden? Diese Aktion kann nicht rückgängig gemacht werden.`);
         if (!confirmed) return; // Stop action
 
         // Reset password
@@ -185,15 +158,15 @@ function CreateEditUser({user}) {
         }
     }
 
-    return [
+    return (
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
             React.createElement('h2', {key: 'headline'}, userIdInUrl ? "Bestehenden Nutzer bearbeiten" : "Neuen Nutzer anlegen"),
             React.createElement(TextField, {
                 key: 'username', required: true, variant: "outlined", label: "Benutzername", value: username,
                 onChange: (e) => setUsername(e.target.value)
-            }, null),
+            }),
             React.createElement(TextField,
-                {key: 'role', select: true, required: true, value: roleId, variant: "outlined", label: "Rolle", onChange: (e) => setRoleId(e.target.value),},
+                {key: 'role', select: true, required: true, value: roleId, variant: "outlined", label: "Rolle", onChange: (e) => setRoleId(e.target.value)},
                 roles.map(role =>
                     React.createElement(MenuItem, { key: role.id, value: role.id }, role.name)
                 )
@@ -207,13 +180,14 @@ function CreateEditUser({user}) {
                 React.createElement('strong', {key: 'invitation-hint-text'}, "Bitte kopieren Sie sich den Link in die Zwischenablage, da er nur einmal angezeigt wird."),
                 React.createElement('p', {key: 'invitation-text'}, invitationLink),
                 invitationExpiry ? React.createElement('small', {key: 'expiry-info'}, `Verfällt: ${new Date(invitationExpiry).toLocaleString('de-DE')}`) : null,
-                React.createElement(Button, {key: 'copy-button', className: 'ml-2', variant: 'outlined', size: 'small', onClick: () => {navigator.clipboard.writeText(invitationLink); alert('Link kopiert!');}}, 'In Zwischenablage kopieren')
-            ]) : null,
+                React.createElement(Button, {key: 'copy-button', className: 'ml-2', variant: 'outlined', size: 'small',
+                    onClick: () => {
+                        navigator.clipboard.writeText(invitationLink);
+                        alert('Link kopiert!');
+                    }},
+                    'In Zwischenablage kopieren'
+                )
+            ]) : null
         ])
-    ]
+    );
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));

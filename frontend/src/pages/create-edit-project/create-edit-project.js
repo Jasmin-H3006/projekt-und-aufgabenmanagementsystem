@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import ReactDOM from 'react-dom/client';
 import {FormButtons} from "../../js/form-buttons.js";
 import {TextField, MenuItem, Box, Chip, Select, FormControl, InputLabel} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -7,7 +6,10 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {requireLogin} from "../../js/session-handling.js";
-import {pageBuilder} from "../../js/page-builder.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+import {responseFunctionPutPost} from "../../js/create-edit-forms.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -33,8 +35,6 @@ function CreateEditProject() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const [projects, setProjects] = useState([])
-
     const [createNewProject, setCreateNewProject] = useState(false); // First, it's assumed that the user only wants to edit
     const [noEqualProjectInSystem, setNoEqualProjectInSystem] = useState(true);
     const [message, setMessage] = useState('');
@@ -45,14 +45,12 @@ function CreateEditProject() {
     const maxLength = 500;
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/projects/get-all")
-            .then(res => res.json())
-            .then(data => setProjects(data));
-
+        // Get all customers
         fetch("http://localhost:8080/api/customers/get-all")
             .then(res => res.json())
             .then(customers => setCustomers(customers));
 
+        // Get all users
         fetch("http://localhost:8080/api/users/get-all")
             .then(res => res.json())
             .then(users => {
@@ -63,10 +61,12 @@ function CreateEditProject() {
 
     useEffect(() => {
         if (customerId) {
+            // Get all contact persons of the chosen customer
             fetch(`http://localhost:8080/api/customer/contact-persons/customer/${customerId}`)
                 .then(res => res.json())
                 .then(contactPersons => setContactPersons(contactPersons));
         } else {
+            // Get all contact persons (no customer chosen yet)
             fetch("http://localhost:8080/api/customer/contact-persons/get-all")
                 .then(res => res.json())
                 .then(contactPersons => setContactPersons(contactPersons));
@@ -79,13 +79,12 @@ function CreateEditProject() {
             return;
         }
 
+        // Get the project (for editing)
         fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`,
             {credentials: "include"} // Have the browser send the session token
         )
             .then(r => {
-                if (!r.ok) {
-                    throw new Error(`HTTP ${r.status}`);
-                }
+                if (!r.ok) window.location.href = "../home/home.html";
                 return r.json();
             })
             .then(project => {
@@ -99,8 +98,8 @@ function CreateEditProject() {
             });
     }, [projectIdInUrl]);
 
-    // Reset contactPersons when changing customer
     useEffect(() => {
+        // Reset contactPersons when changing customer
         setContactPersonIds(prev =>
             prev.filter(id =>
                 contactPersons.some(cp => Number(cp.id) === Number(id))
@@ -108,9 +107,7 @@ function CreateEditProject() {
         );
     }, [contactPersons]);
 
-    const handleBack = () => {
-        window.location.href = "../home/home.html";
-    };
+    const handleBack = () => { window.location.href = "../home/home.html" };
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -128,38 +125,36 @@ function CreateEditProject() {
         setMessage('');
         setNoEqualProjectInSystem(true);
 
-        const editProject = projectIdInUrl;
-
-        if(title === "") {
-            setMessage('Die Bezeichnung darf nicht leer sein.');
+        // Check inputs
+        if (title === "") {
+            setMessage('Bitte eine Bezeichnung angeben.');
             return;
         }
-        if(customerId === null) {
+        if (customerId === null) {
             setMessage('Bitte einen Kunden auswählen.');
             return;
         }
-        if(projectManagerId === null) {
+        if (projectManagerId === null) {
             setMessage('Bitte einen Projektleiter auswählen.');
             return;
         }
-        if(contactPersonIds.length === 0) {
+        if (contactPersonIds.length === 0) {
             setMessage('Bitte mindestens einen Ansprechpartner auswählen.');
             return;
         }
-        if(description === "") {
+        if (description === "") {
             setMessage('Bitte eine Beschreibung für das Projekt hinterlegen.');
             return;
         }
-        if(description.length > maxLength) {
+        if (description.length > maxLength) {
             setMessage(`Die Beschreibung darf nicht länger als ${maxLength} Zeichen sein.`);
             return;
         }
 
+        const editProject = projectIdInUrl;
         if(!editProject) {
             // Creating a new project (not edit an already existing one)
-            const responseCheck = await fetch(
-                'http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(payload.title) + '&customerId=' + encodeURIComponent(payload.customerId) + '&deadline=' + (payload.deadline ? encodeURIComponent(payload.deadline) : '')
-            );
+            const responseCheck = await fetch('http://localhost:8080/api/projects/project-exists?title=' + encodeURIComponent(payload.title) + '&customerId=' + encodeURIComponent(payload.customerId) + '&deadline=' + (payload.deadline ? encodeURIComponent(payload.deadline) : ''));
             if (!responseCheck.ok) return;
 
             // If exists
@@ -169,15 +164,7 @@ function CreateEditProject() {
             }
         }
 
-        const responseUrl = editProject ? `http://localhost:8080/api/projects/${projectIdInUrl}` : "http://localhost:8080/api/projects/create";
-        const method = editProject ? "PUT" : "POST";
-
-        // Save process
-        const response = await fetch(responseUrl, {
-            method: method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        const response = await responseFunctionPutPost(editProject, `http://localhost:8080/api/projects/${projectIdInUrl}`, "http://localhost:8080/api/projects/create", payload);
 
         if (response.ok) {
             setMessage('Das Projekt wurde erfolgreich angelegt/bearbeitet!');
@@ -191,20 +178,13 @@ function CreateEditProject() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-
         if (!projectIdInUrl) return;
 
-        const confirmed = window.confirm(
-            `Soll das Projekt mit der ID "${projectIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`
-        );
-
+        const confirmed = window.confirm(`Soll das Projekt mit der ID "${projectIdInUrl}" wirklich gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.`);
         if (!confirmed) return; // Stop action
 
         // Delete process
-        const response = await fetch(
-            `http://localhost:8080/api/projects/${projectIdInUrl}`,
-            {method: "DELETE"}
-        );
+        const response = await fetch(`http://localhost:8080/api/projects/${projectIdInUrl}`, {method: "DELETE"});
 
         if (response.ok) {
             setMessage('Das Projekt wurde erfolgreich gelöscht!');
@@ -217,12 +197,10 @@ function CreateEditProject() {
     return [
         React.createElement("form", {key: 'create-element-form', className: "create-element-form"}, [
             React.createElement('h2', {key: 'headline'}, projectIdInUrl ? "Bestehendes Projekt bearbeiten" : "Neues Projekt anlegen"),
-            React.createElement(TextField, {key: 'title', required: true, variant: "outlined", value: title, label: "Bezeichnung", onChange: (e) => setTitle(e.target.value)}, null),
+            React.createElement(TextField, {key: 'title', required: true, variant: "outlined", value: title, label: "Bezeichnung", onChange: (e) => setTitle(e.target.value)}),
             React.createElement(TextField,
-                {key: 'customer', required: true, select: true, value: customerId ?? "", variant: "outlined", label: "Kunde", onChange: (e) => setCustomerId(Number(e.target.value)),},
-                customers.map(customer =>
-                    React.createElement(MenuItem, { key: customer.id, value: customer.id }, customer.name)
-                )
+                {key: 'customer', required: true, select: true, value: customerId ?? "", variant: "outlined", label: "Kunde", onChange: (e) => setCustomerId(Number(e.target.value))},
+                customers.map(customer => React.createElement(MenuItem, { key: customer.id, value: customer.id }, customer.name))
             ),
             React.createElement(TextField,
                 {key: 'project-manager', required: true, select: true, value: projectManagerId ?? "", variant: "outlined", label: "Projektleiter",
@@ -236,20 +214,15 @@ function CreateEditProject() {
                         )
                     },
                 },
-                projectManagers.map(projectManager =>
-                    React.createElement(MenuItem, { key: projectManager.id, value: projectManager.id }, projectManager.username)
-                )
+                projectManagers.map(projectManager => React.createElement(MenuItem, { key: projectManager.id, value: projectManager.id }, projectManager.username))
             ),
             React.createElement(FormControl, {key: "contact-person-select-field"},
                 React.createElement(InputLabel,{key: "contact-person-select-label", id: "contact-person-select-label", required: true,}, "Ansprechpartner"),
                 React.createElement(
-                    Select,
-                    {
-                        key: "contact-person-select", multiple: true, value: contactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
+                    Select, { key: "contact-person-select", multiple: true, value: contactPersonIds, variant: "outlined", labelId: "contact-person-select-label", label: "Ansprechpartner",
                         onChange: (e) =>
                             setContactPersonIds(Array.isArray(e.target.value) ? e.target.value.map(Number) : []),
-                        renderValue: selected => React.createElement(Box,
-                            {key: 'contact-person-select-box', className: 'select-box'},
+                        renderValue: selected => React.createElement(Box, {key: 'contact-person-select-box', className: 'select-box'},
                             selected.map(id => {
                                 const numericId = Number(id);
                                 const ccp = contactPersons.find(contactPerson => Number(contactPerson.id) === numericId);
@@ -265,12 +238,9 @@ function CreateEditProject() {
             React.createElement(FormControl, {key: "user-select-field"},
                 React.createElement(InputLabel,{key: "user-select-label", id: "user-select-label"}, "Beteiligte Mitarbeiter"),
                 React.createElement(
-                    Select,
-                    {
-                        key: "user-select", multiple: true, value: userIds, variant: "outlined", labelId: "user-select-label", label: "Beteiligte Mitarbeiter",
+                    Select, { key: "user-select", multiple: true, value: userIds, variant: "outlined", labelId: "user-select-label", label: "Beteiligte Mitarbeiter",
                         onChange: (e) => setUserIds(Array.isArray(e.target.value) ? e.target.value.map(Number) : []),
-                        renderValue: selected => React.createElement(Box,
-                            {key: 'user-select-box', className: 'select-box'},
+                        renderValue: selected => React.createElement(Box, {key: 'user-select-box', className: 'select-box'},
                             selected.map(id => {
                                 const numericId = Number(id);
                                 const u = users.find(user => Number(user.id) === numericId);
@@ -289,23 +259,14 @@ function CreateEditProject() {
             ),
             React.createElement(LocalizationProvider, {key: 'date-picker', dateAdapter: AdapterDayjs},
                 React.createElement(DatePicker, {
-                    key: 'deadline',
-                    value: deadline,
-                    format: "DD.MM.YYYY",
-                    variant: "outlined",
-                    label: "Frist",
-                    onChange: (newValue) => setDeadline(newValue),
-                }, null)
+                    key: 'deadline', value: deadline, format: "DD.MM.YYYY", variant: "outlined", label: "Frist",
+                    onChange: (newValue) => setDeadline(newValue)
+                })
             ),
-            React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}, null),
+            React.createElement(TextField, {key: 'description', required: true, multiline: "true", rows: "4", variant: "outlined", value: description, label: "Beschreibung", className: "full-width description-field", onChange: (e) => setDescription(e.target.value)}),
             !noEqualProjectInSystem ? React.createElement('p', {key: "project-already-exists-error", className: "full-width"}, "Dieses Projekt existiert bereits.") : null,
             message ? React.createElement('p', {key: "project-error", className: "full-width"}, message) : null,
             React.createElement(FormButtons, {key: 'form-buttons-container', onCancel: handleBack, onSave: handleSave, onDelete: handleDelete, createNewElement: createNewProject})
         ])
     ]
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));

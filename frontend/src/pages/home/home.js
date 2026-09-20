@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import ReactDOM from 'react-dom/client';
-import {Button, Toolbar, Typography, IconButton} from "@mui/material";
+import {Button, Toolbar, IconButton} from "@mui/material";
 import {requireLogin} from "../../js/session-handling.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
-import {pageBuilder} from "../../js/page-builder.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -19,8 +20,7 @@ function Page() {
 
 function Intro({username}) {
     return React.createElement(
-        "h2",
-        {key: 'mane-intro', className: 'pl-2'},
+        "h2", {key: 'mane-intro', className: 'pl-2'},
         `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
     )
 }
@@ -28,8 +28,7 @@ function Intro({username}) {
 function ToCustomerPage({user}) {
     return (
         user.customerPageAccess ? React.createElement(
-            Button,
-            {key: 'btn-to-customer-page', className: 'btn-to-customer-page ml-2 mt-3', color: 'primary', variant: 'outlined', href: '../customer-page/customer-page.html'},
+            Button, {key: 'btn-to-customer-page', className: 'btn-to-customer-page ml-2 mt-3', color: 'primary', variant: 'outlined', href: '../customer-page/customer-page.html'},
             "Zur Kunden-Übersicht"
         ) : null
     );
@@ -68,7 +67,6 @@ function ProjectsCards({user}) {
         loadProjectsWithTaskCount(`http://localhost:8080/api/projects/get-my-projects?userId=${user.id}`);
 
         if (user.allProjectsAccess) loadProjectsWithTaskCount(`http://localhost:8080/api/projects/get-other-projects?userId=${user.id}`, false);
-
     }, [user]);
 
     const myProjectCardsIntroduction = ProjectCardsIntroduction(user, true)
@@ -84,8 +82,7 @@ function ProjectCardsIntroduction(user, myProjects = true) {
     // "Other Projects"-Section is not available for those without allProjectsAccess
     if (!myProjects && !user.allProjectsAccess) return;
     return React.createElement(
-        Toolbar,
-        {key: myProjects ? 'my-projects-introduction' : 'other-projects-introduction', className: 'introduction-with-btn pl-0 pt-3'},
+        Toolbar, {key: myProjects ? 'my-projects-introduction' : 'other-projects-introduction', className: 'introduction-with-btn pl-0 pt-3'},
         [
             React.createElement('h3', {key: myProjects ? 'my-projects-introduction-header' : 'other-projects-introduction-header', className: 'pl-2'}, myProjects ? "Meine Projekte" : "Weitere Projekte"),
             (user.createProjectsAccess && myProjects) ? React.createElement(Button, {key: 'btn-new-project', className: 'btn-new-project', color: 'primary', variant: 'contained', href: '../create-edit-project/create-edit-project.html'}, "Neues Projekt anlegen") : null
@@ -96,13 +93,9 @@ function ProjectCardElements(projects, user, myProjects = true) {
     // "Other Projects"-Section is not available for those without allProjectsAccess
     if (!myProjects && !user.allProjectsAccess) return;
 
-    const viewProject = (projectId) => {
-        window.location.href='../project-page/project-page.html?projectId=' + projectId
-    }
+    const viewProject = (projectId) => { window.location.href='../project-page/project-page.html?projectId=' + projectId }
 
-    const editProject = (projectId) => {
-        window.location.href='../create-edit-project/create-edit-project.html?projectId=' + projectId
-    };
+    const editProject = (projectId) => { window.location.href='../create-edit-project/create-edit-project.html?projectId=' + projectId };
 
     const projectGroup = myProjects ? "my" : "other";
 
@@ -118,16 +111,13 @@ function ProjectCardElements(projects, user, myProjects = true) {
                         'div', {key: `${projectGroup}-project-title-container-` + project.id, className: 'card-title-container'}, [
                             React.createElement('h3', {key: `${projectGroup}-project-title-` + project.id, className: user.editAvailableProjectsAccess ? 'card-with-two-buttons' : 'card-with-one-button'}, project.title),
                             React.createElement(
-                                'div',
-                                { key: `edit-${projectGroup}-project-` + project.id, className: 'edit-card-element view-card-element'},
+                                'div', { key: `edit-${projectGroup}-project-` + project.id, className: 'edit-card-element view-card-element'},
                                 React.createElement(
-                                    IconButton,
-                                    { key: `view-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn mr-0-5', onClick: () => viewProject(project.id) },
+                                    IconButton, { key: `view-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn mr-0-5', onClick: () => viewProject(project.id) },
                                     React.createElement(VisibilityIcon, { key: `view-${projectGroup}-project-icon-` + project.id, fontSize: "small" })
                                 ),
                                 user.editAvailableProjectsAccess ? React.createElement(
-                                    IconButton,
-                                    { key: `edit-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn', onClick: () => editProject(project.id) },
+                                    IconButton, { key: `edit-${projectGroup}-project-icon-btn-` + project.id, className: 'card-element-icon-btn', onClick: () => editProject(project.id) },
                                     React.createElement(EditIcon, { key: `edit-${projectGroup}-project-icon-` + project.id, fontSize: "small" })
                                 ) : null
                             )
@@ -150,8 +140,3 @@ function ProjectCardElements(projects, user, myProjects = true) {
         )
     );
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page, {key: 'page'}));

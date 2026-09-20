@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import ReactDOM from 'react-dom/client';
-import {
-    Button,
-    Toolbar,
-    IconButton
-} from "@mui/material";
+import {Button, Toolbar, IconButton} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {requireLogin} from "../../js/session-handling.js";
 import {BackButton} from "../../js/back-button.js";
-import {pageBuilder} from "../../js/page-builder.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
     const [username, setUsername] = useState("");
@@ -28,23 +25,19 @@ function CustomerOverview() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
+        // Get all customers
         fetch("http://localhost:8080/api/customers/get-all")
             .then(res => res.json())
             .then(customers => setCustomers(customers));
     }, []);
 
-    const editCustomer = (customerId) => {
-        window.location.href='../create-edit-customer/create-edit-customer.html?id=' + customerId
-    };
+    const editCustomer = (customerId) => { window.location.href='../create-edit-customer/create-edit-customer.html?id=' + customerId };
 
-    const viewCustomerContactPersons = (customerId) => {
-        window.location.href='../customer-contact-persons/customer-contact-persons.html?customerId=' + customerId
-    }
+    const viewCustomerContactPersons = (customerId) => { window.location.href='../customer-contact-persons/customer-contact-persons.html?customerId=' + customerId }
 
     const customerCardsIntroduction = (
         React.createElement(
-            Toolbar,
-            {key: 'customers-introduction', className: 'introduction-with-btn pl-0 pt-3'},
+            Toolbar, {key: 'customers-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
                 React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Kunden"),
                 React.createElement(Button, {key: 'btn-new-customer', className: 'btn-new-customer', color: 'primary', variant: 'contained', href: '../create-edit-customer/create-edit-customer.html'}, "Neuen Kunden anlegen")
@@ -52,7 +45,7 @@ function CustomerOverview() {
         )
     );
 
-    const customerCards =
+    const customerCards = (
         // Kunden-Container
         React.createElement(
             'div', {key: 'customers-container', className: 'cards-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
@@ -64,16 +57,13 @@ function CustomerOverview() {
                         'div', {key: 'customer-title-container', className: 'card-title-container'}, [
                             React.createElement('h3', {key: 'customer-name', className: 'card-with-two-buttons'}, customer.name),
                             React.createElement(
-                                'div',
-                                { key: 'edit-customer', className: 'edit-card-element view-card-element'},
+                                'div', { key: 'edit-customer', className: 'edit-card-element view-card-element'},
                                 React.createElement(
-                                    IconButton,
-                                    { key: 'view-customer-icon-btn', className: 'card-element-icon-btn mr-0-5', onClick: () => viewCustomerContactPersons(customer.id) },
+                                    IconButton, { key: 'view-customer-icon-btn', className: 'card-element-icon-btn mr-0-5', onClick: () => viewCustomerContactPersons(customer.id) },
                                     React.createElement(VisibilityIcon, { fontSize: "small" })
                                 ),
                                 React.createElement(
-                                    IconButton,
-                                    { key: 'edit-customer-icon-btn', className: 'card-element-icon-btn', onClick: () => editCustomer(customer.id) },
+                                    IconButton, { key: 'edit-customer-icon-btn', className: 'card-element-icon-btn', onClick: () => editCustomer(customer.id) },
                                     React.createElement(EditIcon, { fontSize: "small" })
                                 )
                             )
@@ -82,12 +72,7 @@ function CustomerOverview() {
                     React.createElement('p', {key: 'customer-website'}, customer.website ? `Website: ${customer.website}` : `Website: -`)
                 )
             ) : React.createElement("p", {key: 'hint-no-customers', className: 'pl-2'}, "Aktuell sind keine Kunden vorhanden.")
-        );
-
+        )
+    );
     return [customerCardsIntroduction, customerCards];
 }
-
-// Komponente in den DOM rendern
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(Page));
