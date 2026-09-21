@@ -1,21 +1,12 @@
 import React, {useState} from 'react';
 import {Button, TextField} from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import theme from "../../css/theme-provider.js";
-import {MenuComponentLogin} from "../../js/menu-component-login.js";
-import {FooterComponent} from "../../js/footer-component.js";
-import {renderInDOM} from "../../js/page-builder.js";
+import {pageBuilder, renderInDOM} from "../../js/page-builder.js";
+
+renderInDOM(Page); // DOM
 
 function Page() {
-    return React.createElement(
-        ThemeProvider, { key: "theme-provider", theme },[
-            React.createElement(MenuComponentLogin, {key: 'menu-component-login'}),
-            React.createElement(RegisterAdmin, {key: 'register-admin'}),
-            React.createElement(FooterComponent, {key: 'footer-component'})
-        ]
-    )
+    return pageBuilder(null, React.createElement(RegisterAdmin, {key: 'register-admin'}), false)
 }
-renderInDOM(Page) // DOM
 
 function RegisterAdmin() {
     // Registration is only one time (if there is no admin) possible to configure the system and create employees

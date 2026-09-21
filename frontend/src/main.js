@@ -1,21 +1,47 @@
 import React, {useState, useEffect} from 'react';
 import {Button, TextField} from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import theme from "./css/theme-provider.js";
-import {MenuComponentLogin} from "./js/menu-component-login.js";
-import {FooterComponent} from "./js/footer-component.js";
-import {renderInDOM} from "./js/page-builder.js";
+import {pageBuilder, renderInDOM} from "./js/page-builder.js";
+import PersonIcon from '@mui/icons-material/Person';
+import StoreIcon from '@mui/icons-material/Store';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+
+renderInDOM(Page); // DOM
 
 function Page() {
-    return React.createElement(
-        ThemeProvider, { key: "theme-provider", theme },[
-            React.createElement(MenuComponentLogin, {key: "menu-component-login"}),
-            React.createElement(LogInForm, {key: "login-form"}),
-            React.createElement(FooterComponent, {key: "footer-component"})
-        ]
+    return pageBuilder(null,
+        React.createElement("div", {key: "login-page", className: "login-page-container"}, [
+            React.createElement(TeaserText, {key: "teaser-text"}),
+            React.createElement(LogInForm, {key: "login-form"})
+        ]), false
     )
 }
-renderInDOM(Page) // DOM
+
+function TeaserText() {
+
+    function iconTextElement(nameOfIcon, iconElement, iconDescription) {
+        return React.createElement("div", {key: nameOfIcon + "-icon-container", className: "mane-opportunity"}, [
+            React.createElement(iconElement, {key: nameOfIcon + "-icon", className: "filter-primary"}),
+            React.createElement("p", {key: nameOfIcon + "-icon-text", className: "icon-description"}, `${iconDescription}`)
+        ])
+    }
+
+    return (
+        React.createElement("div", {key: "teaser-text-container", className: "teaser-text-container"}, [
+            React.createElement("h2", {key: "teaser-text-hedline"}, "Willkommen in Mane - deinem Managementsystem!"),
+            React.createElement("p", {key: "teaser-text"}, "Mane ist ein Projekt- und Managementsystem, in dem du deine Projekte, Nutzer und Kunden verwalten kannst. Melde dich an, um deine Projekte zu verwalten oder Aufgaben zu prüfen!"),
+            React.createElement("div", {key: "teaser-text-icon-list-container"}, [
+                React.createElement("h3", {key: "teaser-text-icon-list-teaser"}, "Deine Möglichkeiten mit Mane:"),
+                React.createElement("div", {key: "icons-container", className: "mane-opportunities"}, [
+                    iconTextElement("person", PersonIcon, "Verwalte Nutzer und lege Rollen fest"),
+                    iconTextElement("project", AccountTreeIcon, "Verwalte deine Projekte und verfolge Fortschritte"),
+                    iconTextElement("task", ListAltIcon, "Lege Aufgaben für deine Projekte an, um den Überblick zu behalten"),
+                    iconTextElement("customer", StoreIcon, "Definiere Kunden und seine zugehörigen Ansprechpartner")
+                ]),
+            ])
+        ])
+    )
+}
 
 function LogInForm() {
     const [username, setUsername] = useState('');
@@ -48,7 +74,7 @@ function LogInForm() {
                 setMessage('Anmeldung erfolgreich!');
                 window.location.href="./src/pages/home/home.html"
             } else if (response.status === 409) {
-                setMessage('Dieser Benutzername wurde noch nicht hinterlegt. Bitte an einen Admin wenden, damit dieser ihn hinterlegen kann.');
+                setMessage('Dieser Benutzername wurde noch nicht hinterlegt. Bitte wende dich an einen Admin, damit dieser ihn hinterlegen kann.');
             } else if (response.status === 401) {
                 setMessage('Das Passwort ist inkorrekt. Bitte erneut versuchen.');
             } else {
