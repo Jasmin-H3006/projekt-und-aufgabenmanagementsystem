@@ -1,4 +1,8 @@
 :root {
     --primary: #843B6B;
     --light: #DFC3CE;
+    --light-secondary: #fff9fb; /* #fff7fa */ /* Page background color */
+    --white: #fffbfb;
+    font-family: Helvetica Neue , sans-serif;
+    color: #525252; /* Font color */
 }

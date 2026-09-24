@@ -47,39 +47,22 @@ function UserOverview() {
 
     const table = (
         users.length > 0 ? React.createElement(
-            Table, {key: 'user-table-container', className: 'table-container user-table-container', size: 'small'},
-            [
+            "div", {key: 'users-container', className: 'list-container users-list-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            users.map(user =>
                 React.createElement(
-                    TableHead, {key: 'user-table-head', className: 'user-table-head pl-2'},
+                    "div", { key: user.id, className: "list-element mb-1-5"  }, [
+                    React.createElement("p", {key: 'user-username', className: "pl-1"}, user.username),
+                    React.createElement("p", {key: 'user-role', className: "pl-1 bl-light"}, user.role.name),
+                    React.createElement("p", {key: 'user-state', className: 'pl-1 bl-light user-state' + ((user.status === "ACTIVE") ? ' active-user' : ' inactive-user')}, (user.status === "ACTIVE") ? "Aktiv" : "Inaktiv"),
                     React.createElement(
-                        TableRow, {key: 'user-table-columns'},
-                        [
-                            React.createElement(TableCell, {key: 'users-username'}, 'Benutzername'),
-                            React.createElement(TableCell, {key: 'users-role'}, 'Rolle'),
-                            React.createElement(TableCell, {key: 'users-state'}, 'Status'),
-                            React.createElement(TableCell, {key: 'users-edit'}, "Benutzer bearbeiten")
-                        ]
-                    )
-                ),
-                React.createElement(
-                    TableBody, {key: 'user-table-body'},
-                    users.map(user =>
+                        "div", { key: "user-edit", className: "edit-list-element pr-1" },
                         React.createElement(
-                            TableRow, { key: user.id },
-                            React.createElement(TableCell, {key: 'user-username'}, user.username),
-                            React.createElement(TableCell, {key: 'user-role'}, user.role.name),
-                            React.createElement(TableCell, {key: 'user-state'}, (user.status === "ACTIVE") ? "Aktiv" : "Inaktiv"),
-                            React.createElement(
-                                TableCell, { key: "user-edit" },
-                                React.createElement(
-                                    IconButton, { key: "edit-user-icon-btn", onClick: () => editUser(user.id) },
-                                    React.createElement(EditIcon, { key: "edit-user-icon", fontSize: "small" })
-                                )
-                            ),
+                            IconButton, { key: "edit-user-icon-btn", className: "card-element-icon-btn", onClick: () => editUser(user.id) },
+                            React.createElement(EditIcon, { key: "edit-user-icon", fontSize: "small" })
                         )
                     )
-                ),
-            ]
+                ])
+            )
         ) : React.createElement("p", {key: 'hint-no-users', className: 'pl-2'}, "Aktuell sind keine Benutzer vorhanden.")
     );
     return [tableIntroduction, table];
@@ -155,7 +138,7 @@ function TaskStatesOverview() {
 
     const editTaskState = (taskStateId) => { window.location.href='../create-edit-task-state/create-edit-task-state.html?id=' + taskStateId };
 
-    const tableIntroduction = (
+    const taskStatesIntroduction = (
         React.createElement(
             Toolbar, {key: 'task-states-introduction', className: 'introduction-with-btn pl-0 pt-3'},
             [
@@ -165,40 +148,24 @@ function TaskStatesOverview() {
         )
     );
 
-    const table = (
+    const taskStatesList = (
         taskStates.length > 0 ? React.createElement(
-            Table, {key: 'task-state-table-container', className: 'table-container task-state-table-container', size: 'small'},
-            [
+            "div", {key: 'task-states-container', className: 'list-container task-states-list-container pl-1 pr-1 pl-md-up-5 pr-md-up-5'},
+            taskStates.map(taskState =>
                 React.createElement(
-                    TableHead, {key: 'task-state-table-head', className: 'task-state-table-head pl-2'},
+                    "div", { key: taskState.id, className: "list-element mb-1-5" }, [
+                    React.createElement("p", {key: 'task-state-name', className: "pl-1"}, taskState.name),
+                    React.createElement("p", {key: 'task-state-color', className: 'task-state-color', style: {backgroundColor: taskState.color, color: taskState.fontColorBlack ? 'black' : 'white'}}, taskState.color),
                     React.createElement(
-                        TableRow, {key: 'task-state-table-columns'},
-                        [
-                            React.createElement(TableCell, {key: 'task-states-name'}, 'Status'),
-                            React.createElement(TableCell, {key: 'task-states-color'}, 'Farbe'),
-                            React.createElement(TableCell, {key: 'task-states-edit'}, "Status bearbeiten")
-                        ]
-                    )
-                ),
-                React.createElement(
-                    TableBody, {key: 'task-state-table-body'},
-                    taskStates.map(taskState =>
+                        "div", { key: "task-state-edit", className: "edit-list-element pr-1" },
                         React.createElement(
-                            TableRow, { key: taskState.id },
-                            React.createElement(TableCell, {key: 'task-state-name'}, taskState.name),
-                            React.createElement(TableCell, {key: 'task-state-color', style: {backgroundColor: taskState.color, color: taskState.fontColorBlack ? 'black' : 'white'}}, taskState.color),
-                            React.createElement(
-                                TableCell, { key: "task-state-edit" },
-                                React.createElement(
-                                    IconButton, { key: "edit-task-state-icon-btn", onClick: () => editTaskState(taskState.id) },
-                                    React.createElement(EditIcon, { key: "edit-task-state-icon", fontSize: "small" })
-                                )
-                            )
+                            IconButton, { key: "edit-task-state-icon-btn", className: "card-element-icon-btn", onClick: () => editTaskState(taskState.id) },
+                            React.createElement(EditIcon, { key: "edit-task-state-icon", fontSize: "small" })
                         )
-                    )
+                    )]
                 )
-            ]
+            )
         ) : React.createElement("p", {key: 'hint-no-task-states', className: 'pl-2'}, "Aktuell sind keine Status für Aufgaben hinterlegt.")
     );
-    return [tableIntroduction, table];
+    return [taskStatesIntroduction, taskStatesList];
 }

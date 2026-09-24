@@ -3,7 +3,6 @@
     width: 100%;
     box-sizing: border-box;
     padding: 1rem 2rem 1rem 2rem;
-    margin-bottom: .8rem;
     background-color: var(--primary);
-    color: white;
+    color: var(--white);
 }

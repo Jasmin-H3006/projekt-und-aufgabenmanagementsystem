@@ -259,7 +259,7 @@ function CreateEditProject() {
             ),
             React.createElement(LocalizationProvider, {key: 'date-picker', dateAdapter: AdapterDayjs},
                 React.createElement(DatePicker, {
-                    key: 'deadline', value: deadline, format: "DD.MM.YYYY", variant: "outlined", label: "Frist",
+                    key: 'deadline', className: "deadline", value: deadline, format: "DD.MM.YYYY", variant: "outlined", label: "Frist",
                     onChange: (newValue) => setDeadline(newValue)
                 })
             ),

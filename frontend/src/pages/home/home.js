@@ -21,7 +21,7 @@ function Page() {
 function Intro({username}) {
     return React.createElement(
         "h2", {key: 'mane-intro', className: 'pl-2'},
-        `Mane - Ihr Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
+        `Mane - Dein Projekt- & Aufgabenmanagementsystem. Willkommen, ${username}!`
     )
 }
 

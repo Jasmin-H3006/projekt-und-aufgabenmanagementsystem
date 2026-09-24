@@ -1,8 +1,34 @@
 @import "./forms.css";
 @import "./general.css";
 @import "./menu.css";
-@import "./tables.css";
 @import "./footer.css";
 @import "./variables.css";
 @import "./pages.css";
 @import "./cards.css";
+@import "./teaser-text.css";
+
+body {
+    background-color: var(--light-secondary);
+}
+
+.MuiButton-outlined.MuiButton-colorPrimary {
+    background-color: var(--white);
+}
+
+.MuiButton-root, .MuiIconButton-root:not(.menu-dropdown-btn) {
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+}
+
+.deadline .MuiIconButton-root {
+    box-shadow: none !important;
+}
+
+.back-btn {
+    border: 1px solid var(--primary) !important;
+    background-color: var(--white) !important;
+}
+
+.filter-primary {
+    color: #000000; /* Reset color to black so that the filter can be applied correctly */
+    filter: invert(27%) sepia(9%) saturate(5004%) hue-rotate(271deg) brightness(93%) contrast(81%);
+}

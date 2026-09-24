@@ -1,0 +1,28 @@
+.login-page-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem;
+
+    @media (max-width: 1200px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.teaser-text-container, .log-in-form {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.teaser-text-container h2 {
+    margin-top: 3rem;
+}
+
+.mane-opportunity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-description {
+    color: var(--primary);
+}

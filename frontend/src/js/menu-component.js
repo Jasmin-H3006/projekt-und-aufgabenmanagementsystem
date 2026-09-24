@@ -32,7 +32,7 @@ export function MenuComponent({user}) {
             React.createElement(
                 Tooltip, { key: "dropdown-container"},
                 React.createElement(
-                    IconButton, {key: "dropdown-btn", onClick: handleClick, color: 'inherit'},
+                    IconButton, {key: "dropdown-btn", className: 'menu-dropdown-btn' , onClick: handleClick, color: 'inherit'},
                     React.createElement(MenuIcon, {key: 'dropdown-icon', className: 'menu-dropdown-icon'})
                 )
             )

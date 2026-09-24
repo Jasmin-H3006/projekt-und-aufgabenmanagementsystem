@@ -6,7 +6,9 @@ form {
     max-width: 800px;
     padding: 2rem;
     border: 2px solid var(--primary);
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
     border-radius: 4px;
+    background-color: var(--white);
     margin: 3rem auto;
 
     @media (max-width: 768px) {

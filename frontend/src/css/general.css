@@ -10,6 +10,10 @@
     padding-left: 2rem;
 }
 
+.pl-3 {
+    padding-left: 3rem;
+}
+
 .pl-5 {
     padding-left: 5rem;
 }
@@ -43,6 +47,10 @@
     padding-top: 3rem;
 }
 
+.mb-1-5 {
+    margin-bottom: 1.5rem !important;
+}
+
 .ml-2 {
     margin-left: 2rem !important;
 }
@@ -55,6 +63,6 @@
     margin-right: .5rem !important;
 }
 
-.back-btn {
-    border: 1px solid var(--primary) !important;
+.bl-light {
+    border-left: 2px solid var(--light);
 }
