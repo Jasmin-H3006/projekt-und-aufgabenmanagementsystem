@@ -18,13 +18,13 @@ function Page() {
 
     const backLink = '../home/home.html';
 
-    return pageBuilder(user, [React.createElement(BackButton, {key: 'back-button', pageLink: backLink}), React.createElement(ProjectOverview, {key: 'project-overview'}), React.createElement(ProjectTasks, {key: 'project-tasks-overview', user})])
+    return pageBuilder(user, [React.createElement(BackButton, {key: 'back-button', pageLink: backLink}), React.createElement(ProjectOverview, {key: 'project-overview', user}), React.createElement(ProjectTasks, {key: 'project-tasks-overview', user})])
 }
 
 const urlParams = new URLSearchParams(window.location.search);
 const projectIdInUrl = urlParams.get("projectId");
 
-function ProjectOverview() {
+function ProjectOverview({user}) {
     const [title, setTitle] = useState("");
     const [customer, setCustomer] = useState("");
     const [contactPersons, setContactPersons] = useState([]);
@@ -32,6 +32,7 @@ function ProjectOverview() {
     const [users, setUsers] = useState([]);
     const [deadline, setDeadline] = useState("");
     const [description, setDescription] = useState("");
+    const [projectArchived, setProjectArchived] = useState(false);
     const [taskCounts, setTaskCounts] = useState({ total: 0, done: 0 });
 
     useEffect(() => {
@@ -51,6 +52,7 @@ function ProjectOverview() {
                 setUsers(project.users)
                 setDeadline(project.deadline)
                 setDescription(project.description)
+                setProjectArchived(project.archived)
             });
 
         // Get project tasks
@@ -63,10 +65,33 @@ function ProjectOverview() {
             })
     }, [projectIdInUrl]);
 
-    const introduction = React.createElement(
-        Toolbar, {key: 'project-introduction', className: 'introduction pl-0 pt-3'},
-        React.createElement('h3', {key: 'introduction-header', className: 'pl-2'}, "Projekt '" + title + "' ( ID: " + projectIdInUrl + " )")
-    );
+    const changeProjectArchivedState = async (e) => {
+        e.preventDefault();
+        const changedArchivedState = !projectArchived
+
+        // Save in database
+        const response = await fetch(`http://localhost:8080/api/projects/${projectIdInUrl}/update-archived-state`, {
+            method: 'PUT',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({archived: changedArchivedState})
+        });
+
+        if (response.ok) {
+            // Change state
+            setProjectArchived(changedArchivedState)
+            alert("Das Projekt wurde erfolgreich " + (changedArchivedState ? "archiviert." : "aktiviert."))
+        } else {
+            alert("Beim " + (changedArchivedState ? "archivieren" : "aktivieren") + " ist ein Fehler aufgetreten.")
+        }
+    }
+
+    const introduction = [
+        projectArchived ? React.createElement('p', {key: 'project-archived-hint', className: 'project-archived-hint pl-2 pt-3'}, "Dieses Projekt ist archiviert.") : null,
+        React.createElement(Toolbar, {key: 'project-introduction', className: `introduction-with-btn pl-0 ${!projectArchived ? 'pt-3' : ''}`}, [
+            React.createElement('h2', {key: 'introduction-header', className: 'pl-2'}, "Projekt '" + title + "' ( ID: " + projectIdInUrl + " )"),
+            user.editAvailableProjectsAccess ? React.createElement(Button, {key: 'btn-archive-project', className: 'btn-archive-project', color: 'primary', variant: 'outlined', onClick: changeProjectArchivedState}, projectArchived ? "Projekt aktivieren" : "Projekt archivieren") : null
+        ])
+    ];
 
     const infos = (
         React.createElement('div', {key: 'project-infos', className: 'pl-2'}, [

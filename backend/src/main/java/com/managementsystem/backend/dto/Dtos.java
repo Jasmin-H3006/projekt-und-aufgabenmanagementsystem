@@ -69,6 +69,7 @@ public interface Dtos {
         @NotEmpty String title,
         LocalDate deadline,
         @NotEmpty String description,
+        Boolean archived,
         @NotEmpty Long customerId,
         @NotEmpty Long projectManagerId,
         java.util.List<Long> userIds,

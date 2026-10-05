@@ -54,6 +54,7 @@ public class User {
     private Role role;
 
     // Join with Task-Table
+    /*
     @ManyToMany
     @JoinTable(
         name = "user_x_task",
@@ -61,6 +62,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private Set<Task> tasks = new HashSet<>();
+    */
 
     // Join with Project-Table
     @ManyToMany(mappedBy = "users")

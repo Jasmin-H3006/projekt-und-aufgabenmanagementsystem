@@ -49,6 +49,8 @@ public class Task {
     private Project project;
 
     // Join with User-Table
+    /*
     @ManyToMany(mappedBy = "tasks")
     private Set<User> users = new HashSet<>();
+    */
 }

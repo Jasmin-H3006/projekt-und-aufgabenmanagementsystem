@@ -3,6 +3,10 @@
     align-items: center;
     justify-content: space-between;
     padding-bottom: 2rem;
+
+    h2, h3 {
+        padding-right: 2rem;
+    }
 }
 
 .cards-container {
@@ -68,6 +72,14 @@
     border-radius: 4px;
     box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
     background-color: var(--white);
+
+    &.project-archived {
+        background-color: #e4e4e4;
+        &::before {
+            content: 'Archiviert';
+            text-decoration: overline;
+        }
+    }
 }
 
 .list-container {

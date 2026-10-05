@@ -29,7 +29,7 @@ function TeaserText() {
     return (
         React.createElement("div", {key: "teaser-text-container", className: "teaser-text-container"}, [
             React.createElement("h2", {key: "teaser-text-hedline"}, "Willkommen in Mane - deinem Managementsystem!"),
-            React.createElement("p", {key: "teaser-text"}, "Mane ist ein Projekt- und Managementsystem, in dem du deine Projekte, Nutzer und Kunden verwalten kannst. Melde dich an, um deine Projekte zu verwalten oder Aufgaben zu prüfen!"),
+            React.createElement("p", {key: "teaser-text"}, "Mane ist ein Projekt- und Aufgabenmanagementsystem, in dem du deine Projekte, Nutzer und Kunden verwalten kannst. Melde dich an, um deine Projekte zu verwalten oder Aufgaben zu prüfen!"),
             React.createElement("div", {key: "teaser-text-icon-list-container"}, [
                 React.createElement("h3", {key: "teaser-text-icon-list-teaser"}, "Deine Möglichkeiten mit Mane:"),
                 React.createElement("div", {key: "icons-container", className: "mane-opportunities"}, [

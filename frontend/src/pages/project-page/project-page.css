@@ -14,3 +14,7 @@
     display: flex;
     justify-content: flex-start;
 }
+
+.project-archived-hint {
+    color: var(--primary);
+}

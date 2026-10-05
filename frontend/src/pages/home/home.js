@@ -106,7 +106,7 @@ function ProjectCardElements(projects, user, myProjects = true) {
             // Einzelnen Projekt-Container
             projects.length > 0 ? projects.map (project =>
                 React.createElement(
-                    'div', {key: `${projectGroup}-project-container-` + project.id, className: 'card-container'},
+                    'div', {key: `${projectGroup}-project-container-` + project.id, className: `card-container ${project.archived ? 'project-archived' : ''}`},
                     React.createElement(
                         'div', {key: `${projectGroup}-project-title-container-` + project.id, className: 'card-title-container'}, [
                             React.createElement('h3', {key: `${projectGroup}-project-title-` + project.id, className: user.editAvailableProjectsAccess ? 'card-with-two-buttons' : 'card-with-one-button'}, project.title),

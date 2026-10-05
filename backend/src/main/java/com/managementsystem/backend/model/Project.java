@@ -43,6 +43,9 @@ public class Project {
     @Column(length = 500)
     private String description;
 
+    @Builder.Default
+    private Boolean archived = false;
+
     // FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)

@@ -114,6 +114,13 @@ public class ProjectController {
         return ResponseEntity.ok(service.createProject(existing));
     }
 
+    @PutMapping("/{id}/update-archived-state")
+    public ResponseEntity<Project> updateProjectArchivedState(@PathVariable Long id, @RequestBody NewProjectDTO dto) {
+       Project existing = service.getProjectById(id);
+       existing.setArchived(dto.archived());
+       return ResponseEntity.ok(service.createProject(existing));
+    }
+
     @GetMapping("/get-all")
     public List<Project> getAllProjects() {
         return service.getAllProjects();
