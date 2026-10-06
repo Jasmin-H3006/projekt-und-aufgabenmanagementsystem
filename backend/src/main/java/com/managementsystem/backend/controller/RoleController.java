@@ -25,8 +25,8 @@ public class RoleController {
     private final RoleService service;
 
     @PostMapping("/create")
-    public String createRole(@RequestBody NewRoleDTO dto) {
-        service.createRole(Role.builder()
+    public ResponseEntity<Role> createRole(@RequestBody NewRoleDTO dto) {
+        Role role = Role.builder()
             .name(dto.name())
             .adminAccess(dto.adminAccess())
             .allProjectsAccess(dto.allProjectsAccess())
@@ -34,9 +34,8 @@ public class RoleController {
             .editAvailableProjectsAccess(dto.editAvailableProjectsAccess())
             .createAndEditTasksAccess(dto.createAndEditTasksAccess())
             .customerPageAccess(dto.customerPageAccess())
-            .build()
-        );
-        return "Role created successfully";
+            .build();
+        return ResponseEntity.ok(service.createRole(role));
     }
 
     @PutMapping("/{id}")

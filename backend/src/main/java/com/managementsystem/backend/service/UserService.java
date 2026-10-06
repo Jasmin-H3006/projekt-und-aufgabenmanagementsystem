@@ -8,11 +8,9 @@ import com.managementsystem.backend.dto.Dtos.NewUserInvitationDTO;
 import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.model.UserStatus;
 import com.managementsystem.backend.model.UserInvitation;
-import com.managementsystem.backend.service.UserInvitationService;
 import com.managementsystem.backend.service.UserInvitationService.CreatedInvitation;
 import com.managementsystem.backend.repository.UserRepository;
 import com.managementsystem.backend.repository.UserInvitationRepository;
-import java.util.List;
 import java.time.Instant;
 
 @Service

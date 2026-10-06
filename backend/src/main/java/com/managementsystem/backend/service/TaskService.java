@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import com.managementsystem.backend.model.Task;
 import com.managementsystem.backend.model.User;
 import com.managementsystem.backend.repository.TaskRepository;
-import com.managementsystem.backend.service.ProjectService;
 
 @Service
 @RequiredArgsConstructor

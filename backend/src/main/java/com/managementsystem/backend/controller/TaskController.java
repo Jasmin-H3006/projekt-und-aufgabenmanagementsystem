@@ -35,18 +35,17 @@ public class TaskController {
     private final UserRepository userRepository;
 
     @PostMapping("/create")
-    public String createTask(@RequestBody NewTaskDTO dto) {
+    public ResponseEntity<Task> createTask(@RequestBody NewTaskDTO dto) {
         Project project = projectService.getProjectById(dto.projectId());
         TaskState taskState = taskStateService.getTaskStateById(dto.taskStateId());
 
-        service.createTask(Task.builder()
+        Task task = Task.builder()
             .title(dto.title())
             .description(dto.description())
             .project(project)
             .taskState(taskState)
-            .build()
-        );
-        return "Task created successfully";
+            .build();
+        return ResponseEntity.ok(service.createTask(task));
     }
 
     @PutMapping("/{id}")

@@ -25,13 +25,12 @@ public class CustomerController {
     private final CustomerService service;
 
     @PostMapping("/create")
-    public String createCustomer(@RequestBody NewCustomerDTO dto) {
-        service.createCustomer(Customer.builder()
+    public ResponseEntity<Customer> createCustomer(@RequestBody NewCustomerDTO dto) {
+        Customer customer = Customer.builder()
             .name(dto.name())
             .website(dto.website())
-            .build()
-        );
-        return "Customer created successfully";
+            .build();
+        return ResponseEntity.ok(service.createCustomer(customer));
     }
 
     @PutMapping("/{id}")

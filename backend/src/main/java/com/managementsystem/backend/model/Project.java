@@ -19,7 +19,6 @@ import jakarta.persistence.ManyToMany;
 import java.util.Set;
 import java.util.HashSet;
 import java.time.LocalDate;
-import com.managementsystem.backend.model.CustomerContactPerson;
 
 @Entity
 

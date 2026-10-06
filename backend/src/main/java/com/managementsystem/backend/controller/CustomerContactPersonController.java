@@ -28,16 +28,15 @@ public class CustomerContactPersonController {
     private final CustomerService customerService;
 
     @PostMapping("/create")
-    public String createCustomerContactPerson(@RequestBody NewCustomerContactPersonDTO dto) {
+    public ResponseEntity<CustomerContactPerson> createCustomerContactPerson(@RequestBody NewCustomerContactPersonDTO dto) {
         Customer customer = customerService.getCustomerById(dto.customerId());
-        service.createCustomerContactPerson(CustomerContactPerson.builder()
+        CustomerContactPerson customerContactPerson = CustomerContactPerson.builder()
             .name(dto.name())
             .email(dto.email())
             .telefone(dto.telefone())
             .customer(customer)
-            .build()
-        );
-        return "Contact person created successfully";
+            .build();
+        return ResponseEntity.ok(service.createCustomerContactPerson(customerContactPerson));
     }
 
     @PutMapping("/{id}")

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.Instant;
-import com.managementsystem.backend.model.Role;
 
 public interface Dtos {
     @Builder

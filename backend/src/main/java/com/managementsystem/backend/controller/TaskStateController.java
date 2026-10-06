@@ -25,15 +25,14 @@ public class TaskStateController {
     private final TaskStateService service;
 
     @PostMapping("/create")
-    public String createTaskState(@RequestBody NewTaskStateDTO dto) {
-        service.createTaskState(TaskState.builder()
+    public ResponseEntity<TaskState> createTaskState(@RequestBody NewTaskStateDTO dto) {
+        TaskState taskState = TaskState.builder()
             .name(dto.name())
             .color(dto.color())
             .fontColorBlack(dto.fontColorBlack())
             .taskDoneState(dto.taskDoneState())
-            .build()
-        );
-        return "Task state created successfully";
+            .build();
+        return ResponseEntity.ok(service.createTaskState(taskState));
     }
 
     @PutMapping("/{id}")
