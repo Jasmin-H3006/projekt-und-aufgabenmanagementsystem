@@ -1,8 +1,11 @@
 # projekt-und-aufgabenmanagementsystem
 Projekt- und Aufgabenmanagementsystem für ein IT-Dienstleistungsunternehmen
 
+## Starten des Backends und des Frontends
+1. Backend starten: Im Ordner 'bin' befindet sich eine Datei "start-backend", welche bei Ausführung das Backend über den Terminal startet
+2. Frontend starten: Analog zum backend, gibt es im bin-Ordner auch eine Datei "start-frontend", welche das Frontend ebenso im Terminal starten lässt
 
-## Rollen-Berechtigungen
+## Übersicht der Rollen-Berechtigungen in Mane
 - **AdminAccess:** (Impliziert alle nachfolgenden Rechte) Vollzugriff auf alle Funktionen und Daten des Systems.
 - **CustomerPageAccess:** Der Nutzer hat Zugriff auf die Kunden-Übersichts-Seite und kann neue Kunden und Ansprechpartner anlegen, sowie bestehende bearbeiten.
 - **AllProjectsAccess:** (Impliziert alle nachfolgenden Rechte) Zugriff auf alle Projekte (dürfen alle bearbeitet und neue erstellt werden), aber kein Zugang zur Admin-Oberfläche und den zugehörigen Funktionen wie Benutzer- & Rollenverwaltung. Ist einem User diese Rolle nicht zugeordnet, sieht er autom. nur die Projekte, die ihm zugeordnet sind
