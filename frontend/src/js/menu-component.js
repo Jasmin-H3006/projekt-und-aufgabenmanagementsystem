@@ -19,7 +19,8 @@ export function MenuComponent({user}) {
         // Session beenden
         await fetch("http://localhost:8080/api/auth/logout", {
             method: "POST",
-            credentials: "include"
+            credentials: "include",
+            cache: "no-store"
         });
         window.location.replace("../../../index.html") // Replace so that it is not possible to return to the logged-in state by using the browser's back Button
     };

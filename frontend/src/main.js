@@ -48,6 +48,18 @@ function LogInForm() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
+    useEffect(() => {
+        // Clear fields, because of browser back
+        const clearLoginFields = () => {
+            setUsername('');
+            setPassword('');
+            setMessage('');
+        };
+        clearLoginFields();
+        window.addEventListener("pageshow", clearLoginFields);
+        return () => window.removeEventListener("pageshow", clearLoginFields);
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const user = { username, password };
@@ -98,12 +110,12 @@ function LogInForm() {
 
     return (
         React.createElement(
-            "form", {key: "log-in-form", className: "log-in-form", onSubmit: handleSubmit}, [
+            "form", {key: "log-in-form", className: "log-in-form", onSubmit: handleSubmit, autoComplete: "off"}, [
             React.createElement('h2', {key: "user-log-in"}, "Anmelden"),
-            React.createElement(TextField, {key: "username", variant: "outlined", label: "Benutzername", required: true, value: username,
+            React.createElement(TextField, {key: "username", variant: "outlined", label: "Benutzername", required: true, value: username, autoComplete: "off",
                 onChange: (e) => setUsername(e.target.value)
             }),
-            React.createElement(TextField, {key: "password", variant: "outlined", label: "Passwort", type: "password", required: true, value: password,
+            React.createElement(TextField, {key: "password", variant: "outlined", label: "Passwort", type: "password", required: true, value: password, autoComplete: "off",
                 onChange: (e) => setPassword(e.target.value)
             }),
             message ? React.createElement('p', {key: "admin-error", className: "full-width"}, message) : null,
